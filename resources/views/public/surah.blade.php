@@ -307,9 +307,14 @@
         let list = window.QURAN_DATA.surahs;
         if (filterQuery) {
             const q = filterQuery.toLowerCase();
+            const normalizeStr = (str) => (str || '').toLowerCase().replace(/[-_']/g, '').replace(/aa/g, 'a').replace(/ee/g, 'i').replace(/oo/g, 'u');
+            const normQ = normalizeStr(q);
             list = list.filter(s => 
                 s.name.toLowerCase().includes(q) || 
+                normalizeStr(s.name).includes(normQ) || 
                 s.bangla.toLowerCase().includes(q) || 
+                s.englishMeaning.toLowerCase().includes(q) || 
+                normalizeStr(s.englishMeaning).includes(normQ) || 
                 s.arabic.includes(q) || 
                 String(s.id).includes(q)
             );

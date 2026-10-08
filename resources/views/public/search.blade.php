@@ -71,12 +71,17 @@
 
         const q = (query || "").trim().toLowerCase();
 
+        const normalizeStr = (str) => (str || '').toLowerCase().replace(/[-_']/g, '').replace(/aa/g, 'a').replace(/ee/g, 'i').replace(/oo/g, 'u');
+        const normQ = normalizeStr(q);
+
         let results = window.QURAN_DATA.surahs;
         if (q) {
             results = results.filter(s => 
                 s.name.toLowerCase().includes(q) ||
+                normalizeStr(s.name).includes(normQ) ||
                 s.bangla.toLowerCase().includes(q) ||
                 s.englishMeaning.toLowerCase().includes(q) ||
+                normalizeStr(s.englishMeaning).includes(normQ) ||
                 s.banglaMeaning.toLowerCase().includes(q) ||
                 s.arabic.includes(q) ||
                 String(s.id) === q ||
