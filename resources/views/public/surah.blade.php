@@ -42,8 +42,8 @@
         <div class="reader-nav-header">
             <div class="d-flex align-items-center justify-content-between mb-3">
                 <div>
-                    <h5 class="fw-bold font-bangla mb-0">কুরআন নেভিগেশন</h5>
-                    <p class="text-muted small mb-0">সূরা নির্বাচন করুন</p>
+                    <h5 class="fw-bold font-bangla mb-0" id="navPanelTitle">কুরআন নেভিগেশন</h5>
+                    <p class="text-muted small mb-0" id="navPanelSub">সূরা নির্বাচন করুন</p>
                 </div>
                 <button class="btn-icon-circle d-md-none" onclick="toggleNavPanel()">
                     <i class="fa-solid fa-xmark"></i>
@@ -117,7 +117,7 @@
     <!-- Right Reading Settings Panel -->
     <aside class="reader-settings-panel" id="readerSettingsPanel">
         <div class="settings-panel-header">
-            <h6 class="fw-bold font-bangla mb-0"><i class="fa-solid fa-gear text-primary me-2"></i> রিডিং সেটিংস</h6>
+            <h6 class="fw-bold font-bangla mb-0" id="settingsHeaderTitle"><i class="fa-solid fa-gear text-primary me-2"></i> রিডিং সেটিংস</h6>
             <button class="btn-icon-circle" onclick="toggleSettingsPanel()">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -126,7 +126,7 @@
         <div class="settings-panel-content">
             <!-- Qari / Reciter Selection -->
             <div class="setting-group-item">
-                <div class="setting-label">ক্বারী / তিলাওয়াতকারী</div>
+                <div class="setting-label" id="labelReciter">ক্বারী / তিলাওয়াতকারী</div>
                 <select class="custom-select-box" id="settingReciterSelect" onchange="onReciterChanged(this)">
                     <!-- Populated dynamically -->
                 </select>
@@ -134,7 +134,7 @@
 
             <!-- Arabic Font Family -->
             <div class="setting-group-item">
-                <div class="setting-label">আরবি ফন্ট স্টাইল</div>
+                <div class="setting-label" id="labelArabicFont">আরবি ফন্ট স্টাইল</div>
                 <select class="custom-select-box" id="settingArabicFont">
                     <option value="font-amiri">Amiri (উসমানী স্টাইল)</option>
                     <option value="font-scheherazade">Scheherazade New</option>
@@ -145,7 +145,7 @@
             <!-- Arabic Font Size Slider -->
             <div class="setting-group-item">
                 <div class="setting-label">
-                    <span>আরবি ফন্ট সাইজ</span>
+                    <span id="labelArabicSize">আরবি ফন্ট সাইজ</span>
                     <span class="badge bg-secondary text-primary" id="arabicSizeValue">28px</span>
                 </div>
                 <input type="range" class="custom-range-slider" id="settingArabicSize" min="20" max="48" value="28">
@@ -154,7 +154,7 @@
             <!-- Translation Font Size Slider -->
             <div class="setting-group-item">
                 <div class="setting-label">
-                    <span>অনুবাদ ফন্ট সাইজ</span>
+                    <span id="labelTransSize">অনুবাদ ফন্ট সাইজ</span>
                     <span class="badge bg-secondary text-primary" id="transSizeValue">15px</span>
                 </div>
                 <input type="range" class="custom-range-slider" id="settingTransSize" min="12" max="24" value="15">
@@ -164,14 +164,14 @@
 
             <!-- Translations Toggles -->
             <div class="setting-group-item">
-                <div class="setting-label">অনুবাদ প্রদর্শন</div>
+                <div class="setting-label" id="labelTransDisplay">অনুবাদ প্রদর্শন</div>
                 <div class="form-check form-switch mb-2">
                     <input class="form-check-input" type="checkbox" id="settingShowBangla" checked>
-                    <label class="form-check-label small font-bangla" for="settingShowBangla">বাংলা অনুবাদ</label>
+                    <label class="form-check-label small font-bangla" for="settingShowBangla" id="labelShowBn">বাংলা অনুবাদ</label>
                 </div>
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="settingShowEnglish" checked>
-                    <label class="form-check-label small" for="settingShowEnglish">English Translation</label>
+                    <label class="form-check-label small" for="settingShowEnglish" id="labelShowEn">English Translation</label>
                 </div>
             </div>
         </div>
@@ -188,8 +188,25 @@
         initReaderView();
     });
 
+    // Listen to global language changes
+    window.addEventListener("quranLanguageChanged", () => {
+        updateReaderLanguageUI();
+    });
+
     function initReaderView() {
+        updateReaderLanguageUI();
+
+        // Populate Reciters in Settings
+        populateRecitersDropdown();
+
+        // Initialize QuranReader instance
+        window.quranReader = new QuranReader(currentSurahId);
+    }
+
+    function updateReaderLanguageUI() {
         if (!window.QURAN_DATA) return;
+        const lang = window.currentQuranLang || localStorage.getItem("quran_lang") || "bn";
+        const isBn = lang === "bn";
 
         const s = window.QURAN_DATA.surahs.find(item => item.id === currentSurahId) || window.QURAN_DATA.surahs[0];
         
@@ -200,32 +217,57 @@
         const metaInfo = document.getElementById("bannerMetaInfo");
 
         if (arName) arName.textContent = s.arabic;
-        if (bnName) bnName.textContent = `${s.bangla} (${s.name})`;
-        if (headerTitle) headerTitle.textContent = `${s.bangla} (${s.name})`;
+        if (bnName) bnName.textContent = isBn ? `${s.bangla} (${s.name})` : `${s.name} (${s.englishMeaning})`;
+        if (headerTitle) headerTitle.textContent = isBn ? `${s.bangla} (${s.name})` : `${s.name} (${s.englishMeaning})`;
         if (metaInfo) {
-            const icon = s.type === "Makki" ? "🕋 মাক্কী" : "🕌 মাদানী";
+            const icon = isBn ? (s.type === "Makki" ? "🕋 মাক্কী" : "🕌 মাদানী") : `🕋 ${s.type}`;
+            const versesText = isBn ? `${window.toBanglaNumber(s.verses)} আয়াত` : `${s.verses} Verses`;
+            const juzText = isBn ? `পারা ${window.toBanglaNumber(s.juz.join(', '))}` : `Juz ${s.juz.join(', ')}`;
             metaInfo.innerHTML = `
                 <span>${icon}</span>
                 <span>•</span>
-                <span>${s.verses} আয়াত</span>
+                <span>${versesText}</span>
                 <span>•</span>
-                <span>পারা ${s.juz.join(', ')}</span>
+                <span>${juzText}</span>
             `;
         }
 
-        // Render Nav Surah List
+        // Drawer labels
+        const navTitle = document.getElementById("navPanelTitle");
+        const navSub = document.getElementById("navPanelSub");
+        const navSearch = document.getElementById("navSurahSearch");
+        if (navTitle) navTitle.textContent = isBn ? "কুরআন নেভিগেশন" : "Quran Navigation";
+        if (navSub) navSub.textContent = isBn ? "সূরা নির্বাচন করুন" : "Select Surah";
+        if (navSearch) navSearch.placeholder = isBn ? "সূরা খুঁজুন..." : "Search Surah...";
+
+        // Settings panel labels
+        const sTitle = document.getElementById("settingsHeaderTitle");
+        const lReciter = document.getElementById("labelReciter");
+        const lArabicFont = document.getElementById("labelArabicFont");
+        const lArabicSize = document.getElementById("labelArabicSize");
+        const lTransSize = document.getElementById("labelTransSize");
+        const lTransDisplay = document.getElementById("labelTransDisplay");
+        const lShowBn = document.getElementById("labelShowBn");
+        const lShowEn = document.getElementById("labelShowEn");
+        if (sTitle) sTitle.innerHTML = `<i class="fa-solid fa-gear text-primary me-2"></i> ${isBn ? "রিডিং সেটিংস" : "Reading Settings"}`;
+        if (lReciter) lReciter.textContent = isBn ? "ক্বারী / তিলাওয়াতকারী" : "Reciter / Qari";
+        if (lArabicFont) lArabicFont.textContent = isBn ? "আরবি ফন্ট স্টাইল" : "Arabic Font Style";
+        if (lArabicSize) lArabicSize.textContent = isBn ? "আরবি ফন্ট সাইজ" : "Arabic Font Size";
+        if (lTransSize) lTransSize.textContent = isBn ? "অনুবাদ ফন্ট সাইজ" : "Translation Font Size";
+        if (lTransDisplay) lTransDisplay.textContent = isBn ? "অনুবাদ প্রদর্শন" : "Display Translations";
+        if (lShowBn) lShowBn.textContent = isBn ? "বাংলা অনুবাদ" : "Bengali Translation";
+        if (lShowEn) lShowEn.textContent = isBn ? "English Translation" : "English Translation (Sahih)";
+
+        // Re-render sidebar list
         renderNavSurahList();
-
-        // Populate Reciters in Settings
-        populateRecitersDropdown();
-
-        // Initialize QuranReader instance
-        window.quranReader = new QuranReader(currentSurahId);
     }
 
     function renderNavSurahList(filterQuery = "") {
         const container = document.getElementById("navSurahList");
         if (!container || !window.QURAN_DATA) return;
+
+        const lang = window.currentQuranLang || localStorage.getItem("quran_lang") || "bn";
+        const isBn = lang === "bn";
 
         let list = window.QURAN_DATA.surahs;
         if (filterQuery) {
@@ -243,18 +285,21 @@
         list.forEach(s => {
             const isActive = s.id === currentSurahId;
             const originClass = s.type === "Makki" ? "text-warning" : "text-emerald";
+            const originBadge = isBn ? (s.type === 'Makki' ? 'মাক্কী' : 'মাদানী') : s.type;
+            const title = isBn ? s.bangla : s.name;
+            const sub = isBn ? s.name : s.englishMeaning;
 
             html += `
                 <a href="${baseUrl}/surah/${s.id}" class="surah-nav-item ${isActive ? 'active' : ''}">
                     <div class="surah-num-box" style="width:32px; height:32px; font-size:0.75rem;">${s.id}</div>
                     <div style="flex:1; min-width:0;">
                         <div class="d-flex align-items-center justify-content-between">
-                            <h6 class="mb-0 font-bangla fw-bold text-truncate small ${isActive ? 'text-primary' : ''}">${s.bangla}</h6>
+                            <h6 class="mb-0 ${isBn ? 'font-bangla' : ''} fw-bold text-truncate small ${isActive ? 'text-primary' : ''}">${title}</h6>
                             <span class="font-amiri fw-bold" style="font-size:1.1rem;">${s.arabic}</span>
                         </div>
                         <div class="d-flex align-items-center justify-content-between text-muted" style="font-size:0.68rem;">
-                            <span>${s.name}</span>
-                            <span class="${originClass}">${s.type === 'Makki' ? 'মাক্কী' : 'মাদানী'}</span>
+                            <span>${sub}</span>
+                            <span class="${originClass}">${originBadge}</span>
                         </div>
                     </div>
                 </a>
@@ -310,3 +355,4 @@
     }
 </script>
 @endsection
+

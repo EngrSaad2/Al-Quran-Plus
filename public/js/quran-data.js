@@ -160,3 +160,146 @@ window.QURAN_DATA = {
         };
     })
 };
+
+window.currentQuranLang = localStorage.getItem("quran_lang") || "bn";
+
+window.toBanglaNumber = function(num) {
+    const bnNums = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+    return String(num).split('').map(d => bnNums[parseInt(d)] !== undefined ? bnNums[parseInt(d)] : d).join('');
+};
+
+window.formatNumberByLang = function(num, lang = window.currentQuranLang) {
+    return lang === 'bn' ? window.toBanglaNumber(num) : String(num);
+};
+
+window.QURAN_I18N = {
+    bn: {
+        brand: "কুরআন মাজিদ",
+        nav_home: "হোম",
+        nav_read: "কুরআন পড়ুন",
+        nav_bookmarks: "বুকমার্ক",
+        nav_search: "অনুসন্ধান",
+        nav_about: "অ্যাপ সম্পর্কে",
+        nav_privacy: "গোপনীয়তা নীতি",
+        nav_contact: "যোগাযোগ",
+        hero_sub: "পড়ো তোমার প্রতিপালকের নামে, যিনি সৃষ্টি করেছেন",
+        hero_search_ph: "সূরার নাম, নম্বর বা আয়াত দিয়ে খুঁজুন...",
+        hero_search_btn: "খুঁজুন",
+        tab_surahs: "সূরা (১১৪)",
+        tab_juz: "৩০ পারা",
+        tab_pages: "পৃষ্ঠা",
+        filter_all: "সব",
+        filter_makki: "মাক্কী",
+        filter_madani: "মাদানী",
+        filter_saved: "সংরক্ষিত",
+        verses: "আয়াত",
+        surah: "সূরা",
+        juz: "পারা",
+        page: "পৃষ্ঠা",
+        explore_all: "সকল ১১৪ সূরা দেখুন",
+        popular_title: "জনপ্রিয় তিলাওয়াত",
+        popular_sub: "সবচেয়ে বেশি শোনা সূরা",
+        popular_badge: "সেরা তিলাওয়াত",
+        listeners: "শ্রোতা",
+        listen: "শুনুন",
+        last_played_badge: "সর্বশেষ শোনা হয়েছে",
+        continue_reading: "চালিয়ে যান",
+        ayah: "আয়াত",
+        prev_surah: "পূর্ববর্তী সূরা",
+        next_surah: "পরবর্তী সূরা",
+        bookmarks_title: "সংরক্ষিত বুকমার্ক",
+        bookmarks_sub: "আপনার প্রিয় সূরা ও আয়াতসমূহ সহজে খুঁজে পেতে এখানে সংরক্ষিত থাকে।",
+        clear_all: "সব মুছুন",
+        no_bookmarks: "এখনো কোন বুকমার্ক নেই",
+        no_bookmarks_sub: "কুরআন পড়ার সময় পছন্দের সূরা বা আয়াতে বুকমার্ক আইকনে ক্লিক করে সংরক্ষণ করুন।",
+        search_title: "পবিত্র কুরআন অনুসন্ধান",
+        search_sub: "সূরার নাম (বাংলা/ইংরেজি/আরবি), সূরার নম্বর বা অর্থ দিয়ে সহজে অনুসন্ধান করুন।",
+        search_ph: "সূরার নাম, নম্বর বা অর্থ লিখুন...",
+        search_results: "অনুসন্ধান ফলাফল",
+        no_results: "কোন ফলাফল পাওয়া যায়নি",
+        reading_settings: "রিডিং সেটিংস",
+        reciter: "ক্বারী / তিলাওয়াতকারী",
+        arabic_font: "আরবি ফন্ট স্টাইল",
+        arabic_size: "আরবি ফন্ট সাইজ",
+        trans_size: "অনুবাদ ফন্ট সাইজ",
+        trans_display: "অনুবাদ প্রদর্শন",
+        bangla_trans: "বাংলা অনুবাদ",
+        english_trans: "English Translation (Sahih)",
+        copy: "কপি",
+        copied: "কপি করা হয়েছে!",
+        share: "শেয়ার",
+        nav_drawer_title: "কুরআন নেভিগেশন",
+        select_surah: "সূরা নির্বাচন করুন",
+        search_surah_ph: "সূরা খুঁজুন...",
+        mushaf: "মুসহাফ",
+        footer_desc: "পবিত্র কুরআন পাঠ ও শোনার জন্য একটি পরিচ্ছন্ন, বিজ্ঞাপনহীন ইসলামিক ওয়েব প্ল্যাটফর্ম।"
+    },
+    en: {
+        brand: "Quran Mazid",
+        nav_home: "Home",
+        nav_read: "Read Quran",
+        nav_bookmarks: "Bookmarks",
+        nav_search: "Search",
+        nav_about: "About App",
+        nav_privacy: "Privacy Policy",
+        nav_contact: "Contact",
+        hero_sub: "Read in the name of your Lord who created",
+        hero_search_ph: "Search by Surah name, number, or verse...",
+        hero_search_btn: "Search",
+        tab_surahs: "Surahs (114)",
+        tab_juz: "30 Juz",
+        tab_pages: "Pages",
+        filter_all: "All",
+        filter_makki: "Makki",
+        filter_madani: "Madani",
+        filter_saved: "Saved",
+        verses: "Verses",
+        surah: "Surah",
+        juz: "Juz",
+        page: "Page",
+        explore_all: "Explore All 114 Surahs",
+        popular_title: "Popular Recitations",
+        popular_sub: "Most listened Surahs worldwide",
+        popular_badge: "Top Recitation",
+        listeners: "listeners",
+        listen: "Listen",
+        last_played_badge: "Last Listened",
+        continue_reading: "Continue",
+        ayah: "Ayah",
+        prev_surah: "Previous Surah",
+        next_surah: "Next Surah",
+        bookmarks_title: "Saved Bookmarks",
+        bookmarks_sub: "Your favorite surahs and verses are saved here for quick access.",
+        clear_all: "Clear All",
+        no_bookmarks: "No Bookmarks Yet",
+        no_bookmarks_sub: "Click the bookmark icon on any surah or verse while reading to save it here.",
+        search_title: "Search Holy Quran",
+        search_sub: "Search by Surah name (English/Bengali/Arabic), number, or meaning.",
+        search_ph: "Type surah name, number, or meaning...",
+        search_results: "Search Results",
+        no_results: "No results found",
+        reading_settings: "Reading Settings",
+        reciter: "Reciter / Qari",
+        arabic_font: "Arabic Font Style",
+        arabic_size: "Arabic Font Size",
+        trans_size: "Translation Font Size",
+        trans_display: "Display Translations",
+        bangla_trans: "Bengali Translation",
+        english_trans: "English Translation (Sahih)",
+        copy: "Copy",
+        copied: "Copied!",
+        share: "Share",
+        nav_drawer_title: "Quran Navigation",
+        select_surah: "Select Surah",
+        search_surah_ph: "Search Surah...",
+        mushaf: "Mushaf",
+        footer_desc: "A clean, ad-free Islamic web platform for reading and listening to the Holy Quran."
+    }
+};
+
+window.t = function(key) {
+    const lang = window.currentQuranLang || 'bn';
+    return (window.QURAN_I18N[lang] && window.QURAN_I18N[lang][key]) || 
+           (window.QURAN_I18N['en'] && window.QURAN_I18N['en'][key]) || key;
+};
+

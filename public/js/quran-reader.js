@@ -118,26 +118,29 @@ class QuranReader {
         const container = document.getElementById("ayahsContainer");
         if (!container) return;
 
+        const lang = window.currentQuranLang || localStorage.getItem("quran_lang") || "bn";
+        const isBn = lang === "bn";
         let html = "";
 
         this.verses.forEach(v => {
             const isBookmarked = this.isAyahBookmarked(this.surahId, v.number);
+            const ayahNumFormatted = isBn && window.toBanglaNumber ? `${window.toBanglaNumber(this.surahId)}:${window.toBanglaNumber(v.number)}` : `${this.surahId}:${v.number}`;
 
             html += `
                 <div class="ayah-card" id="ayah-${v.number}">
                     <div class="ayah-card-header">
-                        <span class="ayah-number-badge">${this.surahId}:${v.number}</span>
+                        <span class="ayah-number-badge">${ayahNumFormatted}</span>
                         <div class="ayah-actions-group">
-                            <button class="btn-ayah-action" title="শুনুন" onclick="window.quranPlayer.playAyah(${this.surahId}, ${v.number}, ${this.verses.length})">
+                            <button class="btn-ayah-action" title="${isBn ? 'শুনুন' : 'Listen'}" onclick="window.quranPlayer.playAyah(${this.surahId}, ${v.number}, ${this.verses.length})">
                                 <i class="fa-solid fa-play"></i>
                             </button>
-                            <button class="btn-ayah-action ${isBookmarked ? 'text-emerald' : ''}" title="বুকমার্ক" onclick="window.quranReader.toggleBookmark(${this.surahId}, ${v.number}, this)">
+                            <button class="btn-ayah-action ${isBookmarked ? 'text-emerald' : ''}" title="${isBn ? 'বুকমার্ক' : 'Bookmark'}" onclick="window.quranReader.toggleBookmark(${this.surahId}, ${v.number}, this)">
                                 <i class="${isBookmarked ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
                             </button>
-                            <button class="btn-ayah-action" title="কপি করুন" onclick="window.quranReader.copyAyah(${v.number})">
+                            <button class="btn-ayah-action" title="${isBn ? 'কপি করুন' : 'Copy'}" onclick="window.quranReader.copyAyah(${v.number})">
                                 <i class="fa-regular fa-copy"></i>
                             </button>
-                            <button class="btn-ayah-action" title="শেয়ার" onclick="window.quranReader.shareAyah(${v.number})">
+                            <button class="btn-ayah-action" title="${isBn ? 'শেয়ার' : 'Share'}" onclick="window.quranReader.shareAyah(${v.number})">
                                 <i class="fa-solid fa-share-nodes"></i>
                             </button>
                         </div>
@@ -151,14 +154,14 @@ class QuranReader {
                     <div class="ayah-translations-container">
                         ${this.showBangla && v.bangla ? `
                             <div class="ayah-translation-item bangla" style="font-size: ${this.transFontSize}px;">
-                                <div class="translation-tag">বাংলা অনুবাদ</div>
+                                <div class="translation-tag">${isBn ? 'বাংলা অনুবাদ' : 'Bengali Translation'}</div>
                                 ${v.bangla}
                             </div>
                         ` : ''}
 
                         ${this.showEnglish && v.english ? `
                             <div class="ayah-translation-item english" style="font-size: ${this.transFontSize}px;">
-                                <div class="translation-tag">English (Sahih Int.)</div>
+                                <div class="translation-tag">${isBn ? 'English (Sahih Int.)' : 'English (Sahih International)'}</div>
                                 ${v.english}
                             </div>
                         ` : ''}
@@ -176,13 +179,13 @@ class QuranReader {
             <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 40px; padding: 20px 0; border-top: 1px solid var(--border-color);">
                 ${prevId ? `
                     <a href="${baseUrl}/surah/${prevId}" class="btn-quran-outline" style="text-decoration:none; display:flex; align-items:center; gap:8px;">
-                        <i class="fa-solid fa-arrow-left"></i> পূর্ববর্তী সূরা
+                        <i class="fa-solid fa-arrow-left"></i> ${isBn ? 'পূর্ববর্তী সূরা' : 'Previous Surah'}
                     </a>
                 ` : '<div></div>'}
 
                 ${nextId ? `
                     <a href="${baseUrl}/surah/${nextId}" class="btn-quran-primary" style="text-decoration:none; display:flex; align-items:center; gap:8px;">
-                        পরবর্তী সূরা <i class="fa-solid fa-arrow-right"></i>
+                        ${isBn ? 'পরবর্তী সূরা' : 'Next Surah'} <i class="fa-solid fa-arrow-right"></i>
                     </a>
                 ` : '<div></div>'}
             </div>
@@ -318,5 +321,10 @@ class QuranReader {
                 this.renderVerses();
             });
         }
+
+        window.addEventListener("quranLanguageChanged", () => {
+            this.renderVerses();
+        });
     }
 }
+

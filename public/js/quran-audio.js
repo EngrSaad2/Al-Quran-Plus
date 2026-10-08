@@ -252,11 +252,20 @@ class QuranAudioPlayer {
             }
         }
 
+        const lang = window.currentQuranLang || localStorage.getItem("quran_lang") || "bn";
+        const isBn = lang === "bn";
         const nameEl = document.getElementById("audioSurahName");
         const reciterEl = document.getElementById("audioReciterName");
         const bar = document.getElementById("globalAudioBar");
 
-        if (nameEl) nameEl.textContent = `${banglaName} (${this.currentAyahNumber})`;
+        if (nameEl) {
+            if (isBn) {
+                const ayahNum = window.toBanglaNumber ? window.toBanglaNumber(this.currentAyahNumber) : this.currentAyahNumber;
+                nameEl.textContent = `${banglaName} (${ayahNum})`;
+            } else {
+                nameEl.textContent = `Surah ${surahName} (${this.currentAyahNumber})`;
+            }
+        }
         if (reciterEl) reciterEl.textContent = this.currentReciterName;
         if (bar) bar.classList.remove("hidden-bar");
 
@@ -279,3 +288,11 @@ class QuranAudioPlayer {
 
 // Global instance
 window.quranPlayer = new QuranAudioPlayer();
+
+// Listen to language changes
+window.addEventListener("quranLanguageChanged", () => {
+    if (window.quranPlayer) {
+        window.quranPlayer.updateUI();
+    }
+});
+

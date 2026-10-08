@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,7 +24,7 @@
         <div class="quran-bg-dots"></div>
         <div class="watermark-text-center">ٱلْقُرْآنُ ٱلْكَرِيمُ</div>
         <div class="watermark-text-left">اقْرَأْ بِاسْمِ رَبِّكَ</div>
-        <div class="watermark-text-right">قُرْآنٌ مَجِيدٌ</div>
+        <div class="watermark-text-right">قُرْآنٌ মَجِيدٌ</div>
         <div class="glow-orb-top"></div>
         <div class="glow-orb-right"></div>
     </div>
@@ -40,16 +40,16 @@
 
             <!-- Center Navigation Links -->
             <div class="nav-links-pill d-none d-md-flex">
-                <a href="{{ route('public.home') }}" class="nav-pill-item {{ request()->routeIs('public.home') ? 'active' : '' }}">হোম</a>
-                <a href="{{ route('public.surah', 1) }}" class="nav-pill-item {{ request()->routeIs('public.surah') ? 'active' : '' }}">কুরআন পড়ুন</a>
-                <a href="{{ route('public.bookmarks') }}" class="nav-pill-item {{ request()->routeIs('public.bookmarks') ? 'active' : '' }}">বুকমার্ক</a>
-                <a href="{{ route('public.search') }}" class="nav-pill-item {{ request()->routeIs('public.search') ? 'active' : '' }}">অনুসন্ধান</a>
+                <a href="{{ route('public.home') }}" id="navHome" class="nav-pill-item {{ request()->routeIs('public.home') ? 'active' : '' }}">হোম</a>
+                <a href="{{ route('public.surah', 1) }}" id="navRead" class="nav-pill-item {{ request()->routeIs('public.surah') ? 'active' : '' }}">কুরআন পড়ুন</a>
+                <a href="{{ route('public.bookmarks') }}" id="navBookmarks" class="nav-pill-item {{ request()->routeIs('public.bookmarks') ? 'active' : '' }}">বুকমার্ক</a>
+                <a href="{{ route('public.search') }}" id="navSearch" class="nav-pill-item {{ request()->routeIs('public.search') ? 'active' : '' }}">অনুসন্ধান</a>
             </div>
 
             <!-- Right Action Buttons -->
             <div class="nav-actions-pill">
                 <!-- Theme Toggle Button -->
-                <button class="btn-icon-circle" id="themeToggleBtn" aria-label="Toggle Theme" title="Theme Toggle">
+                <button class="btn-icon-circle" id="themeToggleBtn" aria-label="Toggle Theme" title="Toggle Theme">
                     <i class="fa-solid fa-moon" id="themeIcon"></i>
                 </button>
 
@@ -78,26 +78,26 @@
         </div>
         <div class="offcanvas-body p-4">
             <div class="d-flex flex-column gap-2">
-                <a href="{{ route('public.home') }}" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.home') ? 'active' : '' }}">
+                <a href="{{ route('public.home') }}" id="drawerHome" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.home') ? 'active' : '' }}">
                     <i class="fa-solid fa-house me-2"></i> হোম
                 </a>
-                <a href="{{ route('public.surah', 1) }}" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.surah') ? 'active' : '' }}">
+                <a href="{{ route('public.surah', 1) }}" id="drawerRead" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.surah') ? 'active' : '' }}">
                     <i class="fa-solid fa-book-quran me-2"></i> কুরআন পড়ুন
                 </a>
-                <a href="{{ route('public.bookmarks') }}" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.bookmarks') ? 'active' : '' }}">
+                <a href="{{ route('public.bookmarks') }}" id="drawerBookmarks" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.bookmarks') ? 'active' : '' }}">
                     <i class="fa-solid fa-bookmark me-2"></i> সংরক্ষিত আয়াত / বুকমার্ক
                 </a>
-                <a href="{{ route('public.search') }}" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.search') ? 'active' : '' }}">
+                <a href="{{ route('public.search') }}" id="drawerSearch" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.search') ? 'active' : '' }}">
                     <i class="fa-solid fa-magnifying-glass me-2"></i> অনুসন্ধান
                 </a>
                 <hr style="border-color: var(--border-color);">
-                <a href="{{ route('public.about') }}" class="nav-pill-item text-start p-3 rounded-3">
+                <a href="{{ route('public.about') }}" id="drawerAbout" class="nav-pill-item text-start p-3 rounded-3">
                     <i class="fa-solid fa-circle-info me-2"></i> অ্যাপ সম্পর্কে
                 </a>
-                <a href="{{ route('public.privacy') }}" class="nav-pill-item text-start p-3 rounded-3">
+                <a href="{{ route('public.privacy') }}" id="drawerPrivacy" class="nav-pill-item text-start p-3 rounded-3">
                     <i class="fa-solid fa-shield-halved me-2"></i> গোপনীয়তা নীতি
                 </a>
-                <a href="{{ route('public.contact') }}" class="nav-pill-item text-start p-3 rounded-3">
+                <a href="{{ route('public.contact') }}" id="drawerContact" class="nav-pill-item text-start p-3 rounded-3">
                     <i class="fa-solid fa-envelope me-2"></i> যোগাযোগ
                 </a>
             </div>
@@ -174,8 +174,8 @@
     <script>
         window.APP_BASE_URL = "{{ url('/') }}";
 
-        // Theme initialization
-        const savedTheme = localStorage.getItem("quran_theme") || "dark";
+        // Theme initialization - DEFAULT LIGHT
+        const savedTheme = localStorage.getItem("quran_theme") || "light";
         document.documentElement.setAttribute("data-theme", savedTheme);
         updateThemeIcon(savedTheme);
 
@@ -192,20 +192,75 @@
 
         function updateThemeIcon(theme) {
             const icon = document.getElementById("themeIcon");
+            const btn = document.getElementById("themeToggleBtn");
             if (icon) {
-                icon.className = theme === "dark" ? "fa-solid fa-moon" : "fa-solid fa-sun text-warning";
+                // In light mode, show moon icon to switch to dark mode
+                // In dark mode, show sun icon to switch to light mode
+                icon.className = theme === "dark" ? "fa-solid fa-sun text-warning" : "fa-solid fa-moon text-muted";
+            }
+            if (btn) {
+                btn.title = theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode";
+            }
+            const readerThemeIcon = document.querySelector("#readerThemeToggle i");
+            if (readerThemeIcon) {
+                readerThemeIcon.className = theme === "dark" ? "fa-solid fa-sun text-warning" : "fa-solid fa-moon";
             }
         }
 
-        // Language toggle
-        let currentLang = localStorage.getItem("quran_lang") || "bn";
+        // Global Layout Language Management
+        function applyLayoutLanguage(lang) {
+            window.currentQuranLang = lang;
+            const isBn = lang === "bn";
+
+            // Navbar Brand
+            const brandEls = document.querySelectorAll("#navBrandText, .offcanvas-title");
+            brandEls.forEach(el => el.textContent = isBn ? "কুরআন মাজিদ" : "Quran Mazid");
+
+            // Navbar items
+            const navHome = document.getElementById("navHome");
+            const navRead = document.getElementById("navRead");
+            const navBookmarks = document.getElementById("navBookmarks");
+            const navSearch = document.getElementById("navSearch");
+            if (navHome) navHome.textContent = isBn ? "হোম" : "Home";
+            if (navRead) navRead.textContent = isBn ? "কুরআন পড়ুন" : "Read Quran";
+            if (navBookmarks) navBookmarks.textContent = isBn ? "বুকমার্ক" : "Bookmarks";
+            if (navSearch) navSearch.textContent = isBn ? "অনুসন্ধান" : "Search";
+
+            // Mobile Drawer
+            const dHome = document.getElementById("drawerHome");
+            const dRead = document.getElementById("drawerRead");
+            const dBookmarks = document.getElementById("drawerBookmarks");
+            const dSearch = document.getElementById("drawerSearch");
+            const dAbout = document.getElementById("drawerAbout");
+            const dPrivacy = document.getElementById("drawerPrivacy");
+            const dContact = document.getElementById("drawerContact");
+            if (dHome) dHome.innerHTML = `<i class="fa-solid fa-house me-2"></i> ${isBn ? "হোম" : "Home"}`;
+            if (dRead) dRead.innerHTML = `<i class="fa-solid fa-book-quran me-2"></i> ${isBn ? "কুরআন পড়ুন" : "Read Quran"}`;
+            if (dBookmarks) dBookmarks.innerHTML = `<i class="fa-solid fa-bookmark me-2"></i> ${isBn ? "সংরক্ষিত আয়াত / বুকমার্ক" : "Saved Bookmarks"}`;
+            if (dSearch) dSearch.innerHTML = `<i class="fa-solid fa-magnifying-glass me-2"></i> ${isBn ? "অনুসন্ধান" : "Search"}`;
+            if (dAbout) dAbout.innerHTML = `<i class="fa-solid fa-circle-info me-2"></i> ${isBn ? "অ্যাপ সম্পর্কে" : "About App"}`;
+            if (dPrivacy) dPrivacy.innerHTML = `<i class="fa-solid fa-shield-halved me-2"></i> ${isBn ? "গোপনীয়তা নীতি" : "Privacy Policy"}`;
+            if (dContact) dContact.innerHTML = `<i class="fa-solid fa-envelope me-2"></i> ${isBn ? "যোগাযোগ" : "Contact"}`;
+
+            // Lang toggle button label
+            const label = document.getElementById("langLabel");
+            if (label) label.textContent = isBn ? "Ar+বাং" : "Ar+En";
+        }
+
+        window.setQuranLanguage = function(lang) {
+            localStorage.setItem("quran_lang", lang);
+            applyLayoutLanguage(lang);
+            window.dispatchEvent(new CustomEvent("quranLanguageChanged", { detail: { lang } }));
+        };
+
+        const initialLang = localStorage.getItem("quran_lang") || "bn";
+        applyLayoutLanguage(initialLang);
+
         const langBtn = document.getElementById("langToggleBtn");
         if (langBtn) {
             langBtn.addEventListener("click", () => {
-                currentLang = currentLang === "bn" ? "en" : "bn";
-                localStorage.setItem("quran_lang", currentLang);
-                const label = document.getElementById("langLabel");
-                if (label) label.textContent = currentLang === "bn" ? "Ar+বাং" : "Ar+En";
+                const nextLang = (window.currentQuranLang || initialLang) === "bn" ? "en" : "bn";
+                window.setQuranLanguage(nextLang);
             });
         }
     </script>
