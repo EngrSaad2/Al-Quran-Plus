@@ -13,7 +13,27 @@
     <!-- FontAwesome 6 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <!-- Quran Mazid Custom CSS -->
-    <link href="{{ asset('css/quranmazid.css') }}" rel="stylesheet">
+    @php
+        $cssVer = file_exists(public_path('css/quranmazid.css')) ? filemtime(public_path('css/quranmazid.css')) : time();
+        $dataVer = file_exists(public_path('js/quran-data.js')) ? filemtime(public_path('js/quran-data.js')) : time();
+        $audioVer = file_exists(public_path('js/quran-audio.js')) ? filemtime(public_path('js/quran-audio.js')) : time();
+        $readerVer = file_exists(public_path('js/quran-reader.js')) ? filemtime(public_path('js/quran-reader.js')) : time();
+    @endphp
+    <link href="{{ asset('css/quranmazid.css') }}?v={{ $cssVer }}" rel="stylesheet">
+    
+    <script>
+        window.APP_BASE_URL = "{{ url('/') }}";
+        window.currentQuranLang = localStorage.getItem("quran_lang") || "bn";
+        window.toBanglaNumber = function(num) {
+            if (num === null || num === undefined) return '';
+            const bnNums = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+            return String(num).split('').map(d => bnNums[parseInt(d)] !== undefined ? bnNums[parseInt(d)] : d).join('');
+        };
+        window.formatNumberByLang = function(num, lang) {
+            lang = lang || window.currentQuranLang || 'bn';
+            return lang === 'bn' ? window.toBanglaNumber(num) : String(num);
+        };
+    </script>
     
     @yield('styles')
 </head>
@@ -48,9 +68,9 @@
 
             <!-- Right Action Buttons -->
             <div class="nav-actions-pill">
-                <!-- Theme Toggle Button -->
+                <!-- Theme Toggle Button (Light = Sun, Dark = Moon) -->
                 <button class="btn-icon-circle" id="themeToggleBtn" aria-label="Toggle Theme" title="Toggle Theme">
-                    <i class="fa-solid fa-moon" id="themeIcon"></i>
+                    <i class="fa-solid fa-sun text-warning" id="themeIcon"></i>
                 </button>
 
                 <!-- Language Toggle -->
@@ -166,14 +186,12 @@
 
     <!-- Core Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/bootstrap.bundle.min.js"></script>
-    <script src="{{ asset('js/quran-data.js') }}"></script>
-    <script src="{{ asset('js/quran-audio.js') }}"></script>
-    <script src="{{ asset('js/quran-reader.js') }}"></script>
+    <script src="{{ asset('js/quran-data.js') }}?v={{ $dataVer }}"></script>
+    <script src="{{ asset('js/quran-audio.js') }}?v={{ $audioVer }}"></script>
+    <script src="{{ asset('js/quran-reader.js') }}?v={{ $readerVer }}"></script>
 
     <!-- Theme & Global Logic -->
     <script>
-        window.APP_BASE_URL = "{{ url('/') }}";
-
         // Theme initialization - DEFAULT LIGHT
         const savedTheme = localStorage.getItem("quran_theme") || "light";
         document.documentElement.setAttribute("data-theme", savedTheme);
@@ -194,16 +212,16 @@
             const icon = document.getElementById("themeIcon");
             const btn = document.getElementById("themeToggleBtn");
             if (icon) {
-                // In light mode, show moon icon to switch to dark mode
-                // In dark mode, show sun icon to switch to light mode
-                icon.className = theme === "dark" ? "fa-solid fa-sun text-warning" : "fa-solid fa-moon text-muted";
+                // In light mode, show bright sun icon (like ref screenshot)
+                // In dark mode, show moon icon
+                icon.className = theme === "dark" ? "fa-solid fa-moon text-info" : "fa-solid fa-sun text-warning";
             }
             if (btn) {
                 btn.title = theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode";
             }
             const readerThemeIcon = document.querySelector("#readerThemeToggle i");
             if (readerThemeIcon) {
-                readerThemeIcon.className = theme === "dark" ? "fa-solid fa-sun text-warning" : "fa-solid fa-moon";
+                readerThemeIcon.className = theme === "dark" ? "fa-solid fa-moon text-info" : "fa-solid fa-sun text-warning";
             }
         }
 

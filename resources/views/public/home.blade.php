@@ -32,7 +32,76 @@
     <!-- 3D Fan / Stacked Cards Carousel -->
     <div class="cards-fan-container">
         <div class="cards-fan-stack" id="featuredFanStack">
-            <!-- Rendered by JS or Blade -->
+            <a href="{{ route('public.surah', 17) }}" class="fan-card-item" style="transform: translateY(10px) rotate(-10deg); z-index: 10;">
+                <div class="fan-card-inner">
+                    <span class="fan-card-bg-watermark">سورة</span>
+                    <div class="fan-card-top">
+                        <span class="badge-surah-num">17</span>
+                        <span class="badge-surah-origin">🕋 মাক্কী</span>
+                    </div>
+                    <div class="fan-card-arabic">الإسراء</div>
+                    <div class="fan-card-bottom">
+                        <h4 class="fan-card-name">আল-ইসরা</h4>
+                        <p class="fan-card-verses">১১১ আয়াত</p>
+                    </div>
+                </div>
+            </a>
+            <a href="{{ route('public.surah', 41) }}" class="fan-card-item" style="transform: translateY(10px) rotate(-5deg); z-index: 20;">
+                <div class="fan-card-inner">
+                    <span class="fan-card-bg-watermark">سورة</span>
+                    <div class="fan-card-top">
+                        <span class="badge-surah-num">41</span>
+                        <span class="badge-surah-origin">🕋 মাক্কী</span>
+                    </div>
+                    <div class="fan-card-arabic">فصلت</div>
+                    <div class="fan-card-bottom">
+                        <h4 class="fan-card-name">ফুসসিলাত</h4>
+                        <p class="fan-card-verses">৫৪ আয়াত</p>
+                    </div>
+                </div>
+            </a>
+            <a href="{{ route('public.surah', 109) }}" class="fan-card-item" style="transform: translateY(10px) rotate(0deg); z-index: 30;">
+                <div class="fan-card-inner">
+                    <span class="fan-card-bg-watermark">سورة</span>
+                    <div class="fan-card-top">
+                        <span class="badge-surah-num">109</span>
+                        <span class="badge-surah-origin">🕋 মাক্কী</span>
+                    </div>
+                    <div class="fan-card-arabic">الكافرون</div>
+                    <div class="fan-card-bottom">
+                        <h4 class="fan-card-name">আল-কাফিরুন</h4>
+                        <p class="fan-card-verses">৬ আয়াত</p>
+                    </div>
+                </div>
+            </a>
+            <a href="{{ route('public.surah', 88) }}" class="fan-card-item" style="transform: translateY(10px) rotate(5deg); z-index: 20;">
+                <div class="fan-card-inner">
+                    <span class="fan-card-bg-watermark">سورة</span>
+                    <div class="fan-card-top">
+                        <span class="badge-surah-num">88</span>
+                        <span class="badge-surah-origin">🕋 মাক্কী</span>
+                    </div>
+                    <div class="fan-card-arabic">الغاشية</div>
+                    <div class="fan-card-bottom">
+                        <h4 class="fan-card-name">আল-গাশিয়াহ</h4>
+                        <p class="fan-card-verses">২৬ আয়াত</p>
+                    </div>
+                </div>
+            </a>
+            <a href="{{ route('public.surah', 65) }}" class="fan-card-item" style="transform: translateY(10px) rotate(10deg); z-index: 10;">
+                <div class="fan-card-inner">
+                    <span class="fan-card-bg-watermark">سورة</span>
+                    <div class="fan-card-top">
+                        <span class="badge-surah-num">65</span>
+                        <span class="badge-surah-origin">🕌 মাদানী</span>
+                    </div>
+                    <div class="fan-card-arabic">الطلاق</div>
+                    <div class="fan-card-bottom">
+                        <h4 class="fan-card-name">আত-তালাক</h4>
+                        <p class="fan-card-verses">১২ আয়াত</p>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
 
@@ -182,6 +251,15 @@
     let isShowingAll = false;
     const INITIAL_LIMIT = 18;
 
+    function safeToBn(num) {
+        if (num === null || num === undefined) return '';
+        if (typeof window.toBanglaNumber === 'function') {
+            return window.toBanglaNumber(num);
+        }
+        const bnNums = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+        return String(num).split('').map(d => bnNums[parseInt(d)] !== undefined ? bnNums[parseInt(d)] : d).join('');
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
         updateHomeLanguageUI();
     });
@@ -205,7 +283,7 @@
         const searchInput = document.getElementById("homeSearchInput");
         const searchBtnText = document.getElementById("homeSearchBtnText");
         if (searchInput) {
-            searchInput.placeholder = isBn ? "সূরার নাম, নম্বর, বা আয়াত দিয়ে খুঁজুন..." : "Search by Surah name, number, or verse...";
+            searchInput.placeholder = isBn ? "সূরার নাম, নম্বর বা আয়াত দিয়ে খুঁজুন..." : "Search by Surah name, number, or verse...";
         }
         if (searchBtnText) {
             searchBtnText.textContent = isBn ? "খুঁজুন" : "Search";
@@ -257,19 +335,19 @@
         if (footerPrivacy) footerPrivacy.textContent = isBn ? "প্রাইভেসি পলিসি" : "Privacy Policy";
         if (footerContact) footerContact.textContent = isBn ? "যোগাযোগ" : "Contact";
 
-        // Render dynamic parts
-        renderFeaturedFanStack();
-        renderPopularRecitations();
-        renderSurahsGrid();
-        updateLastPlayedWidget();
-        renderJuzGrid();
-        renderPagesGrid();
+        // Render dynamic parts with error isolation
+        try { renderFeaturedFanStack(); } catch (e) { console.error("renderFeaturedFanStack:", e); }
+        try { renderPopularRecitations(); } catch (e) { console.error("renderPopularRecitations:", e); }
+        try { renderSurahsGrid(); } catch (e) { console.error("renderSurahsGrid:", e); }
+        try { updateLastPlayedWidget(); } catch (e) { console.error("updateLastPlayedWidget:", e); }
+        try { renderJuzGrid(); } catch (e) { console.error("renderJuzGrid:", e); }
+        try { renderPagesGrid(); } catch (e) { console.error("renderPagesGrid:", e); }
     }
 
     // 1. Render 3D Fan / Stacked Cards
     function renderFeaturedFanStack() {
         const container = document.getElementById("featuredFanStack");
-        if (!container || !window.QURAN_DATA) return;
+        if (!container || !window.QURAN_DATA || !window.QURAN_DATA.featuredStack) return;
 
         const lang = window.currentQuranLang || 'bn';
         const isBn = lang === 'bn';
@@ -285,7 +363,7 @@
             const icon = item.type === "Makki" ? "🕋" : "🕌";
             const badgeClass = item.type === "Makki" ? (isBn ? "মাক্কী" : "Makki") : (isBn ? "মাদানী" : "Madani");
             const displayName = isBn ? item.bangla : item.name;
-            const displayVerses = isBn ? `${window.toBanglaNumber(item.verses)} আয়াত` : `${item.verses} Verses`;
+            const displayVerses = isBn ? `${safeToBn(item.verses)} আয়াত` : `${item.verses} Verses`;
 
             html += `
                 <a href="${baseUrl}/surah/${item.id}" class="fan-card-item" style="transform: translateY(10px) rotate(${rot}deg); z-index: ${z};">
@@ -402,7 +480,7 @@
             const badgeText = isBn ? (s.type === "Makki" ? "মাক্কী" : "মাদানী") : s.type;
             const surahTitle = isBn ? s.bangla : s.name;
             const surahSub = isBn ? `${s.banglaMeaning} · ${s.name}` : `${s.englishMeaning} · ${s.bangla}`;
-            const versesText = isBn ? `${window.toBanglaNumber(s.verses)} আয়াত` : `${s.verses} Verses`;
+            const versesText = isBn ? `${safeToBn(s.verses)} আয়াত` : `${s.verses} Verses`;
 
             html += `
                 <a href="${baseUrl}/surah/${s.id}" class="surah-card">
@@ -521,7 +599,7 @@
         window.QURAN_DATA.juzList.forEach(j => {
             const jTitle = isBn ? j.banglaName : j.name;
             const jSub = isBn ? j.name : `Part ${j.id}`;
-            const badge = isBn ? `পারা ${window.toBanglaNumber(j.id)}` : `Juz ${j.id}`;
+            const badge = isBn ? `পারা ${safeToBn(j.id)}` : `Juz ${j.id}`;
 
             html += `
                 <a href="${baseUrl}/juz/${j.id}" class="surah-card">
@@ -552,7 +630,7 @@
         const baseUrl = window.APP_BASE_URL || '';
         let html = "";
         for (let p = 1; p <= 604; p += 20) {
-            const pTitle = isBn ? `পৃষ্ঠা ${window.toBanglaNumber(p)}` : `Page ${p}`;
+            const pTitle = isBn ? `পৃষ্ঠা ${safeToBn(p)}` : `Page ${p}`;
             const badge = isBn ? '<i class="fa-solid fa-book-open me-1"></i> মুসহাফ' : '<i class="fa-solid fa-book-open me-1"></i> Mushaf';
 
             html += `
@@ -590,7 +668,7 @@
 
             if (arEl) arEl.textContent = s.arabic;
             if (nameEl) nameEl.textContent = isBn ? `সূরা ${s.bangla}` : `Surah ${s.name}`;
-            if (verseEl) verseEl.textContent = isBn ? `আয়াত ${window.toBanglaNumber(lastAyah)} · চালিয়ে যান` : `Ayah ${lastAyah} · Continue`;
+            if (verseEl) verseEl.textContent = isBn ? `আয়াত ${safeToBn(lastAyah)} · চালিয়ে যান` : `Ayah ${lastAyah} · Continue`;
             if (badgeEl) badgeEl.textContent = isBn ? "সর্বশেষ শোনা হয়েছে" : "Last Listened";
         }
     }
