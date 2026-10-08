@@ -57,14 +57,26 @@
     padding: 0;
 }
 
+html {
+    overflow-x: hidden;
+    width: 100%;
+}
+
 body {
     font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     background-color: var(--bg-main);
     color: var(--text-primary);
     min-height: 100vh;
     overflow-x: hidden;
+    width: 100%;
+    position: relative;
     transition: background-color 0.3s ease, color 0.3s ease;
-    padding-bottom: 90px;
+    padding-bottom: 96px;
+}
+
+.offcanvas.offcanvas-start {
+    max-width: 85vw !important;
+    width: 320px !important;
 }
 
 .font-amiri {
@@ -381,6 +393,7 @@ body {
     position: relative;
     display: inline-block;
     padding-bottom: 10px;
+    max-width: 100%;
 }
 
 .hero-swoosh {
@@ -404,12 +417,14 @@ body {
     font-weight: 600;
     letter-spacing: 0.18em;
     text-transform: uppercase;
+    max-width: 100%;
 }
 
 .hero-sub-english .line {
     height: 1px;
     width: 40px;
     background: linear-gradient(90deg, transparent, var(--border-color));
+    flex-shrink: 1;
 }
 
 .hero-sub-english .line.right {
@@ -421,17 +436,36 @@ body {
     height: 4px;
     background: var(--primary-color);
     transform: rotate(45deg);
+    flex-shrink: 0;
+}
+
+@media (max-width: 576px) {
+    .hero-sub-bengali {
+        font-size: 1.05rem;
+        padding-bottom: 8px;
+    }
+    .hero-sub-english {
+        font-size: 0.6rem;
+        letter-spacing: 0.08em;
+        gap: 6px;
+        padding: 0 4px;
+    }
+    .hero-sub-english .line {
+        width: 16px;
+    }
 }
 
 /* 3D Stack / Fan Carousel */
 .cards-fan-container {
     position: relative;
-    max-width: 750px;
+    max-width: 100%;
+    width: 100%;
     height: 270px;
     margin: 25px auto 15px;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
 }
 
 .cards-fan-stack {
