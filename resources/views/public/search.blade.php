@@ -60,7 +60,11 @@
         const inputEl = document.getElementById("liveSearchInput");
         const btnSpan = document.getElementById("searchBtnSpan");
 
-        if (titleEl) titleEl.innerHTML = `<i class="fa-solid fa-magnifying-glass me-2"></i> ${isBn ? "পবিত্র কুরআন অনুসন্ধান" : "Search Holy Quran"}`;
+        if (titleEl) {
+            titleEl.innerHTML = `<i class="fa-solid fa-magnifying-glass me-2"></i> ${isBn ? "পবিত্র কুরআন অনুসন্ধান" : "Search Holy Quran"}`;
+            if (isBn) titleEl.classList.add("font-bangla");
+            else titleEl.classList.remove("font-bangla");
+        }
         if (subEl) subEl.textContent = isBn ? "সূরার নাম (বাংলা/ইংরেজি/আরবি), সূরার নম্বর বা অর্থ দিয়ে সহজে অনুসন্ধান করুন।" : "Search by Surah name (English/Bengali/Arabic), number, or meaning.";
         if (inputEl) inputEl.placeholder = isBn ? "সূরার নাম, নম্বর বা অর্থ লিখুন..." : "Type surah name, number, or meaning...";
         if (btnSpan) btnSpan.textContent = isBn ? "খুঁজুন" : "Search";
@@ -81,6 +85,9 @@
         }
 
         if (countLabel) {
+            if (isBn) countLabel.classList.add("font-bangla");
+            else countLabel.classList.remove("font-bangla");
+
             if (q) {
                 countLabel.textContent = isBn ? `"${query}" এর জন্য ${window.toBanglaNumber(results.length)} টি ফলাফল পাওয়া গেছে` : `Found ${results.length} results for "${query}"`;
             } else {
@@ -106,7 +113,7 @@
             const badgeClass = s.type === "Makki" ? "makki" : "madani";
             const badgeText = isBn ? (s.type === "Makki" ? "মাক্কী" : "মাদানী") : s.type;
             const surahTitle = isBn ? s.bangla : s.name;
-            const surahSub = isBn ? `${s.banglaMeaning} · ${s.name}` : `${s.englishMeaning} · ${s.bangla}`;
+            const surahSub = isBn ? `${s.banglaMeaning} · ${s.name}` : s.englishMeaning;
             const versesText = isBn ? `${window.toBanglaNumber(s.verses)} আয়াত` : `${s.verses} Verses`;
 
             html += `
@@ -114,7 +121,7 @@
                     <div class="surah-card-left">
                         <div class="surah-num-box">${s.id}</div>
                         <div class="surah-card-names">
-                            <h4 class="surah-name-en mb-0">${surahTitle}</h4>
+                            <h4 class="surah-name-en ${isBn ? 'font-bangla' : ''} mb-0">${surahTitle}</h4>
                             <p class="surah-meaning mb-0">${surahSub}</p>
                         </div>
                     </div>

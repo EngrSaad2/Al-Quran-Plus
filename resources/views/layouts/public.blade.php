@@ -44,7 +44,7 @@
         <div class="quran-bg-dots"></div>
         <div class="watermark-text-center">ٱلْقُرْآنُ ٱلْكَرِيمُ</div>
         <div class="watermark-text-left">اقْرَأْ بِاسْمِ رَبِّكَ</div>
-        <div class="watermark-text-right">قُرْآنٌ মَجِيدٌ</div>
+        <div class="watermark-text-right">قُرْآنٌ مَجِيدٌ</div>
         <div class="glow-orb-top"></div>
         <div class="glow-orb-right"></div>
     </div>
@@ -229,10 +229,18 @@
         function applyLayoutLanguage(lang) {
             window.currentQuranLang = lang;
             const isBn = lang === "bn";
+            document.documentElement.setAttribute("data-lang", lang);
 
             // Navbar Brand
             const brandEls = document.querySelectorAll("#navBrandText, .offcanvas-title");
-            brandEls.forEach(el => el.textContent = isBn ? "কুরআন মাজিদ" : "Quran Mazid");
+            brandEls.forEach(el => {
+                el.textContent = isBn ? "কুরআন মাজিদ" : "Quran Mazid";
+                if (isBn) {
+                    el.classList.add("font-bangla");
+                } else {
+                    el.classList.remove("font-bangla");
+                }
+            });
 
             // Navbar items
             const navHome = document.getElementById("navHome");
@@ -260,9 +268,17 @@
             if (dPrivacy) dPrivacy.innerHTML = `<i class="fa-solid fa-shield-halved me-2"></i> ${isBn ? "গোপনীয়তা নীতি" : "Privacy Policy"}`;
             if (dContact) dContact.innerHTML = `<i class="fa-solid fa-envelope me-2"></i> ${isBn ? "যোগাযোগ" : "Contact"}`;
 
-            // Lang toggle button label
+            // Lang toggle button label & tooltips
             const label = document.getElementById("langLabel");
             if (label) label.textContent = isBn ? "Ar+বাং" : "Ar+En";
+            const langToggle = document.getElementById("langToggleBtn");
+            if (langToggle) langToggle.title = isBn ? "ভাষা পরিবর্তন করুন" : "Change Language";
+
+            // Audio Player Bar defaults if not active
+            const audioSurahName = document.getElementById("audioSurahName");
+            if (audioSurahName && (!window.quranPlayer || !window.quranPlayer.isPlaying)) {
+                audioSurahName.textContent = isBn ? "সূরা আল-ফাতিহা (১)" : "Surah Al-Faatiha (1)";
+            }
         }
 
         window.setQuranLanguage = function(lang) {

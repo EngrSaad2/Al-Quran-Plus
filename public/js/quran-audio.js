@@ -257,13 +257,20 @@ class QuranAudioPlayer {
         const nameEl = document.getElementById("audioSurahName");
         const reciterEl = document.getElementById("audioReciterName");
         const bar = document.getElementById("globalAudioBar");
+        const loopBtn = document.getElementById("audioLoopBtn");
+        const speedBtn = document.getElementById("audioSpeedBtn");
+
+        if (loopBtn) loopBtn.title = isBn ? "রিপিট / লুপ" : "Repeat / Loop";
+        if (speedBtn) speedBtn.title = isBn ? "প্লেব্যাক গতি" : "Playback Speed";
 
         if (nameEl) {
             if (isBn) {
                 const ayahNum = window.toBanglaNumber ? window.toBanglaNumber(this.currentAyahNumber) : this.currentAyahNumber;
                 nameEl.textContent = `${banglaName} (${ayahNum})`;
+                nameEl.classList.add("font-bangla");
             } else {
                 nameEl.textContent = `Surah ${surahName} (${this.currentAyahNumber})`;
+                nameEl.classList.remove("font-bangla");
             }
         }
         if (reciterEl) reciterEl.textContent = this.currentReciterName;

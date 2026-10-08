@@ -50,7 +50,11 @@
         const subEl = document.getElementById("bookmarksSub");
         const clearBtn = document.getElementById("clearAllBtn");
 
-        if (titleEl) titleEl.innerHTML = `<i class="fa-solid fa-bookmark me-2"></i> ${isBn ? "সংরক্ষিত বুকমার্ক" : "Saved Bookmarks"}`;
+        if (titleEl) {
+            titleEl.innerHTML = `<i class="fa-solid fa-bookmark me-2"></i> ${isBn ? "সংরক্ষিত বুকমার্ক" : "Saved Bookmarks"}`;
+            if (isBn) titleEl.classList.add("font-bangla");
+            else titleEl.classList.remove("font-bangla");
+        }
         if (subEl) subEl.textContent = isBn ? "আপনার প্রিয় সূরা ও আয়াতসমূহ সহজে খুঁজে পেতে এখানে সংরক্ষিত থাকে।" : "Your favorite surahs and verses are saved here for easy access.";
         if (clearBtn) clearBtn.innerHTML = `<i class="fa-solid fa-trash-can me-1"></i> ${isBn ? "সব মুছুন" : "Clear All"}`;
 
@@ -76,9 +80,11 @@
         bookmarks.forEach((b, idx) => {
             const isAyah = !!b.ayah;
             const targetUrl = isAyah ? `${baseUrl}/surah/${b.surah}#ayah-${b.ayah}` : `${baseUrl}/surah/${b.surah}`;
-            const sName = isBn ? (b.banglaName || b.surahName) : (b.surahName || b.banglaName);
+            const sMeta = window.QURAN_DATA ? window.QURAN_DATA.surahs.find(item => item.id === b.surah) : null;
+            const sName = isBn ? (sMeta ? sMeta.bangla : (b.banglaName || b.surahName)) : (sMeta ? sMeta.name : (b.surahName || b.banglaName));
+            const prefix = isBn ? "সূরা" : "Surah";
             const ayahLabel = isAyah ? (isBn ? `আয়াত ${window.toBanglaNumber(b.ayah)}` : `Verse ${b.ayah}`) : '';
-            const title = isAyah ? (isBn ? `সূরা ${sName} : ${ayahLabel}` : `Surah ${sName} : ${ayahLabel}`) : (isBn ? `সূরা ${sName}` : `Surah ${sName}`);
+            const title = isAyah ? `${prefix} ${sName} : ${ayahLabel}` : `${prefix} ${sName}`;
             const dateLabel = b.date ? (isBn ? `সংরক্ষণ তারিখ: ${b.date}` : `Saved: ${b.date}`) : '';
 
             html += `

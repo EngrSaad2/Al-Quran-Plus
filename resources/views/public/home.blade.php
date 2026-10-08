@@ -24,7 +24,7 @@
     <div class="hero-sub-english">
         <span class="line"></span>
         <span class="dot"></span>
-        <span>READ IN THE NAME OF YOUR LORD WHO CREATED</span>
+        <span id="heroSubEnSpan">READ IN THE NAME OF YOUR LORD WHO CREATED</span>
         <span class="dot"></span>
         <span class="line right"></span>
     </div>
@@ -154,7 +154,7 @@
                 <span class="badge bg-secondary text-light px-3 py-2 rounded-pill font-bangla border border-secondary" id="popularSectionBadge" style="font-size:0.75rem;">
                     <i class="fa-solid fa-star text-warning me-1"></i> সেরা তিলাওয়াত
                 </span>
-                <button class="btn-icon-circle" onclick="shufflePopularRecitations()" title="নতুন সূরা দেখুন">
+                <button class="btn-icon-circle" id="popularShuffleBtn" onclick="shufflePopularRecitations()" title="নতুন সূরা দেখুন">
                     <i class="fa-solid fa-shuffle"></i>
                 </button>
             </div>
@@ -275,8 +275,17 @@
 
         // Hero Subtitle
         const heroSubBn = document.getElementById("heroSubBnSpan");
+        const heroSubEn = document.getElementById("heroSubEnSpan");
         if (heroSubBn) {
             heroSubBn.textContent = isBn ? "পড়ো তোমার প্রতিপালকের নামে, যিনি সৃষ্টি করেছেন" : "Read in the name of your Lord who created";
+            if (isBn) {
+                heroSubBn.parentElement.classList.add("font-bangla");
+            } else {
+                heroSubBn.parentElement.classList.remove("font-bangla");
+            }
+        }
+        if (heroSubEn) {
+            heroSubEn.textContent = isBn ? "READ IN THE NAME OF YOUR LORD WHO CREATED" : "THE NOBLE QURAN — RECITATION & TRANSLATIONS";
         }
 
         // Hero Search
@@ -293,9 +302,11 @@
         const popTitle = document.getElementById("popularSectionTitle");
         const popSub = document.getElementById("popularSectionSub");
         const popBadge = document.getElementById("popularSectionBadge");
+        const popShuffle = document.getElementById("popularShuffleBtn");
         if (popTitle) popTitle.textContent = isBn ? "জনপ্রিয় তিলাওয়াত" : "Popular Recitations";
         if (popSub) popSub.textContent = isBn ? "সবচেয়ে বেশি শোনা সূরা" : "Most listened Surahs worldwide";
         if (popBadge) popBadge.innerHTML = `<i class="fa-solid fa-star text-warning me-1"></i> ${isBn ? "সেরা তিলাওয়াত" : "Top Recitations"}`;
+        if (popShuffle) popShuffle.title = isBn ? "নতুন সূরা দেখুন" : "Shuffle Recitations";
 
         // Tabs
         const tabSurahs = document.getElementById("tabSurahsBtn");
@@ -375,7 +386,7 @@
                         </div>
                         <div class="fan-card-arabic">${item.arabic}</div>
                         <div class="fan-card-bottom">
-                            <h4 class="fan-card-name">${displayName}</h4>
+                            <h4 class="fan-card-name ${isBn ? 'font-bangla' : ''}">${displayName}</h4>
                             <p class="fan-card-verses">${displayVerses}</p>
                         </div>
                     </div>
@@ -410,7 +421,7 @@
                                 <i class="fa-solid fa-play"></i>
                             </button>
                         </div>
-                        <h4 class="recitation-title">${title}</h4>
+                        <h4 class="recitation-title ${isBn ? 'font-bangla' : ''}">${title}</h4>
                         <p class="recitation-reciter">${item.reciter}</p>
                     </div>
                     <div class="recitation-footer">
@@ -479,7 +490,7 @@
             const badgeTypeClass = s.type === "Makki" ? "makki" : "madani";
             const badgeText = isBn ? (s.type === "Makki" ? "মাক্কী" : "মাদানী") : s.type;
             const surahTitle = isBn ? s.bangla : s.name;
-            const surahSub = isBn ? `${s.banglaMeaning} · ${s.name}` : `${s.englishMeaning} · ${s.bangla}`;
+            const surahSub = isBn ? `${s.banglaMeaning} · ${s.name}` : s.englishMeaning;
             const versesText = isBn ? `${safeToBn(s.verses)} আয়াত` : `${s.verses} Verses`;
 
             html += `
@@ -487,7 +498,7 @@
                     <div class="surah-card-left">
                         <div class="surah-num-box">${s.id}</div>
                         <div class="surah-card-names">
-                            <h4 class="surah-name-en mb-0">${surahTitle}</h4>
+                            <h4 class="surah-name-en ${isBn ? 'font-bangla' : ''} mb-0">${surahTitle}</h4>
                             <p class="surah-meaning mb-0">${surahSub}</p>
                         </div>
                     </div>
@@ -496,7 +507,7 @@
                         <div class="surah-meta-row">
                             <span class="badge-origin-pill ${badgeTypeClass}">${icon} ${badgeText}</span>
                             <span class="surah-verses-count">${versesText}</span>
-                            <button class="btn-bookmark-icon ${isBookmarked ? 'bookmarked' : ''}" onclick="event.preventDefault(); toggleSurahBookmark(${s.id}, this)">
+                            <button class="btn-bookmark-icon ${isBookmarked ? 'bookmarked' : ''}" onclick="event.preventDefault(); toggleSurahBookmark(${s.id}, this)" title="${isBn ? 'বুকমার্ক' : 'Bookmark'}">
                                 <i class="${isBookmarked ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
                             </button>
                         </div>
@@ -542,7 +553,7 @@
                 surah: surahId,
                 surahName: s ? s.name : `Surah ${surahId}`,
                 banglaName: s ? s.bangla : `সূরা ${surahId}`,
-                date: new Date().toLocaleDateString('bn-BD')
+                date: new Date().toLocaleDateString('en-CA')
             });
             if (btn) {
                 btn.classList.add("bookmarked");
@@ -606,7 +617,7 @@
                     <div class="surah-card-left">
                         <div class="surah-num-box">${j.id}</div>
                         <div>
-                            <h4 class="surah-name-en mb-0">${jTitle}</h4>
+                            <h4 class="surah-name-en ${isBn ? 'font-bangla' : ''} mb-0">${jTitle}</h4>
                             <p class="surah-meaning mb-0">${jSub}</p>
                         </div>
                     </div>
@@ -638,7 +649,7 @@
                     <div class="surah-card-left">
                         <div class="surah-num-box">${p}</div>
                         <div>
-                            <h4 class="surah-name-en mb-0">${pTitle}</h4>
+                            <h4 class="surah-name-en ${isBn ? 'font-bangla' : ''} mb-0">${pTitle}</h4>
                             <p class="surah-meaning mb-0">Page ${p} of 604</p>
                         </div>
                     </div>
@@ -665,11 +676,17 @@
             const nameEl = document.getElementById("lastPlayedName");
             const verseEl = document.getElementById("lastPlayedVerse");
             const badgeEl = document.getElementById("lastPlayedBadgeText");
+            const playBtn = document.querySelector(".last-played-playbtn");
 
             if (arEl) arEl.textContent = s.arabic;
-            if (nameEl) nameEl.textContent = isBn ? `সূরা ${s.bangla}` : `Surah ${s.name}`;
+            if (nameEl) {
+                nameEl.textContent = isBn ? `সূরা ${s.bangla}` : `Surah ${s.name}`;
+                if (isBn) nameEl.classList.add("font-bangla");
+                else nameEl.classList.remove("font-bangla");
+            }
             if (verseEl) verseEl.textContent = isBn ? `আয়াত ${safeToBn(lastAyah)} · চালিয়ে যান` : `Ayah ${lastAyah} · Continue`;
             if (badgeEl) badgeEl.textContent = isBn ? "সর্বশেষ শোনা হয়েছে" : "Last Listened";
+            if (playBtn) playBtn.title = isBn ? "চালান" : "Play";
         }
     }
 

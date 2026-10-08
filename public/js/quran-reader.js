@@ -35,12 +35,21 @@ class QuranReader {
         const savedShowBn = localStorage.getItem("quran_show_bn");
         const savedShowEn = localStorage.getItem("quran_show_en");
         const savedShowWbw = localStorage.getItem("quran_show_wbw");
+        const currentLang = window.currentQuranLang || localStorage.getItem("quran_lang") || "bn";
 
         if (savedArabicSize) this.arabicFontSize = parseInt(savedArabicSize);
         if (savedTransSize) this.transFontSize = parseInt(savedTransSize);
         if (savedArabicFont) this.arabicFont = savedArabicFont;
-        if (savedShowBn !== null) this.showBangla = savedShowBn === "true";
-        if (savedShowEn !== null) this.showEnglish = savedShowEn === "true";
+        if (savedShowBn !== null) {
+            this.showBangla = savedShowBn === "true";
+        } else {
+            this.showBangla = currentLang === "bn";
+        }
+        if (savedShowEn !== null) {
+            this.showEnglish = savedShowEn === "true";
+        } else {
+            this.showEnglish = true;
+        }
         if (savedShowWbw !== null) this.showWbw = savedShowWbw === "true";
     }
 
@@ -48,6 +57,11 @@ class QuranReader {
         const container = document.getElementById("ayahsContainer");
         const cacheKey = `quran_surah_v2_${this.surahId}`;
         const cached = localStorage.getItem(cacheKey);
+
+        const lang = window.currentQuranLang || localStorage.getItem("quran_lang") || "bn";
+        const isBn = lang === "bn";
+        const surahTitle = isBn ? (this.surahMeta ? this.surahMeta.bangla : '') : (this.surahMeta ? this.surahMeta.name : '');
+        const loadingText = isBn ? `সূরা ${surahTitle} লোড হচ্ছে...` : `Loading Surah ${surahTitle}...`;
 
         if (cached) {
             try {
@@ -63,7 +77,7 @@ class QuranReader {
             container.innerHTML = `
                 <div style="text-align:center; padding: 60px 0; color: var(--text-muted);">
                     <i class="fa-solid fa-spinner fa-spin fa-2x" style="color: var(--primary-color);"></i>
-                    <p style="margin-top: 15px; font-size: 0.95rem;">সূরা ${this.surahMeta ? this.surahMeta.bangla : ''} লোড হচ্ছে...</p>
+                    <p style="margin-top: 15px; font-size: 0.95rem;">${loadingText}</p>
                 </div>
             `;
         }
@@ -102,12 +116,15 @@ class QuranReader {
         } catch (err) {
             console.error("Error loading Surah:", err);
             if (container) {
+                const errTitle = isBn ? "ইন্টারনেট সংযোগ চেক করুন" : "Check Internet Connection";
+                const errSub = isBn ? "আয়াত লোড করতে সমস্যা হয়েছে। অনুগ্রহ করে পুনরায় চেষ্টা করুন।" : "Failed to load verses. Please check your internet connection.";
+                const retryBtn = isBn ? "পুনরায় চেষ্টা করুন" : "Try Again";
                 container.innerHTML = `
                     <div style="text-align:center; padding: 50px 20px; background: var(--bg-card); border-radius: 18px; border: 1px solid var(--border-color);">
                         <i class="fa-solid fa-triangle-exclamation fa-2x text-warning"></i>
-                        <h5 style="margin-top: 12px; color: var(--text-primary);">ইন্টারনেট সংযোগ চেক করুন</h5>
-                        <p style="color: var(--text-muted); font-size: 0.85rem;">আয়াত লোড করতে সমস্যা হয়েছে। অনুগ্রহ করে পুনরায় চেষ্টা করুন।</p>
-                        <button onclick="window.location.reload()" class="btn-quran-primary" style="margin-top: 10px; padding: 8px 20px; font-size: 0.85rem;">পুনরায় চেষ্টা করুন</button>
+                        <h5 style="margin-top: 12px; color: var(--text-primary);">${errTitle}</h5>
+                        <p style="color: var(--text-muted); font-size: 0.85rem;">${errSub}</p>
+                        <button onclick="window.location.reload()" class="btn-quran-primary" style="margin-top: 10px; padding: 8px 20px; font-size: 0.85rem;">${retryBtn}</button>
                     </div>
                 `;
             }
@@ -216,7 +233,7 @@ class QuranReader {
                 ayah: ayahNumber,
                 surahName: sMeta ? sMeta.name : `Surah ${surahId}`,
                 banglaName: sMeta ? sMeta.bangla : `সূরা ${surahId}`,
-                date: new Date().toLocaleDateString('bn-BD')
+                date: new Date().toLocaleDateString('en-CA')
             });
             if (btn) {
                 btn.classList.add("text-emerald");
@@ -236,11 +253,15 @@ class QuranReader {
         const v = this.verses.find(item => item.number === ayahNumber);
         if (!v) return;
 
-        const sName = this.surahMeta ? `${this.surahMeta.bangla} (${this.surahMeta.name})` : `সূরা ${this.surahId}`;
-        const copyText = `${v.arabic}\n\nবাংলা: ${v.bangla}\n\nEnglish: ${v.english}\n\n[সূরা ${sName}, আয়াত ${ayahNumber}]`;
+        const lang = window.currentQuranLang || localStorage.getItem("quran_lang") || "bn";
+        const isBn = lang === "bn";
+        const sName = isBn ? (this.surahMeta ? `${this.surahMeta.bangla} (${this.surahMeta.name})` : `সূরা ${this.surahId}`) : (this.surahMeta ? `${this.surahMeta.name} (${this.surahMeta.englishMeaning})` : `Surah ${this.surahId}`);
+        const copyText = isBn 
+            ? `${v.arabic}\n\nবাংলা: ${v.bangla}\n\nEnglish: ${v.english}\n\n[সূরা ${sName}, আয়াত ${ayahNumber}]`
+            : `${v.arabic}\n\nEnglish: ${v.english}\n\n[${sName}, Verse ${ayahNumber}]`;
 
         navigator.clipboard.writeText(copyText).then(() => {
-            alert(`আয়াত ${this.surahId}:${ayahNumber} কপি করা হয়েছে!`);
+            alert(isBn ? `আয়াত ${this.surahId}:${ayahNumber} কপি করা হয়েছে!` : `Verse ${this.surahId}:${ayahNumber} copied to clipboard!`);
         });
     }
 
@@ -248,10 +269,16 @@ class QuranReader {
         const v = this.verses.find(item => item.number === ayahNumber);
         if (!v) return;
 
+        const lang = window.currentQuranLang || localStorage.getItem("quran_lang") || "bn";
+        const isBn = lang === "bn";
+        const sTitle = isBn ? (this.surahMeta ? this.surahMeta.bangla : this.surahId) : (this.surahMeta ? this.surahMeta.name : this.surahId);
+        const prefix = isBn ? "সূরা" : "Surah";
+        const verseWord = isBn ? "আয়াত" : "Verse";
+
         if (navigator.share) {
             navigator.share({
-                title: `সূরা ${this.surahMeta ? this.surahMeta.bangla : this.surahId}, আয়াত ${ayahNumber}`,
-                text: `${v.arabic}\n\n${v.bangla}`,
+                title: `${prefix} ${sTitle}, ${verseWord} ${ayahNumber}`,
+                text: `${v.arabic}\n\n${isBn ? v.bangla : v.english}`,
                 url: window.location.href
             }).catch(() => {});
         } else {
@@ -322,7 +349,12 @@ class QuranReader {
             });
         }
 
-        window.addEventListener("quranLanguageChanged", () => {
+        window.addEventListener("quranLanguageChanged", (e) => {
+            const nextLang = e.detail?.lang || window.currentQuranLang || "bn";
+            if (localStorage.getItem("quran_show_bn") === null) {
+                this.showBangla = nextLang === "bn";
+                if (showBnCheck) showBnCheck.checked = this.showBangla;
+            }
             this.renderVerses();
         });
     }

@@ -20,19 +20,19 @@
 <div class="reader-page-layout">
     <!-- Left Mini Icon Sidebar -->
     <aside class="reader-mini-sidebar d-none d-md-flex">
-        <a href="{{ route('public.home') }}" class="mini-nav-btn" title="হোম">
+        <a href="{{ route('public.home') }}" class="mini-nav-btn" id="miniNavHome" title="হোম">
             <i class="fa-solid fa-house"></i>
         </a>
         <button class="mini-nav-btn active" id="toggleNavDrawerBtn" onclick="toggleNavPanel()" title="সূরা তালিকা">
             <i class="fa-solid fa-book-quran"></i>
         </button>
-        <a href="{{ route('public.bookmarks') }}" class="mini-nav-btn" title="বুকমার্ক">
+        <a href="{{ route('public.bookmarks') }}" class="mini-nav-btn" id="miniNavBookmarks" title="বুকমার্ক">
             <i class="fa-solid fa-bookmark"></i>
         </a>
-        <a href="{{ route('public.search') }}" class="mini-nav-btn" title="অনুসন্ধান">
+        <a href="{{ route('public.search') }}" class="mini-nav-btn" id="miniNavSearch" title="অনুসন্ধান">
             <i class="fa-solid fa-magnifying-glass"></i>
         </a>
-        <button class="mini-nav-btn mt-auto" onclick="toggleSettingsPanel()" title="রিডিং সেটিংস">
+        <button class="mini-nav-btn mt-auto" id="miniNavSettings" onclick="toggleSettingsPanel()" title="রিডিং সেটিংস">
             <i class="fa-solid fa-gear"></i>
         </button>
     </aside>
@@ -65,7 +65,7 @@
         <!-- Top Reader Header Bar -->
         <header class="reader-top-header">
             <div class="d-flex align-items-center gap-3">
-                <button class="btn-icon-circle d-md-none" onclick="toggleNavPanel()" title="সূরা তালিকা">
+                <button class="btn-icon-circle d-md-none" id="readerMobileNavBtn" onclick="toggleNavPanel()" title="সূরা তালিকা">
                     <i class="fa-solid fa-bars"></i>
                 </button>
                 <div class="reader-surah-badge">
@@ -77,13 +77,13 @@
             </div>
 
             <div class="d-flex align-items-center gap-2">
-                <a href="{{ route('public.home') }}" class="btn-icon-circle" title="হোমে ফিরুন">
+                <a href="{{ route('public.home') }}" class="btn-icon-circle" id="readerHeaderHome" title="হোমে ফিরুন">
                     <i class="fa-solid fa-house"></i>
                 </a>
                 <button class="btn-icon-circle" id="readerThemeToggle" onclick="document.getElementById('themeToggleBtn').click()" title="থিম পরিবর্তন">
                     <i class="fa-solid fa-moon"></i>
                 </button>
-                <button class="btn-icon-circle" onclick="toggleSettingsPanel()" title="রিডিং সেটিংস">
+                <button class="btn-icon-circle" id="readerHeaderSettingsBtn" onclick="toggleSettingsPanel()" title="রিডিং সেটিংস">
                     <i class="fa-solid fa-sliders"></i>
                 </button>
             </div>
@@ -217,8 +217,16 @@
         const metaInfo = document.getElementById("bannerMetaInfo");
 
         if (arName) arName.textContent = s.arabic;
-        if (bnName) bnName.textContent = isBn ? `${s.bangla} (${s.name})` : `${s.name} (${s.englishMeaning})`;
-        if (headerTitle) headerTitle.textContent = isBn ? `${s.bangla} (${s.name})` : `${s.name} (${s.englishMeaning})`;
+        if (bnName) {
+            bnName.textContent = isBn ? `${s.bangla} (${s.name})` : `${s.name} (${s.englishMeaning})`;
+            if (isBn) bnName.classList.add("font-bangla");
+            else bnName.classList.remove("font-bangla");
+        }
+        if (headerTitle) {
+            headerTitle.textContent = isBn ? `${s.bangla} (${s.name})` : `${s.name} (${s.englishMeaning})`;
+            if (isBn) headerTitle.classList.add("font-bangla");
+            else headerTitle.classList.remove("font-bangla");
+        }
         if (metaInfo) {
             const icon = isBn ? (s.type === "Makki" ? "🕋 মাক্কী" : "🕌 মাদানী") : `🕋 ${s.type}`;
             const versesText = isBn ? `${window.toBanglaNumber(s.verses)} আয়াত` : `${s.verses} Verses`;
@@ -232,6 +240,30 @@
             `;
         }
 
+        // Mini sidebar tooltips
+        const miniHome = document.getElementById("miniNavHome");
+        const miniNav = document.getElementById("toggleNavDrawerBtn");
+        const miniBook = document.getElementById("miniNavBookmarks");
+        const miniSrch = document.getElementById("miniNavSearch");
+        const miniSet = document.getElementById("miniNavSettings");
+        if (miniHome) miniHome.title = isBn ? "হোম" : "Home";
+        if (miniNav) miniNav.title = isBn ? "সূরা তালিকা" : "Surah List";
+        if (miniBook) miniBook.title = isBn ? "বুকমার্ক" : "Bookmarks";
+        if (miniSrch) miniSrch.title = isBn ? "অনুসন্ধান" : "Search";
+        if (miniSet) miniSet.title = isBn ? "রিডিং সেটিংস" : "Reading Settings";
+
+        // Top header buttons
+        const mNavBtn = document.getElementById("readerMobileNavBtn");
+        const quickPlay = document.getElementById("headerQuickPlayBtn");
+        const headHome = document.getElementById("readerHeaderHome");
+        const themeBtn = document.getElementById("readerThemeToggle");
+        const headSet = document.getElementById("readerHeaderSettingsBtn");
+        if (mNavBtn) mNavBtn.title = isBn ? "সূরা তালিকা" : "Surah List";
+        if (quickPlay) quickPlay.title = isBn ? "সূরা শুনুন" : "Play Surah";
+        if (headHome) headHome.title = isBn ? "হোমে ফিরুন" : "Back to Home";
+        if (themeBtn) themeBtn.title = isBn ? "থিম পরিবর্তন" : "Toggle Theme";
+        if (headSet) headSet.title = isBn ? "রিডিং সেটিংস" : "Reading Settings";
+
         // Drawer labels
         const navTitle = document.getElementById("navPanelTitle");
         const navSub = document.getElementById("navPanelSub");
@@ -240,7 +272,7 @@
         if (navSub) navSub.textContent = isBn ? "সূরা নির্বাচন করুন" : "Select Surah";
         if (navSearch) navSearch.placeholder = isBn ? "সূরা খুঁজুন..." : "Search Surah...";
 
-        // Settings panel labels
+        // Settings panel labels & options
         const sTitle = document.getElementById("settingsHeaderTitle");
         const lReciter = document.getElementById("labelReciter");
         const lArabicFont = document.getElementById("labelArabicFont");
@@ -257,6 +289,9 @@
         if (lTransDisplay) lTransDisplay.textContent = isBn ? "অনুবাদ প্রদর্শন" : "Display Translations";
         if (lShowBn) lShowBn.textContent = isBn ? "বাংলা অনুবাদ" : "Bengali Translation";
         if (lShowEn) lShowEn.textContent = isBn ? "English Translation" : "English Translation (Sahih)";
+
+        const amiriOpt = document.querySelector('#settingArabicFont option[value="font-amiri"]');
+        if (amiriOpt) amiriOpt.textContent = isBn ? "Amiri (উসমানী স্টাইল)" : "Amiri (Uthmani Style)";
 
         // Re-render sidebar list
         renderNavSurahList();
