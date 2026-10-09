@@ -168,25 +168,32 @@
         <!-- Center Controls & Timeline -->
         <div class="audio-controls-center">
             <div class="audio-buttons-row">
-                <!-- Loop Mode Toggle -->
-                <button class="btn-audio-ctrl" id="audioLoopBtn" onclick="window.quranPlayer.toggleLoopMode()" title="Repeat / Loop">
-                    <i class="fa-solid fa-forward-step"></i>
-                </button>
+                <!-- Left Controls -->
+                <div class="audio-side-ctrls left">
+                    <button class="btn-audio-ctrl" id="audioLoopBtn" onclick="window.quranPlayer.toggleLoopMode()" title="Repeat / Loop">
+                        <i class="fa-solid fa-repeat"></i>
+                    </button>
+                    <button class="btn-audio-ctrl" onclick="window.quranPlayer.prevAyah()" title="Previous Ayah">
+                        <i class="fa-solid fa-backward"></i>
+                    </button>
+                </div>
 
-                <!-- Previous Ayah -->
-                <button class="btn-audio-ctrl" onclick="window.quranPlayer.prevAyah()" title="Previous Ayah">
-                    <i class="fa-solid fa-backward"></i>
-                </button>
+                <!-- Center Play / Pause Button (100% Dead Center) -->
+                <div class="audio-center-play">
+                    <button class="btn-audio-play-main" id="audioMainPlayBtn" onclick="window.quranPlayer.togglePlayPause()" title="Play / Pause">
+                        <i class="fa-solid fa-play"></i>
+                    </button>
+                </div>
 
-                <!-- Play / Pause Main Button -->
-                <button class="btn-audio-play-main" id="audioMainPlayBtn" onclick="window.quranPlayer.togglePlayPause()" title="Play / Pause">
-                    <i class="fa-solid fa-play"></i>
-                </button>
-
-                <!-- Next Ayah -->
-                <button class="btn-audio-ctrl" onclick="window.quranPlayer.nextAyah()" title="Next Ayah">
-                    <i class="fa-solid fa-forward"></i>
-                </button>
+                <!-- Right Controls -->
+                <div class="audio-side-ctrls right">
+                    <button class="btn-audio-ctrl" onclick="window.quranPlayer.nextAyah()" title="Next Ayah">
+                        <i class="fa-solid fa-forward"></i>
+                    </button>
+                    <button class="btn-audio-ctrl audio-speed-ctrl-inline" onclick="window.quranPlayer.cycleSpeed()" title="Playback Speed">
+                        <span id="audioInlineSpeed">1.0x</span>
+                    </button>
+                </div>
             </div>
 
             <!-- Progress Timeline Bar -->

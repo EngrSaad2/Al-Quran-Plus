@@ -557,6 +557,10 @@ class QuranAudioPlayer {
         if (speedBtn) {
             speedBtn.textContent = `${this.playbackSpeed}x`;
         }
+        const inlineSpeed = document.getElementById("audioInlineSpeed");
+        if (inlineSpeed) {
+            inlineSpeed.textContent = `${this.playbackSpeed}x`;
+        }
     }
 
     formatTime(seconds) {
@@ -632,6 +636,11 @@ class QuranAudioPlayer {
 
         if (loopBtn) loopBtn.title = isBn ? "রিপিট / লুপ" : "Repeat / Loop";
         if (speedBtn) speedBtn.title = isBn ? "প্লেব্যাক গতি" : "Playback Speed";
+        const inlineSpeed = document.getElementById("audioInlineSpeed");
+        if (inlineSpeed) {
+            inlineSpeed.textContent = `${this.playbackSpeed}x`;
+            inlineSpeed.closest("button")?.setAttribute("title", isBn ? "প্লেব্যাক গতি" : "Playback Speed");
+        }
         if (reciterEl) reciterEl.textContent = this.currentReciterName;
         if (bar) bar.classList.remove("hidden-bar");
 

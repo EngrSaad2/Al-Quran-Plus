@@ -2110,9 +2110,55 @@ body {
 }
 
 .audio-buttons-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    width: 100%;
+    max-width: 290px;
+    margin: 0 auto;
+}
+
+.audio-side-ctrls {
     display: flex;
     align-items: center;
+}
+
+.audio-side-ctrls.left {
+    justify-content: flex-end;
     gap: 14px;
+}
+
+.audio-center-play {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 14px;
+}
+
+.audio-side-ctrls.right {
+    justify-content: flex-start;
+    gap: 14px;
+}
+
+.btn-audio-ctrl.audio-speed-ctrl-inline {
+    font-size: 0.70rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 6px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    min-width: 32px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.btn-audio-ctrl.audio-speed-ctrl-inline:hover {
+    color: var(--text-primary);
+    border-color: var(--primary-color);
 }
 
 .btn-audio-ctrl {
@@ -2203,6 +2249,12 @@ body {
     cursor: pointer;
 }
 
+@media (min-width: 769px) {
+    .audio-speed-btn {
+        display: none !important;
+    }
+}
+
 .audio-vol-container {
     display: flex;
     align-items: center;
@@ -2239,9 +2291,16 @@ body {
         padding: 0 16px !important;
     }
     .audio-buttons-row {
-        gap: 16px;
+        max-width: 280px;
         margin-bottom: 3px;
-        justify-content: center;
+        width: 100%;
+    }
+    .audio-side-ctrls.left,
+    .audio-side-ctrls.right {
+        gap: 12px;
+    }
+    .audio-center-play {
+        padding: 0 10px;
     }
     .btn-audio-ctrl {
         font-size: 1rem;
@@ -2273,7 +2332,20 @@ body {
         min-height: 62px;
     }
     .audio-buttons-row {
-        gap: 14px;
+        max-width: 250px;
+    }
+    .audio-side-ctrls.left,
+    .audio-side-ctrls.right {
+        gap: 10px;
+    }
+    .audio-center-play {
+        padding: 0 8px;
+    }
+    .btn-audio-ctrl.audio-speed-ctrl-inline {
+        font-size: 0.65rem;
+        padding: 1px 4px;
+        height: 20px;
+        min-width: 26px;
     }
     .btn-audio-ctrl {
         font-size: 0.9rem;
