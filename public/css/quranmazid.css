@@ -562,6 +562,9 @@ body {
     .fan-card-top {
         justify-content: center !important;
     }
+    .fan-card-name {
+        font-size: 0.68rem;
+    }
 }
 
 @media (max-width: 576px) {
@@ -575,22 +578,28 @@ body {
         transform: scale(0.86);
     }
     .fan-card-item {
-        width: 96px;
+        width: 98px;
         height: 145px;
         margin: 0 -9px;
-        padding: 5px;
+        padding: 4px;
         border-radius: 14px;
     }
     .fan-card-inner {
-        padding: 8px 4px 6px;
+        padding: 8px 3px 6px;
         border-radius: 12px;
     }
     .fan-card-arabic {
         font-size: 1.25rem;
     }
     .fan-card-name {
-        font-size: 0.72rem;
+        font-size: 0.55rem;
+        font-weight: 700;
+        letter-spacing: -0.015em;
         margin-bottom: 2px;
+        line-height: 1.2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: clip;
     }
     .badge-surah-num,
     .badge-surah-origin,
@@ -613,17 +622,26 @@ body {
         transform: scale(0.78);
     }
     .fan-card-item {
-        width: 88px;
+        width: 90px;
         height: 135px;
         margin: 0 -8px;
         padding: 4px;
         border-radius: 13px;
     }
+    .fan-card-inner {
+        padding: 6px 2px 4px;
+    }
     .fan-card-arabic {
         font-size: 1.15rem;
     }
     .fan-card-name {
-        font-size: 0.68rem;
+        font-size: 0.49rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: clip;
     }
     .badge-surah-num,
     .badge-surah-origin,
@@ -632,6 +650,17 @@ body {
     }
     .fan-card-top {
         justify-content: center !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .fan-card-item {
+        width: 84px;
+        margin: 0 -7px;
+    }
+    .fan-card-name {
+        font-size: 0.45rem;
+        letter-spacing: -0.025em;
     }
 }
 
@@ -752,7 +781,7 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-family: 'Hind Siliguri', sans-serif;
+    font-family: 'Outfit', 'Hind Siliguri', sans-serif;
 }
 
 .fan-card-verses {
