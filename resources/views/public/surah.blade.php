@@ -170,7 +170,7 @@
                     <label class="form-check-label small font-bangla" for="settingShowBangla" id="labelShowBn">বাংলা অনুবাদ</label>
                 </div>
                 <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="settingShowEnglish" checked>
+                    <input class="form-check-input" type="checkbox" id="settingShowEnglish">
                     <label class="form-check-label small" for="settingShowEnglish" id="labelShowEn">English Translation</label>
                 </div>
             </div>
@@ -227,12 +227,12 @@
 
         if (arName) arName.textContent = s.arabic;
         if (bnName) {
-            bnName.textContent = isBn ? `${s.bangla} (${s.name})` : `${s.name} (${s.englishMeaning})`;
+            bnName.textContent = isBn ? s.bangla : `${s.name} (${s.englishMeaning})`;
             if (isBn) bnName.classList.add("font-bangla");
             else bnName.classList.remove("font-bangla");
         }
         if (headerTitle) {
-            headerTitle.textContent = isBn ? `${s.bangla} (${s.name})` : `${s.name} (${s.englishMeaning})`;
+            headerTitle.textContent = isBn ? s.bangla : `${s.name} (${s.englishMeaning})`;
             if (isBn) headerTitle.classList.add("font-bangla");
             else headerTitle.classList.remove("font-bangla");
         }
@@ -336,7 +336,7 @@
             const originClass = s.type === "Makki" ? "text-warning" : "text-emerald";
             const originBadge = isBn ? (s.type === 'Makki' ? 'মাক্কী' : 'মাদানী') : s.type;
             const title = isBn ? s.bangla : s.name;
-            const sub = isBn ? s.name : s.englishMeaning;
+            const sub = isBn ? (s.banglaMeaning || s.bangla) : s.englishMeaning;
 
             html += `
                 <a href="${baseUrl}/surah/${s.id}" class="surah-nav-item ${isActive ? 'active selected-surah' : ''}" id="navSurahItem-${s.id}">

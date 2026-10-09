@@ -48,7 +48,7 @@ class QuranReader {
         if (savedShowEn !== null) {
             this.showEnglish = savedShowEn === "true";
         } else {
-            this.showEnglish = true;
+            this.showEnglish = currentLang !== "bn";
         }
         if (savedShowWbw !== null) this.showWbw = savedShowWbw === "true";
     }
@@ -209,6 +209,11 @@ class QuranReader {
         `;
 
         container.innerHTML = html;
+
+        // Auto highlight current playing ayah if audio is active
+        if (window.quranPlayer) {
+            window.quranPlayer.highlightActiveAyah();
+        }
     }
 
     toArabicNumerals(num) {
@@ -354,6 +359,10 @@ class QuranReader {
             if (localStorage.getItem("quran_show_bn") === null) {
                 this.showBangla = nextLang === "bn";
                 if (showBnCheck) showBnCheck.checked = this.showBangla;
+            }
+            if (localStorage.getItem("quran_show_en") === null) {
+                this.showEnglish = nextLang !== "bn";
+                if (showEnCheck) showEnCheck.checked = this.showEnglish;
             }
             this.renderVerses();
         });

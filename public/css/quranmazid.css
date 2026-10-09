@@ -1652,9 +1652,16 @@ body {
 }
 
 .ayah-card.active-playing {
-    border-color: var(--primary-color);
-    background: var(--active-highlight);
-    box-shadow: 0 0 25px var(--primary-glow);
+    border: 2px solid var(--primary-color) !important;
+    background: rgba(16, 185, 129, 0.1) !important;
+    box-shadow: 0 0 25px var(--primary-glow), inset 4px 0 0 var(--primary-color) !important;
+}
+
+.ayah-card.active-playing .ayah-number-badge {
+    background: var(--primary-color) !important;
+    color: #ffffff !important;
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 2px 8px var(--primary-glow) !important;
 }
 
 .ayah-card-header {

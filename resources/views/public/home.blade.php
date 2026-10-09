@@ -524,7 +524,7 @@
             const badgeTypeClass = s.type === "Makki" ? "makki" : "madani";
             const badgeText = isBn ? (s.type === "Makki" ? "মাক্কী" : "মাদানী") : s.type;
             const surahTitle = isBn ? s.bangla : s.name;
-            const surahSub = isBn ? `${s.banglaMeaning} · ${s.name}` : s.englishMeaning;
+            const surahSub = isBn ? s.banglaMeaning : s.englishMeaning;
             const versesText = isBn ? `${safeToBn(s.verses)} আয়াত` : `${s.verses} Verses`;
 
             html += `

@@ -1,33 +1,15 @@
 /**
  * Quran Mazid - Global Audio Engine
- * Supports seamless studio Surah recitation and synchronized Ayah playback
+ * Dual-buffer gapless playback with synchronized real-time Ayah tracking
  */
-
-const FULL_SURAH_SERVERS = {
-    "Alafasy_128kbps": "https://server8.mp3quran.net/afs/",
-    "ar.alafasy": "https://server8.mp3quran.net/afs/",
-    "Abdurrahmaan_As-Sudais_192kbps": "https://server11.mp3quran.net/sds/",
-    "ar.abdurrahmaansudais": "https://server11.mp3quran.net/sds/",
-    "Maher_AlMuaiqly_64kbps": "https://server12.mp3quran.net/maher/",
-    "ar.mahermuaiqly": "https://server12.mp3quran.net/maher/",
-    "Saood_ash-Shuraym_128kbps": "https://server7.mp3quran.net/shur/",
-    "ar.saoodshuraym": "https://server7.mp3quran.net/shur/",
-    "Abdullah_Basfar_192kbps": "https://server6.mp3quran.net/bsfr/",
-    "ar.abdullahbasfar": "https://server6.mp3quran.net/bsfr/",
-    "Minshawy_Murattal_128kbps": "https://server10.mp3quran.net/minsh/",
-    "ar.minshawi": "https://server10.mp3quran.net/minsh/",
-    "Hudhaify_128kbps": "https://server9.mp3quran.net/hthfi/",
-    "ar.hudhaify": "https://server9.mp3quran.net/hthfi/",
-    "Ahmed_ibn_Ali_al-Ajamy_128kbps_ketaballah.net": "https://server10.mp3quran.net/ajm/128/",
-    "ar.ahmedajamy": "https://server10.mp3quran.net/ajm/128/"
-};
 
 class QuranAudioPlayer {
     constructor() {
-        this.audio = new Audio();
-        this.preloader = new Audio();
+        this.audioA = new Audio();
+        this.audioB = new Audio();
+        this.activeAudio = this.audioA;
+        this.inactiveAudio = this.audioB;
         this.isPlaying = false;
-        this.playMode = "surah"; // 'surah' (full continuous recitation) or 'ayah' (verse by verse)
         this.currentSurahId = 1;
         this.currentAyahNumber = 1;
         this.totalAyahs = 7;
@@ -36,12 +18,12 @@ class QuranAudioPlayer {
         this.loopMode = "continuous"; // 'off', 'repeat_ayah', 'repeat_surah', 'continuous'
         this.playbackSpeed = 1.0;
         this.speedOptions = [0.75, 1.0, 1.25, 1.5, 2.0];
+        this.isTransitioning = false;
 
         this.init();
     }
 
     init() {
-        // Load saved state
         const savedSurah = localStorage.getItem("quran_last_surah");
         const savedAyah = localStorage.getItem("quran_last_ayah");
         const savedReciter = localStorage.getItem("quran_reciter");
@@ -52,33 +34,43 @@ class QuranAudioPlayer {
         if (savedReciter) this.currentReciter = savedReciter;
         if (savedReciterName) this.currentReciterName = savedReciterName;
 
-        this.bindEvents();
+        this.bindAudioEvents(this.audioA);
+        this.bindAudioEvents(this.audioB);
+
         this.updateUI();
     }
 
-    bindEvents() {
-        this.audio.addEventListener("timeupdate", () => this.onTimeUpdate());
-        this.audio.addEventListener("ended", () => this.onTrackEnded());
-        this.audio.addEventListener("play", () => {
-            this.isPlaying = true;
-            this.updatePlayPauseButtons();
-        });
-        this.audio.addEventListener("pause", () => {
-            this.isPlaying = false;
-            this.updatePlayPauseButtons();
-        });
-        this.audio.addEventListener("error", (e) => {
-            console.warn("Audio playback error, trying fallback:", e);
-            if (this.playMode === "ayah") {
-                this.nextAyah();
+    bindAudioEvents(audio) {
+        audio.addEventListener("timeupdate", () => {
+            if (audio === this.activeAudio) {
+                this.onTimeUpdate();
             }
         });
-    }
-
-    getFullSurahAudioUrl(surahId, reciter = this.currentReciter) {
-        const prefix = FULL_SURAH_SERVERS[reciter] || "https://server8.mp3quran.net/afs/";
-        const s = String(surahId).padStart(3, "0");
-        return `${prefix}${s}.mp3`;
+        audio.addEventListener("ended", () => {
+            if (audio === this.activeAudio) {
+                this.onTrackEnded();
+            }
+        });
+        audio.addEventListener("play", () => {
+            if (audio === this.activeAudio) {
+                this.isPlaying = true;
+                this.updatePlayPauseButtons();
+            }
+        });
+        audio.addEventListener("pause", () => {
+            if (audio === this.activeAudio && !this.isTransitioning) {
+                this.isPlaying = false;
+                this.updatePlayPauseButtons();
+            }
+        });
+        audio.addEventListener("error", (e) => {
+            if (audio === this.activeAudio) {
+                console.warn("Audio playback error:", e);
+                if (this.currentAyahNumber < this.totalAyahs) {
+                    this.nextAyah();
+                }
+            }
+        });
     }
 
     getAyahAudioUrl(surah, ayah, reciter = this.currentReciter) {
@@ -87,68 +79,39 @@ class QuranAudioPlayer {
         return `https://everyayah.com/data/${reciter}/${s}${a}.mp3`;
     }
 
-    // Set surah in player without forcing playback unless autoplay = true
+    // Set or sync surah in player without forcing playback unless autoplay = true
     loadSurah(surahId, autoplay = false) {
         this.currentSurahId = parseInt(surahId) || 1;
         this.currentAyahNumber = 1;
-        this.playMode = "surah";
 
         if (window.QURAN_DATA) {
             const s = window.QURAN_DATA.surahs.find(item => item.id === this.currentSurahId);
             if (s) this.totalAyahs = s.verses;
         }
 
-        const url = this.getFullSurahAudioUrl(this.currentSurahId);
-        if (this.audio.src !== url) {
-            this.audio.src = url;
-            this.audio.playbackRate = this.playbackSpeed;
-        }
+        const url = this.getAyahAudioUrl(this.currentSurahId, 1);
+        this.activeAudio.src = url;
+        this.activeAudio.playbackRate = this.playbackSpeed;
+        this.activeAudio.load();
 
         this.updateUI();
+        this.highlightActiveAyah();
 
         if (autoplay) {
-            this.audio.play().then(() => {
-                this.isPlaying = true;
-                this.saveState();
-                this.updateUI();
-            }).catch(err => {
-                console.log("Autoplay prevented:", err);
-            });
-            this.preloadNextSurah();
+            this.playAyah(this.currentSurahId, 1);
+        } else {
+            this.preloadNextAyah();
         }
     }
 
-    // Play full Surah audio continuously with natural Qari rhythm
-    playSurah(surahId) {
-        this.currentSurahId = parseInt(surahId) || 1;
-        this.currentAyahNumber = 1;
-        this.playMode = "surah";
-
-        if (window.QURAN_DATA) {
-            const s = window.QURAN_DATA.surahs.find(item => item.id === this.currentSurahId);
-            if (s) this.totalAyahs = s.verses;
-        }
-
-        const url = this.getFullSurahAudioUrl(this.currentSurahId);
-        this.audio.src = url;
-        this.audio.playbackRate = this.playbackSpeed;
-
-        this.audio.play().then(() => {
-            this.isPlaying = true;
-            this.saveState();
-            this.updateUI();
-        }).catch(err => {
-            console.log("Audio play prevented or loading:", err);
-        });
-
-        this.preloadNextSurah();
+    playSurah(surahId, startAyah = 1) {
+        this.playAyah(surahId, startAyah);
     }
 
-    // Play single Ayah audio
     playAyah(surahId, ayahNumber, totalVerses = null) {
         this.currentSurahId = parseInt(surahId);
         this.currentAyahNumber = parseInt(ayahNumber);
-        this.playMode = "ayah";
+        this.isTransitioning = false;
 
         if (totalVerses) {
             this.totalAyahs = totalVerses;
@@ -157,162 +120,148 @@ class QuranAudioPlayer {
             if (s) this.totalAyahs = s.verses;
         }
 
-        const url = this.getAyahAudioUrl(this.currentSurahId, this.currentAyahNumber);
-        this.audio.src = url;
-        this.audio.playbackRate = this.playbackSpeed;
-        
-        this.audio.play().then(() => {
-            this.isPlaying = true;
-            this.saveState();
-            this.updateUI();
-            this.highlightActiveAyah();
-        }).catch(err => {
-            console.log("Audio play prevented or loading:", err);
-        });
+        try { this.inactiveAudio.pause(); } catch(e) {}
 
-        // Preload next ayah immediately to prevent delay
-        this.preloadNextAyah();
+        const url = this.getAyahAudioUrl(this.currentSurahId, this.currentAyahNumber);
+        this.activeAudio.src = url;
+        this.activeAudio.playbackRate = this.playbackSpeed;
+
+        const playPromise = this.activeAudio.play();
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                this.isPlaying = true;
+                this.saveState();
+                this.updateUI();
+                this.highlightActiveAyah();
+                this.preloadNextAyah();
+            }).catch(err => {
+                console.log("Audio play prevented or loading:", err);
+            });
+        }
     }
 
     preloadNextAyah() {
         if (this.currentAyahNumber < this.totalAyahs) {
             const nextUrl = this.getAyahAudioUrl(this.currentSurahId, this.currentAyahNumber + 1);
-            this.preloader.preload = "auto";
-            this.preloader.src = nextUrl;
+            this.inactiveAudio.preload = "auto";
+            this.inactiveAudio.src = nextUrl;
+            this.inactiveAudio.load();
         }
     }
 
-    preloadNextSurah() {
-        if (this.currentSurahId < 114) {
-            const nextUrl = this.getFullSurahAudioUrl(this.currentSurahId + 1);
-            this.preloader.preload = "auto";
-            this.preloader.src = nextUrl;
-        }
-    }
+    // Seamless gapless switch to the next ayah using preloaded audio buffer
+    transitionToNextAyah() {
+        if (this.isTransitioning) return;
+        this.isTransitioning = true;
 
-    togglePlayPause() {
-        if (!this.audio.src || this.audio.src === "" || this.audio.src.endsWith('/null') || this.audio.src.endsWith('/undefined')) {
-            if (this.playMode === "ayah") {
-                this.playAyah(this.currentSurahId, this.currentAyahNumber);
-            } else {
-                this.playSurah(this.currentSurahId);
-            }
-            return;
-        }
-
-        if (this.isPlaying) {
-            this.audio.pause();
-        } else {
-            this.audio.play().catch(err => console.warn(err));
-        }
-    }
-
-    nextTrack() {
-        if (this.playMode === "ayah") {
-            this.nextAyah();
-        } else {
-            this.nextSurah();
-        }
-    }
-
-    prevTrack() {
-        if (this.playMode === "ayah") {
-            this.prevAyah();
-        } else {
-            this.prevSurah();
-        }
-    }
-
-    nextSurah() {
-        if (this.currentSurahId < 114) {
-            this.currentSurahId++;
-            if (window.location.pathname.includes('/surah/')) {
-                const baseUrl = window.APP_BASE_URL || '';
-                window.location.href = `${baseUrl}/surah/${this.currentSurahId}?autoplay=1`;
-            } else {
-                this.playSurah(this.currentSurahId);
-            }
-        }
-    }
-
-    prevSurah() {
-        if (this.currentSurahId > 1) {
-            this.currentSurahId--;
-            if (window.location.pathname.includes('/surah/')) {
-                const baseUrl = window.APP_BASE_URL || '';
-                window.location.href = `${baseUrl}/surah/${this.currentSurahId}?autoplay=1`;
-            } else {
-                this.playSurah(this.currentSurahId);
-            }
-        }
-    }
-
-    nextAyah() {
-        if (this.playMode === "surah") {
-            this.nextSurah();
-            return;
-        }
         if (this.currentAyahNumber < this.totalAyahs) {
-            this.playAyah(this.currentSurahId, this.currentAyahNumber + 1);
-        } else if (this.currentSurahId < 114) {
-            this.currentSurahId++;
-            this.playAyah(this.currentSurahId, 1);
-            if (window.location.pathname.includes('/surah/')) {
-                const baseUrl = window.APP_BASE_URL || '';
-                window.location.href = `${baseUrl}/surah/${this.currentSurahId}?autoplay=1`;
-            }
-        }
-    }
+            this.currentAyahNumber++;
 
-    prevAyah() {
-        if (this.playMode === "surah") {
-            this.prevSurah();
-            return;
-        }
-        if (this.currentAyahNumber > 1) {
-            this.playAyah(this.currentSurahId, this.currentAyahNumber - 1);
-        } else if (this.currentSurahId > 1) {
-            this.currentSurahId--;
-            this.playAyah(this.currentSurahId, 1);
-            if (window.location.pathname.includes('/surah/')) {
-                const baseUrl = window.APP_BASE_URL || '';
-                window.location.href = `${baseUrl}/surah/${this.currentSurahId}?autoplay=1`;
+            // Swap active and inactive audio objects
+            const prevAudio = this.activeAudio;
+            this.activeAudio = this.inactiveAudio;
+            this.inactiveAudio = prevAudio;
+
+            this.activeAudio.playbackRate = this.playbackSpeed;
+            this.activeAudio.volume = prevAudio.volume;
+
+            const playPromise = this.activeAudio.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    this.isPlaying = true;
+                    this.saveState();
+                    this.updateUI();
+                    this.highlightActiveAyah();
+                    this.isTransitioning = false;
+                    this.preloadNextAyah();
+                }).catch(err => {
+                    console.warn("Transition play error:", err);
+                    this.isTransitioning = false;
+                    this.playAyah(this.currentSurahId, this.currentAyahNumber);
+                });
+            } else {
+                this.isTransitioning = false;
+            }
+        } else {
+            // Surah finished
+            this.isTransitioning = false;
+            if (this.loopMode === "repeat_surah") {
+                this.playAyah(this.currentSurahId, 1);
+            } else if (this.loopMode === "continuous" && this.currentSurahId < 114) {
+                this.currentSurahId++;
+                if (window.location.pathname.includes('/surah/')) {
+                    const baseUrl = window.APP_BASE_URL || '';
+                    window.location.href = `${baseUrl}/surah/${this.currentSurahId}?autoplay=1`;
+                } else {
+                    this.playAyah(this.currentSurahId, 1);
+                }
+            } else {
+                this.isPlaying = false;
+                this.updatePlayPauseButtons();
             }
         }
     }
 
     onTrackEnded() {
-        if (this.playMode === "surah") {
-            if (this.loopMode === "repeat_surah" || this.loopMode === "repeat_ayah") {
-                this.audio.currentTime = 0;
-                this.audio.play();
-            } else if (this.loopMode === "continuous") {
-                this.nextSurah();
-            } else {
-                this.isPlaying = false;
-                this.updatePlayPauseButtons();
-            }
+        if (this.loopMode === "repeat_ayah") {
+            this.activeAudio.currentTime = 0;
+            this.activeAudio.play();
         } else {
-            if (this.loopMode === "repeat_ayah") {
-                this.audio.currentTime = 0;
-                this.audio.play();
-            } else if (this.loopMode === "repeat_surah") {
-                if (this.currentAyahNumber < this.totalAyahs) {
-                    this.nextAyah();
-                } else {
-                    this.playAyah(this.currentSurahId, 1);
-                }
-            } else if (this.loopMode === "continuous") {
-                this.nextAyah();
+            this.transitionToNextAyah();
+        }
+    }
+
+    togglePlayPause() {
+        if (!this.activeAudio.src || this.activeAudio.src === "" || this.activeAudio.src.endsWith('/null') || this.activeAudio.src.endsWith('/undefined')) {
+            this.playAyah(this.currentSurahId, this.currentAyahNumber);
+            return;
+        }
+
+        if (this.isPlaying) {
+            this.activeAudio.pause();
+        } else {
+            this.activeAudio.play().catch(err => console.warn(err));
+        }
+    }
+
+    nextAyah() {
+        if (this.currentAyahNumber < this.totalAyahs) {
+            this.playAyah(this.currentSurahId, this.currentAyahNumber + 1);
+        } else if (this.currentSurahId < 114) {
+            this.currentSurahId++;
+            if (window.location.pathname.includes('/surah/')) {
+                const baseUrl = window.APP_BASE_URL || '';
+                window.location.href = `${baseUrl}/surah/${this.currentSurahId}?autoplay=1`;
             } else {
-                this.isPlaying = false;
-                this.updatePlayPauseButtons();
+                this.playAyah(this.currentSurahId, 1);
             }
         }
     }
 
+    prevAyah() {
+        if (this.currentAyahNumber > 1) {
+            this.playAyah(this.currentSurahId, this.currentAyahNumber - 1);
+        } else if (this.currentSurahId > 1) {
+            this.currentSurahId--;
+            if (window.location.pathname.includes('/surah/')) {
+                const baseUrl = window.APP_BASE_URL || '';
+                window.location.href = `${baseUrl}/surah/${this.currentSurahId}?autoplay=1`;
+            } else {
+                this.playAyah(this.currentSurahId, 1);
+            }
+        }
+    }
+
+    nextTrack() {
+        this.nextAyah();
+    }
+
+    prevTrack() {
+        this.prevAyah();
+    }
+
     toggleLoopMode() {
-        const modes = ["continuous", "repeat_surah", "repeat_ayah", "off"];
+        const modes = ["continuous", "repeat_ayah", "repeat_surah", "off"];
         const idx = modes.indexOf(this.loopMode);
         this.loopMode = modes[(idx + 1) % modes.length];
         
@@ -337,7 +286,8 @@ class QuranAudioPlayer {
     cycleSpeed() {
         const idx = this.speedOptions.indexOf(this.playbackSpeed);
         this.playbackSpeed = this.speedOptions[(idx + 1) % this.speedOptions.length];
-        this.audio.playbackRate = this.playbackSpeed;
+        this.activeAudio.playbackRate = this.playbackSpeed;
+        this.inactiveAudio.playbackRate = this.playbackSpeed;
 
         const speedBtn = document.getElementById("audioSpeedBtn");
         if (speedBtn) {
@@ -352,29 +302,27 @@ class QuranAudioPlayer {
         localStorage.setItem("quran_reciter_name", reciterName);
 
         if (this.isPlaying) {
-            if (this.playMode === "ayah") {
-                this.playAyah(this.currentSurahId, this.currentAyahNumber);
-            } else {
-                this.playSurah(this.currentSurahId);
-            }
+            this.playAyah(this.currentSurahId, this.currentAyahNumber);
         } else {
             this.updateUI();
         }
     }
 
     seekTo(fraction) {
-        if (this.audio.duration) {
-            this.audio.currentTime = fraction * this.audio.duration;
+        if (this.activeAudio.duration) {
+            this.activeAudio.currentTime = fraction * this.activeAudio.duration;
         }
     }
 
     setVolume(volume) {
-        this.audio.volume = Math.max(0, Math.min(1, volume));
+        const v = Math.max(0, Math.min(1, volume));
+        this.activeAudio.volume = v;
+        this.inactiveAudio.volume = v;
     }
 
     onTimeUpdate() {
-        const cur = this.audio.currentTime || 0;
-        const dur = this.audio.duration || 0;
+        const cur = this.activeAudio.currentTime || 0;
+        const dur = this.activeAudio.duration || 0;
 
         const curLabel = document.getElementById("audioCurTime");
         const durLabel = document.getElementById("audioDurTime");
@@ -384,6 +332,15 @@ class QuranAudioPlayer {
         if (durLabel && dur) durLabel.textContent = this.formatTime(dur);
         if (seekSlider && dur) {
             seekSlider.value = (cur / dur) * 100;
+        }
+
+        // Seamless gapless handoff near the end of the audio file (0.05s)
+        if (dur > 0 && (dur - cur) <= 0.05 && !this.isTransitioning && this.isPlaying) {
+            if (this.loopMode === "repeat_ayah") {
+                this.activeAudio.currentTime = 0;
+            } else {
+                this.transitionToNextAyah();
+            }
         }
     }
 
@@ -400,7 +357,6 @@ class QuranAudioPlayer {
     }
 
     highlightActiveAyah() {
-        if (this.playMode !== "ayah") return;
         document.querySelectorAll(".ayah-card.active-playing").forEach(el => {
             el.classList.remove("active-playing");
         });
@@ -436,13 +392,8 @@ class QuranAudioPlayer {
         if (speedBtn) speedBtn.title = isBn ? "প্লেব্যাক গতি" : "Playback Speed";
 
         if (nameEl) {
-            if (this.playMode === "ayah") {
-                const ayahNum = isBn && window.toBanglaNumber ? window.toBanglaNumber(this.currentAyahNumber) : this.currentAyahNumber;
-                nameEl.textContent = isBn ? `${banglaName} (আয়াত ${ayahNum})` : `Surah ${surahName} (Ayah ${this.currentAyahNumber})`;
-            } else {
-                const surahNum = isBn && window.toBanglaNumber ? window.toBanglaNumber(this.currentSurahId) : this.currentSurahId;
-                nameEl.textContent = isBn ? `${banglaName} (${surahNum})` : `Surah ${surahName} (${this.currentSurahId})`;
-            }
+            const ayahNum = isBn && window.toBanglaNumber ? window.toBanglaNumber(this.currentAyahNumber) : this.currentAyahNumber;
+            nameEl.textContent = isBn ? `${banglaName} (আয়াত ${ayahNum})` : `Surah ${surahName} (Ayah ${this.currentAyahNumber})`;
             if (isBn) nameEl.classList.add("font-bangla");
             else nameEl.classList.remove("font-bangla");
         }
