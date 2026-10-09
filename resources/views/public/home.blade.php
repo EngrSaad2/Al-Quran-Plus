@@ -32,88 +32,105 @@
     <!-- 3D Fan / Stacked Cards Carousel -->
     <div class="cards-fan-container">
         <div class="cards-fan-stack" id="featuredFanStack">
-            <a href="{{ route('public.surah', 17) }}?autoplay=1" class="fan-card-item" style="transform: translateY(20px) rotate(-8deg); z-index: 10;">
+            <a href="{{ route('public.surah', 112) }}?autoplay=1" class="fan-card-item" style="transform: translateY(22px) rotate(-10deg); z-index: 10;">
                 <div class="fan-card-inner">
                     <span class="fan-card-bg-watermark">سورة</span>
                     <div class="fan-card-top">
-                        <span class="badge-surah-num">17</span>
-                        <button class="fan-card-quick-play" onclick="playFanCardAudio(event, 17)" title="শুনুন">
+                        <span class="badge-surah-num">112</span>
+                        <button class="fan-card-quick-play" onclick="playFanCardAudio(event, 112)" title="শুনুন">
                             <i class="fa-solid fa-play"></i>
                         </button>
                         <span class="badge-surah-origin">🕋 মাক্কী</span>
                     </div>
-                    <div class="fan-card-arabic">الإسراء</div>
+                    <div class="fan-card-arabic">الإخلاص</div>
                     <div class="fan-card-bottom">
-                        <h4 class="fan-card-name">আল-ইসরা</h4>
-                        <p class="fan-card-verses">১১১ আয়াত</p>
+                        <h4 class="fan-card-name">আল-ইখলাস</h4>
+                        <p class="fan-card-verses">৪ আয়াত</p>
                     </div>
                 </div>
             </a>
-            <a href="{{ route('public.surah', 41) }}?autoplay=1" class="fan-card-item" style="transform: translateY(-8px) rotate(-4deg); z-index: 20;">
+            <a href="{{ route('public.surah', 18) }}?autoplay=1" class="fan-card-item" style="transform: translateY(-2px) rotate(-5deg); z-index: 20;">
                 <div class="fan-card-inner">
                     <span class="fan-card-bg-watermark">سورة</span>
                     <div class="fan-card-top">
-                        <span class="badge-surah-num">41</span>
-                        <button class="fan-card-quick-play" onclick="playFanCardAudio(event, 41)" title="শুনুন">
+                        <span class="badge-surah-num">18</span>
+                        <button class="fan-card-quick-play" onclick="playFanCardAudio(event, 18)" title="শুনুন">
                             <i class="fa-solid fa-play"></i>
                         </button>
                         <span class="badge-surah-origin">🕋 মাক্কী</span>
                     </div>
-                    <div class="fan-card-arabic">فصلت</div>
+                    <div class="fan-card-arabic">الكهف</div>
                     <div class="fan-card-bottom">
-                        <h4 class="fan-card-name">ফুসসিলাত</h4>
-                        <p class="fan-card-verses">৫৪ আয়াত</p>
+                        <h4 class="fan-card-name">আল-কাহফ</h4>
+                        <p class="fan-card-verses">১১০ আয়াত</p>
                     </div>
                 </div>
             </a>
-            <a href="{{ route('public.surah', 109) }}?autoplay=1" class="fan-card-item" style="transform: translateY(-36px) rotate(0deg); z-index: 30;">
+            <a href="{{ route('public.surah', 36) }}?autoplay=1" class="fan-card-item" style="transform: translateY(-28px) rotate(-1.5deg); z-index: 30;">
                 <div class="fan-card-inner">
                     <span class="fan-card-bg-watermark">سورة</span>
                     <div class="fan-card-top">
-                        <span class="badge-surah-num">109</span>
-                        <button class="fan-card-quick-play" onclick="playFanCardAudio(event, 109)" title="শুনুন">
+                        <span class="badge-surah-num">36</span>
+                        <button class="fan-card-quick-play" onclick="playFanCardAudio(event, 36)" title="শুনুন">
                             <i class="fa-solid fa-play"></i>
                         </button>
                         <span class="badge-surah-origin">🕋 মাক্কী</span>
                     </div>
-                    <div class="fan-card-arabic">الكافرون</div>
+                    <div class="fan-card-arabic">يس</div>
                     <div class="fan-card-bottom">
-                        <h4 class="fan-card-name">আল-কাফিরুন</h4>
-                        <p class="fan-card-verses">৬ আয়াত</p>
+                        <h4 class="fan-card-name">ইয়াসিন</h4>
+                        <p class="fan-card-verses">৮৩ আয়াত</p>
                     </div>
                 </div>
             </a>
-            <a href="{{ route('public.surah', 88) }}?autoplay=1" class="fan-card-item" style="transform: translateY(-8px) rotate(4deg); z-index: 20;">
+            <a href="{{ route('public.surah', 55) }}?autoplay=1" class="fan-card-item" style="transform: translateY(-28px) rotate(1.5deg); z-index: 30;">
                 <div class="fan-card-inner">
                     <span class="fan-card-bg-watermark">سورة</span>
                     <div class="fan-card-top">
-                        <span class="badge-surah-num">88</span>
-                        <button class="fan-card-quick-play" onclick="playFanCardAudio(event, 88)" title="শুনুন">
-                            <i class="fa-solid fa-play"></i>
-                        </button>
-                        <span class="badge-surah-origin">🕋 মাক্কী</span>
-                    </div>
-                    <div class="fan-card-arabic">الغاشية</div>
-                    <div class="fan-card-bottom">
-                        <h4 class="fan-card-name">আল-গাশিয়াহ</h4>
-                        <p class="fan-card-verses">২৬ আয়াত</p>
-                    </div>
-                </div>
-            </a>
-            <a href="{{ route('public.surah', 65) }}?autoplay=1" class="fan-card-item" style="transform: translateY(20px) rotate(8deg); z-index: 10;">
-                <div class="fan-card-inner">
-                    <span class="fan-card-bg-watermark">سورة</span>
-                    <div class="fan-card-top">
-                        <span class="badge-surah-num">65</span>
-                        <button class="fan-card-quick-play" onclick="playFanCardAudio(event, 65)" title="শুনুন">
+                        <span class="badge-surah-num">55</span>
+                        <button class="fan-card-quick-play" onclick="playFanCardAudio(event, 55)" title="শুনুন">
                             <i class="fa-solid fa-play"></i>
                         </button>
                         <span class="badge-surah-origin">🕌 মাদানী</span>
                     </div>
-                    <div class="fan-card-arabic">الطلاق</div>
+                    <div class="fan-card-arabic">الرحمن</div>
                     <div class="fan-card-bottom">
-                        <h4 class="fan-card-name">আত-তালাক</h4>
-                        <p class="fan-card-verses">১২ আয়াত</p>
+                        <h4 class="fan-card-name">আর-রহমান</h4>
+                        <p class="fan-card-verses">৭৮ আয়াত</p>
+                    </div>
+                </div>
+            </a>
+            <a href="{{ route('public.surah', 67) }}?autoplay=1" class="fan-card-item" style="transform: translateY(-2px) rotate(5deg); z-index: 20;">
+                <div class="fan-card-inner">
+                    <span class="fan-card-bg-watermark">سورة</span>
+                    <div class="fan-card-top">
+                        <span class="badge-surah-num">67</span>
+                        <button class="fan-card-quick-play" onclick="playFanCardAudio(event, 67)" title="শুনুন">
+                            <i class="fa-solid fa-play"></i>
+                        </button>
+                        <span class="badge-surah-origin">🕋 মাক্কী</span>
+                    </div>
+                    <div class="fan-card-arabic">الملك</div>
+                    <div class="fan-card-bottom">
+                        <h4 class="fan-card-name">আল-মুলক</h4>
+                        <p class="fan-card-verses">৩০ আয়াত</p>
+                    </div>
+                </div>
+            </a>
+            <a href="{{ route('public.surah', 1) }}?autoplay=1" class="fan-card-item" style="transform: translateY(22px) rotate(10deg); z-index: 10;">
+                <div class="fan-card-inner">
+                    <span class="fan-card-bg-watermark">سورة</span>
+                    <div class="fan-card-top">
+                        <span class="badge-surah-num">1</span>
+                        <button class="fan-card-quick-play" onclick="playFanCardAudio(event, 1)" title="শুনুন">
+                            <i class="fa-solid fa-play"></i>
+                        </button>
+                        <span class="badge-surah-origin">🕋 মাক্কী</span>
+                    </div>
+                    <div class="fan-card-arabic">الفاتحة</div>
+                    <div class="fan-card-bottom">
+                        <h4 class="fan-card-name">আল-ফাতিহা</h4>
+                        <p class="fan-card-verses">৭ আয়াত</p>
                     </div>
                 </div>
             </a>
@@ -379,13 +396,14 @@
         const isBn = lang === 'bn';
         const stackItems = window.QURAN_DATA.featuredStack;
         const transforms = [
-            'translateY(20px) rotate(-8deg)',
-            'translateY(-8px) rotate(-4deg)',
-            'translateY(-36px) rotate(0deg)',
-            'translateY(-8px) rotate(4deg)',
-            'translateY(20px) rotate(8deg)'
+            'translateY(22px) rotate(-10deg)',
+            'translateY(-2px) rotate(-5deg)',
+            'translateY(-28px) rotate(-1.5deg)',
+            'translateY(-28px) rotate(1.5deg)',
+            'translateY(-2px) rotate(5deg)',
+            'translateY(22px) rotate(10deg)'
         ];
-        const zIndexes = [10, 20, 30, 20, 10];
+        const zIndexes = [10, 20, 30, 30, 20, 10];
 
         const baseUrl = window.APP_BASE_URL || '';
         let html = "";

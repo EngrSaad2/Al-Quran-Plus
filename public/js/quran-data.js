@@ -143,11 +143,12 @@ window.QURAN_DATA = {
     ],
 
     featuredStack: [
-        { id: 17, name: "Al-Israa", bangla: "আল-ইসরা", arabic: "الإسراء", verses: 111, type: "Makki" },
-        { id: 41, name: "Fussilat", bangla: "ফুসসিলাত", arabic: "فصلت", verses: 54, type: "Makki" },
-        { id: 109, name: "Al-Kaafiroon", bangla: "আল-কাফিরুন", arabic: "الكافرون", verses: 6, type: "Makki" },
-        { id: 88, name: "Al-Ghaashiya", bangla: "আল-গাশিয়াহ", arabic: "الغاشية", verses: 26, type: "Makki" },
-        { id: 65, name: "At-Talaaq", bangla: "আত-তালাক", arabic: "الطلاق", verses: 12, type: "Madani" }
+        { id: 112, name: "Al-Ikhlaas", bangla: "আল-ইখলাস", arabic: "الإخلاص", verses: 4, type: "Makki" },
+        { id: 18, name: "Al-Kahf", bangla: "আল-কাহফ", arabic: "الكهف", verses: 110, type: "Makki" },
+        { id: 36, name: "Yaseen", bangla: "ইয়াসিন", arabic: "يس", verses: 83, type: "Makki" },
+        { id: 55, name: "Ar-Rahmaan", bangla: "আর-রহমান", arabic: "الرحمن", verses: 78, type: "Madani" },
+        { id: 67, name: "Al-Mulk", bangla: "আল-মুলক", arabic: "الملك", verses: 30, type: "Makki" },
+        { id: 1, name: "Al-Faatiha", bangla: "আল-ফাতিহা", arabic: "الفاتحة", verses: 7, type: "Makki" }
     ],
 
     juzList: Array.from({ length: 30 }, (_, i) => {
