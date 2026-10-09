@@ -196,11 +196,20 @@
     function initReaderView() {
         updateReaderLanguageUI();
 
+        // Check if autoplay requested
+        const urlParams = new URLSearchParams(window.location.search);
+        const shouldAutoplay = urlParams.get('autoplay') === '1' || urlParams.get('play') === '1';
+
         // Populate Reciters in Settings
         populateRecitersDropdown();
 
         // Initialize QuranReader instance
         window.quranReader = new QuranReader(currentSurahId);
+
+        // Sync global audio player to current surah
+        if (window.quranPlayer) {
+            window.quranPlayer.loadSurah(currentSurahId, shouldAutoplay);
+        }
     }
 
     function updateReaderLanguageUI() {
@@ -330,8 +339,8 @@
             const sub = isBn ? s.name : s.englishMeaning;
 
             html += `
-                <a href="${baseUrl}/surah/${s.id}" class="surah-nav-item ${isActive ? 'active' : ''}">
-                    <div class="surah-num-box" style="width:32px; height:32px; font-size:0.75rem;">${s.id}</div>
+                <a href="${baseUrl}/surah/${s.id}" class="surah-nav-item ${isActive ? 'active selected-surah' : ''}" id="navSurahItem-${s.id}">
+                    <div class="surah-num-box ${isActive ? 'active-num' : ''}" style="width:32px; height:32px; font-size:0.75rem;">${s.id}</div>
                     <div style="flex:1; min-width:0;">
                         <div class="d-flex align-items-center justify-content-between">
                             <h6 class="mb-0 ${isBn ? 'font-bangla' : ''} fw-bold text-truncate small ${isActive ? 'text-primary' : ''}">${title}</h6>
@@ -348,11 +357,17 @@
 
         container.innerHTML = html;
 
-        // Auto scroll to active surah in sidebar
-        const activeEl = container.querySelector(".surah-nav-item.active");
-        if (activeEl) {
-            activeEl.scrollIntoView({ block: "nearest" });
+        // Auto scroll active surah smoothly to center of sidebar
+        function scrollActiveSurahToCenter() {
+            const activeEl = container.querySelector(".surah-nav-item.active");
+            if (activeEl) {
+                const targetScroll = activeEl.offsetTop - (container.clientHeight / 2) + (activeEl.clientHeight / 2);
+                container.scrollTo({ top: Math.max(0, targetScroll), behavior: "smooth" });
+            }
         }
+        scrollActiveSurahToCenter();
+        setTimeout(scrollActiveSurahToCenter, 100);
+        setTimeout(scrollActiveSurahToCenter, 300);
     }
 
     function filterNavSurahs(query) {
