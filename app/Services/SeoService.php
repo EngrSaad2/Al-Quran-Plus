@@ -10,10 +10,11 @@ class SeoService
             '@context' => 'https://schema.org',
             '@type' => 'WebSite',
             'name' => 'Al Quran Plus',
-            'alternateName' => ['কুরআন মাজিদ', 'Quran Mazid', 'Al Quran Online Bangladesh'],
+            'alternateName' => ['Al Quran', 'Holy Quran Online', 'Al Quran Plus Online'],
             'url' => url('/'),
-            'description' => 'পবিত্র কুরআনুল কারীমের বিশুদ্ধ আরবি তিলাওয়াত, সহজ-সরল বাংলা ও ইংরেজি অনুবাদ এবং ইসলামিক রিসোর্স।',
-            'inLanguage' => ['bn-BD', 'en', 'ar'],
+            'description' => 'Read, listen, and explore the Holy Quran online with crystal clear Arabic script, authentic English and Bangla translations, verse-by-verse recitation audio, Tafsir, Dua, and prayer times.',
+            'inLanguage' => ['en', 'bn-BD', 'ar'],
+            'image' => asset('images/seo-og-banner.png'),
             'potentialAction' => [
                 '@type' => 'SearchAction',
                 'target' => [
@@ -37,7 +38,8 @@ class SeoService
                 'url' => asset('favicon.png'),
                 'width' => 192,
                 'height' => 192
-            ]
+            ],
+            'image' => asset('images/seo-og-banner.png')
         ];
     }
 

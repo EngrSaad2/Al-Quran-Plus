@@ -2,11 +2,12 @@
 
 @section('meta')
     @include('partials.seo-meta', [
-        'metaTitle' => 'আল কুরআন বাংলা ও ইংরেজি অনুবাদ | কুরআন মাজিদ অনলাইন - Al Quran Plus',
-        'metaDesc' => 'পবিত্র আল কুরআন পড়ুন ও শুনুন বিশুদ্ধ আরবি, সহজ বাংলা ও ইংরেজি অনুবাদসহ। ১১৪টি সূরার অডিও তিলাওয়াত, তাফসীর, ইসলামিক দোয়া ও নামাজের সময়সূচি।',
-        'metaKeywords' => 'আল কুরআন বাংলা, কুরআন শরীফ বাংলা, Quran Bangla Translation, Al Quran Online, সূরা ইয়াসিন, সূরা আর রহমান, ইসলামিক দোয়া, নামাজের সময়সূচি',
+        'metaTitle' => 'Al Quran — Read & Listen Holy Quran Online with Bangla & English Translation | Al Quran Plus',
+        'metaDesc' => 'Read, listen, and explore the Holy Quran online with crystal clear Arabic script, authentic English and Bangla translations, verse-by-verse recitation audio, Tafsir, Dua, and prayer times.',
+        'metaKeywords' => 'Al Quran, Holy Quran Online, Quran English Translation, Quran Bangla Translation, Quran Audio Recitation, Read Quran Online, Surah Yaseen, Surah Rahman, Quran Tafsir, Islamic Dua, Al Quran Plus',
         'canonicalUrl' => url('/'),
         'ogType' => 'website',
+        'ogImage' => asset('images/seo-og-banner.png'),
         'websiteSchema' => $websiteSchema ?? null,
         'orgSchema' => $orgSchema ?? null
     ])

@@ -1,9 +1,9 @@
 @php
-    $pageTitle = $metaTitle ?? 'আল কুরআন বাংলা ও ইংরেজি অনুবাদ | কুরআন মাজিদ অনলাইন - Al Quran Plus';
-    $pageDesc = $metaDesc ?? 'পবিত্র আল কুরআন পড়ুন ও শুনুন বিশুদ্ধ আরবি, সহজ বাংলা ও ইংরেজি অনুবাদসহ। ১১৪টি সূরার অডিও তিলাওয়াত, তাফসীর, ইসলামিক দোয়া ও নামাজের সময়সূচি।';
-    $pageKeywords = $metaKeywords ?? 'আল কুরআন বাংলা, কুরআন শরীফ, Quran Bangla Translation, Quran with English, Quran Tafsir Bangla, সূরা ইয়াসিন, সূরা আর রহমান, ইসলামিক দোয়া, নামাজের সময়সূচি বাংলাদেশ';
+    $pageTitle = $metaTitle ?? 'Al Quran — Read & Listen Holy Quran Online with Bangla & English Translation | Al Quran Plus';
+    $pageDesc = $metaDesc ?? 'Read, listen, and explore the Holy Quran online with crystal clear Arabic script, authentic English and Bangla translations, verse-by-verse recitation audio, Tafsir, Dua, and prayer times.';
+    $pageKeywords = $metaKeywords ?? 'Al Quran, Holy Quran Online, Quran English Translation, Quran Bangla Translation, Quran Audio Recitation, Read Quran Online, Surah Yaseen, Surah Rahman, Quran Tafsir, Islamic Dua, Al Quran Plus';
     $pageCanonical = $canonicalUrl ?? url()->current();
-    $pageOgImage = $ogImage ?? asset('favicon.png');
+    $pageOgImage = $ogImage ?? asset('images/seo-og-banner.png');
     $pageType = $ogType ?? 'website';
 @endphp
 
@@ -14,8 +14,8 @@
 
 <!-- Canonical & Language Alternates -->
 <link rel="canonical" href="{{ $pageCanonical }}">
-<link rel="alternate" hreflang="bn-BD" href="{{ $pageCanonical }}?lang=bn">
 <link rel="alternate" hreflang="en" href="{{ $pageCanonical }}?lang=en">
+<link rel="alternate" hreflang="bn" href="{{ $pageCanonical }}?lang=bn">
 <link rel="alternate" hreflang="x-default" href="{{ $pageCanonical }}">
 
 <!-- Open Graph / Facebook -->
@@ -24,9 +24,14 @@
 <meta property="og:title" content="{{ $pageTitle }}">
 <meta property="og:description" content="{{ $pageDesc }}">
 <meta property="og:image" content="{{ $pageOgImage }}">
+<meta property="og:image:secure_url" content="{{ $pageOgImage }}">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Al Quran Plus — Read and Listen to Holy Quran Online">
 <meta property="og:site_name" content="Al Quran Plus">
-<meta property="og:locale" content="bn_BD">
-<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="bn_BD">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
@@ -34,6 +39,7 @@
 <meta name="twitter:title" content="{{ $pageTitle }}">
 <meta name="twitter:description" content="{{ $pageDesc }}">
 <meta name="twitter:image" content="{{ $pageOgImage }}">
+<meta name="twitter:image:alt" content="Al Quran Plus — Read and Listen to Holy Quran Online">
 
 <!-- Structured Data (JSON-LD) -->
 @if(isset($websiteSchema))
