@@ -144,7 +144,7 @@
     <aside class="reader-settings-panel" id="readerSettingsPanel">
         <div class="settings-panel-header">
             <h6 class="fw-bold font-bangla mb-0" id="settingsHeaderTitle"><i class="fa-solid fa-gear text-primary me-2"></i> রিডিং সেটিংস</h6>
-            <button class="btn-icon-circle" onclick="toggleSettingsPanel()">
+            <button class="btn-icon-circle" onclick="closeSettingsPanel()" title="বন্ধ করুন">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
@@ -420,15 +420,71 @@
         }
     }
 
-    function toggleNavPanel() {
-        const panel = document.getElementById("readerNavPanel");
-        if (panel) panel.classList.toggle("open");
-    }
-
     function toggleSettingsPanel() {
         const panel = document.getElementById("readerSettingsPanel");
-        if (panel) panel.classList.toggle("open");
+        if (!panel) return;
+        const isMobile = window.innerWidth <= 1200;
+        if (isMobile) {
+            panel.classList.toggle("open");
+        } else {
+            panel.classList.toggle("closed");
+        }
+        updateSettingsBtnState();
     }
+
+    function closeSettingsPanel() {
+        const panel = document.getElementById("readerSettingsPanel");
+        if (!panel) return;
+        panel.classList.remove("open");
+        panel.classList.add("closed");
+        updateSettingsBtnState();
+    }
+
+    function openSettingsPanel() {
+        const panel = document.getElementById("readerSettingsPanel");
+        if (!panel) return;
+        panel.classList.add("open");
+        panel.classList.remove("closed");
+        updateSettingsBtnState();
+    }
+
+    function updateSettingsBtnState() {
+        const panel = document.getElementById("readerSettingsPanel");
+        const headerBtn = document.getElementById("readerHeaderSettingsBtn");
+        const miniBtn = document.getElementById("miniNavSettings");
+        if (!panel) return;
+        const isMobile = window.innerWidth <= 1200;
+        const isOpen = isMobile ? panel.classList.contains("open") : !panel.classList.contains("closed");
+        if (headerBtn) {
+            if (isOpen) headerBtn.classList.add("active");
+            else headerBtn.classList.remove("active");
+        }
+        if (miniBtn) {
+            if (isOpen) miniBtn.classList.add("active");
+            else miniBtn.classList.remove("active");
+        }
+    }
+
+    function toggleNavPanel() {
+        const panel = document.getElementById("readerNavPanel");
+        const miniBtn = document.getElementById("toggleNavDrawerBtn");
+        if (!panel) return;
+        const isMobile = window.innerWidth <= 1024;
+        if (isMobile) {
+            panel.classList.toggle("open");
+        } else {
+            panel.classList.toggle("closed");
+        }
+        const isOpen = isMobile ? panel.classList.contains("open") : !panel.classList.contains("closed");
+        if (miniBtn) {
+            if (isOpen) miniBtn.classList.add("active");
+            else miniBtn.classList.remove("active");
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        updateSettingsBtnState();
+    });
 </script>
 @endsection
 
