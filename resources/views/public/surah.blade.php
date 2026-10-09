@@ -146,7 +146,7 @@
             <div class="setting-group-item">
                 <div class="setting-label">
                     <span id="labelArabicSize">আরবি ফন্ট সাইজ</span>
-                    <span class="badge bg-secondary text-primary" id="arabicSizeValue">28px</span>
+                    <span class="badge badge-font-size" id="arabicSizeValue">28px</span>
                 </div>
                 <input type="range" class="custom-range-slider" id="settingArabicSize" min="20" max="48" value="28">
             </div>
@@ -155,7 +155,7 @@
             <div class="setting-group-item">
                 <div class="setting-label">
                     <span id="labelTransSize">অনুবাদ ফন্ট সাইজ</span>
-                    <span class="badge bg-secondary text-primary" id="transSizeValue">15px</span>
+                    <span class="badge badge-font-size" id="transSizeValue">15px</span>
                 </div>
                 <input type="range" class="custom-range-slider" id="settingTransSize" min="12" max="24" value="15">
             </div>
@@ -346,9 +346,9 @@
                             <h6 class="mb-0 ${isBn ? 'font-bangla' : ''} fw-bold text-truncate small ${isActive ? 'text-primary' : ''}">${title}</h6>
                             <span class="font-amiri fw-bold" style="font-size:1.1rem;">${s.arabic}</span>
                         </div>
-                        <div class="d-flex align-items-center justify-content-between text-muted" style="font-size:0.68rem;">
-                            <span>${sub}</span>
-                            <span class="${originClass}">${originBadge}</span>
+                        <div class="d-flex align-items-center justify-content-between surah-nav-sub-row" style="font-size:0.72rem; margin-top:2px;">
+                            <span class="surah-nav-sub">${sub}</span>
+                            <span class="${originClass} fw-bold" style="font-size:0.68rem;">${originBadge}</span>
                         </div>
                     </div>
                 </a>

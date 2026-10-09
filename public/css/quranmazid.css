@@ -51,6 +51,15 @@
     --player-bg: rgba(255, 255, 255, 0.96);
 }
 
+:root .text-muted,
+[data-theme="dark"] .text-muted {
+    color: rgba(255, 255, 255, 0.82) !important;
+}
+
+[data-theme="light"] .text-muted {
+    color: var(--text-muted) !important;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -1552,6 +1561,45 @@ body {
 .surah-nav-item.selected-surah h6 {
     color: var(--primary-color) !important;
     font-weight: 800 !important;
+}
+
+.surah-nav-sub {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+}
+
+.surah-nav-item.active .surah-nav-sub,
+.surah-nav-item.selected-surah .surah-nav-sub {
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+[data-theme="light"] .surah-nav-sub {
+    color: #475569 !important;
+    font-weight: 500;
+}
+
+[data-theme="light"] .surah-nav-item.active .surah-nav-sub,
+[data-theme="light"] .surah-nav-item.selected-surah .surah-nav-sub {
+    color: #065f46 !important;
+    font-weight: 600;
+}
+
+.badge-font-size {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.18) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    font-weight: 700 !important;
+    font-size: 0.72rem;
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+}
+
+[data-theme="light"] .badge-font-size {
+    color: #ffffff !important;
+    background: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
 }
 
 /* Main Reader Content Area */
