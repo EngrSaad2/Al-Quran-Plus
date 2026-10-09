@@ -486,7 +486,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: visible;
+    overflow: hidden;
 }
 
 .cards-fan-stack {
@@ -546,7 +546,7 @@ body {
         margin: 12px auto 8px;
     }
     .cards-fan-stack {
-        transform: scale(0.94);
+        transform: scale(0.86);
     }
     .fan-card-item {
         width: 96px;
@@ -582,7 +582,7 @@ body {
         margin: 10px auto 6px;
     }
     .cards-fan-stack {
-        transform: scale(0.88);
+        transform: scale(0.78);
     }
     .fan-card-item {
         width: 88px;
