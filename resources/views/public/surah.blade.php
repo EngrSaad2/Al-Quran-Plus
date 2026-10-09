@@ -89,7 +89,7 @@
             <div class="d-flex align-items-center gap-2">
                 <!-- Change Qari Option on Header Circle with Qari Picture -->
                 <div class="d-inline-block" id="headerQariDropdownContainer">
-                    <button class="btn-qari-header-circle" id="headerQariBtn" onclick="openQariModal()" title="ক্বারী পরিবর্তন করুন / Change Reciter">
+                    <button class="btn-qari-header-circle" id="headerQariBtn" type="button" data-bs-toggle="modal" data-bs-target="#qariSelectModal" onclick="openQariModal()" title="ক্বারী পরিবর্তন করুন / Change Reciter">
                         <img id="headerQariImg" src="{{ asset('images/reciters/alafasy.webp') }}" alt="Qari" class="qari-header-avatar">
                     </button>
                 </div>
@@ -153,7 +153,7 @@
             <!-- Qari / Reciter Selection -->
             <div class="setting-group-item">
                 <div class="setting-label" id="labelReciter">ক্বারী / তিলাওয়াতকারী</div>
-                <button type="button" class="qari-setting-preview-btn" onclick="openQariModal()" id="settingQariBtn" title="ক্বারী পরিবর্তন করুন / Change Reciter">
+                <button type="button" class="qari-setting-preview-btn" data-bs-toggle="modal" data-bs-target="#qariSelectModal" onclick="openQariModal()" id="settingQariBtn" title="ক্বারী পরিবর্তন করুন / Change Reciter">
                     <img id="settingQariImg" src="{{ asset('images/reciters/alafasy.webp') }}" alt="Qari" class="qari-setting-thumb">
                     <div class="qari-setting-info">
                         <div class="qari-setting-name font-bangla" id="settingQariName">মিশারি রশিদ আল-আফাসি</div>

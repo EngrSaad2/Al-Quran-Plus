@@ -155,7 +155,7 @@
     @if(!request()->routeIs('public.home') && !request()->is('/'))
     <div class="global-audio-player-bar" id="globalAudioBar">
         <!-- Track & Surah Meta -->
-        <div class="audio-track-info">
+        <div class="audio-track-info" data-bs-toggle="modal" data-bs-target="#qariSelectModal" onclick="openQariModal()" style="cursor: pointer;" title="ক্বারী পরিবর্তন করতে ক্লিক করুন">
             <div class="audio-thumb-circle">
                 <i class="fa-solid fa-book-quran"></i>
             </div>
@@ -510,6 +510,29 @@
         });
 
         document.addEventListener("DOMContentLoaded", () => {
+            const modalEl = document.getElementById("qariSelectModal");
+            if (modalEl) {
+                modalEl.addEventListener("show.bs.modal", () => {
+                    window.renderQariModalCards();
+                });
+            }
+
+            const headerBtn = document.getElementById("headerQariBtn");
+            if (headerBtn) {
+                headerBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    window.openQariModal();
+                });
+            }
+
+            const settingBtn = document.getElementById("settingQariBtn");
+            if (settingBtn) {
+                settingBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    window.openQariModal();
+                });
+            }
+
             setTimeout(() => {
                 window.updateAllQariUIPreviews();
             }, 100);
