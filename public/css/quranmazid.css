@@ -117,10 +117,10 @@ body {
 .watermark-text-center {
     position: absolute;
     top: 52%;
-    left: 30px;
-    right: 30px;
-    transform: translateY(-50%);
-    font-size: clamp(2.6rem, 11vw, 13.5rem);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vw;
+    font-size: clamp(3.5rem, 16.5vw, 22rem);
     font-family: 'Amiri', 'Amiri Quran', 'Scheherazade New', serif;
     font-weight: 400;
     color: var(--text-primary);
@@ -141,18 +141,14 @@ body {
 @media (max-width: 768px) {
     .watermark-text-center {
         top: 50%;
-        left: 20px;
-        right: 20px;
-        font-size: clamp(2.4rem, 11.5vw, 6.5rem);
+        font-size: clamp(3.2rem, 16.8vw, 8.5rem);
     }
 }
 
 @media (max-width: 480px) {
     .watermark-text-center {
         top: 48%;
-        left: 15px;
-        right: 15px;
-        font-size: clamp(2rem, 12vw, 4.8rem);
+        font-size: clamp(2.8rem, 17vw, 5.5rem);
     }
 }
 
