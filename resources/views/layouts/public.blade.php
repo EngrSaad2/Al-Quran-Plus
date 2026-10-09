@@ -62,9 +62,9 @@
             <div class="nav-links-pill d-none d-md-flex">
                 <a href="{{ route('public.home') }}" id="navHome" class="nav-pill-item {{ request()->routeIs('public.home') ? 'active' : '' }}">হোম</a>
                 <a href="{{ route('public.surah', 1) }}" id="navRead" class="nav-pill-item {{ request()->routeIs('public.surah') ? 'active' : '' }}">কুরআন পড়ুন</a>
-                <a href="{{ route('public.quran.bangla') }}" class="nav-pill-item {{ request()->routeIs('public.quran.*') ? 'active' : '' }}">অনুবাদ ও তাফসীর</a>
-                <a href="{{ route('public.dua') }}" class="nav-pill-item {{ request()->routeIs('public.dua') ? 'active' : '' }}">দোয়া</a>
-                <a href="{{ route('public.prayer-times') }}" class="nav-pill-item {{ request()->routeIs('public.prayer-times') ? 'active' : '' }}">নামাজের সময়</a>
+                <a href="{{ route('public.quran.bangla') }}" id="navTafsir" class="nav-pill-item {{ request()->routeIs('public.quran.*') ? 'active' : '' }}">অনুবাদ ও তাফসীর</a>
+                <a href="{{ route('public.dua') }}" id="navDua" class="nav-pill-item {{ request()->routeIs('public.dua') ? 'active' : '' }}">দোয়া</a>
+                <a href="{{ route('public.prayer-times') }}" id="navPrayerTimes" class="nav-pill-item {{ request()->routeIs('public.prayer-times') ? 'active' : '' }}">নামাজের সময়</a>
                 <a href="{{ route('public.bookmarks') }}" id="navBookmarks" class="nav-pill-item {{ request()->routeIs('public.bookmarks') ? 'active' : '' }}">বুকমার্ক</a>
                 <a href="{{ route('public.search') }}" id="navSearch" class="nav-pill-item {{ request()->routeIs('public.search') ? 'active' : '' }}">অনুসন্ধান</a>
             </div>
@@ -106,19 +106,19 @@
                 <a href="{{ route('public.surah', 1) }}" id="drawerRead" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.surah') ? 'active' : '' }}">
                     <i class="fa-solid fa-book-quran me-2"></i> কুরআন পড়ুন
                 </a>
-                <a href="{{ route('public.quran.bangla') }}" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.quran.bangla') ? 'active' : '' }}">
+                <a href="{{ route('public.quran.bangla') }}" id="drawerBangla" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.quran.bangla') ? 'active' : '' }}">
                     <i class="fa-solid fa-language me-2 text-emerald"></i> বাংলা অনুবাদসহ কুরআন
                 </a>
-                <a href="{{ route('public.quran.tafsir') }}" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.quran.tafsir') ? 'active' : '' }}">
+                <a href="{{ route('public.quran.tafsir') }}" id="drawerTafsir" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.quran.tafsir') ? 'active' : '' }}">
                     <i class="fa-solid fa-book-open-reader me-2 text-warning"></i> কুরআনের তাফসীর বাংলা
                 </a>
-                <a href="{{ route('public.dua') }}" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.dua') ? 'active' : '' }}">
+                <a href="{{ route('public.dua') }}" id="drawerDua" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.dua') ? 'active' : '' }}">
                     <i class="fa-solid fa-hands-praying me-2 text-primary"></i> ইসলামিক দোয়া ও মোনাজাত
                 </a>
-                <a href="{{ route('public.prayer-times') }}" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.prayer-times') ? 'active' : '' }}">
+                <a href="{{ route('public.prayer-times') }}" id="drawerPrayerTimes" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.prayer-times') ? 'active' : '' }}">
                     <i class="fa-solid fa-clock me-2 text-info"></i> নামাজের সময়সূচি (বাংলাদেশ)
                 </a>
-                <a href="{{ route('public.daily-ayah') }}" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.daily-ayah') ? 'active' : '' }}">
+                <a href="{{ route('public.daily-ayah') }}" id="drawerDailyAyah" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.daily-ayah') ? 'active' : '' }}">
                     <i class="fa-solid fa-sun me-2 text-warning"></i> প্রতিদিনের আয়াত
                 </a>
                 <a href="{{ route('public.bookmarks') }}" id="drawerBookmarks" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.bookmarks') ? 'active' : '' }}">
@@ -321,16 +321,27 @@
             // Navbar items
             const navHome = document.getElementById("navHome");
             const navRead = document.getElementById("navRead");
+            const navTafsir = document.getElementById("navTafsir");
+            const navDua = document.getElementById("navDua");
+            const navPrayerTimes = document.getElementById("navPrayerTimes");
             const navBookmarks = document.getElementById("navBookmarks");
             const navSearch = document.getElementById("navSearch");
             if (navHome) navHome.textContent = isBn ? "হোম" : "Home";
             if (navRead) navRead.textContent = isBn ? "কুরআন পড়ুন" : "Read Quran";
+            if (navTafsir) navTafsir.textContent = isBn ? "অনুবাদ ও তাফসীর" : "Tafsir & Meaning";
+            if (navDua) navDua.textContent = isBn ? "দোয়া" : "Dua";
+            if (navPrayerTimes) navPrayerTimes.textContent = isBn ? "নামাজের সময়" : "Prayer Times";
             if (navBookmarks) navBookmarks.textContent = isBn ? "বুকমার্ক" : "Bookmarks";
             if (navSearch) navSearch.textContent = isBn ? "অনুসন্ধান" : "Search";
 
             // Mobile Drawer
             const dHome = document.getElementById("drawerHome");
             const dRead = document.getElementById("drawerRead");
+            const dBangla = document.getElementById("drawerBangla");
+            const dTafsir = document.getElementById("drawerTafsir");
+            const dDua = document.getElementById("drawerDua");
+            const dPrayerTimes = document.getElementById("drawerPrayerTimes");
+            const dDailyAyah = document.getElementById("drawerDailyAyah");
             const dBookmarks = document.getElementById("drawerBookmarks");
             const dSearch = document.getElementById("drawerSearch");
             const dAbout = document.getElementById("drawerAbout");
@@ -338,6 +349,11 @@
             const dContact = document.getElementById("drawerContact");
             if (dHome) dHome.innerHTML = `<i class="fa-solid fa-house me-2"></i> ${isBn ? "হোম" : "Home"}`;
             if (dRead) dRead.innerHTML = `<i class="fa-solid fa-book-quran me-2"></i> ${isBn ? "কুরআন পড়ুন" : "Read Quran"}`;
+            if (dBangla) dBangla.innerHTML = `<i class="fa-solid fa-language me-2 text-emerald"></i> ${isBn ? "বাংলা অনুবাদসহ কুরআন" : "Quran Translation"}`;
+            if (dTafsir) dTafsir.innerHTML = `<i class="fa-solid fa-book-open-reader me-2 text-warning"></i> ${isBn ? "কুরআনের তাফসীর বাংলা" : "Quran Tafsir"}`;
+            if (dDua) dDua.innerHTML = `<i class="fa-solid fa-hands-praying me-2 text-primary"></i> ${isBn ? "ইসলামিক দোয়া ও মোনাজাত" : "Islamic Dua"}`;
+            if (dPrayerTimes) dPrayerTimes.innerHTML = `<i class="fa-solid fa-clock me-2 text-info"></i> ${isBn ? "নামাজের সময়সূচি (বাংলাদেশ)" : "Prayer Times (BD)"}`;
+            if (dDailyAyah) dDailyAyah.innerHTML = `<i class="fa-solid fa-sun me-2 text-warning"></i> ${isBn ? "প্রতিদিনের আয়াত" : "Daily Verse"}`;
             if (dBookmarks) dBookmarks.innerHTML = `<i class="fa-solid fa-bookmark me-2"></i> ${isBn ? "সংরক্ষিত আয়াত / বুকমার্ক" : "Saved Bookmarks"}`;
             if (dSearch) dSearch.innerHTML = `<i class="fa-solid fa-magnifying-glass me-2"></i> ${isBn ? "অনুসন্ধান" : "Search"}`;
             if (dAbout) dAbout.innerHTML = `<i class="fa-solid fa-circle-info me-2"></i> ${isBn ? "অ্যাপ সম্পর্কে" : "About App"}`;

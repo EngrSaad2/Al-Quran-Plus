@@ -64,7 +64,7 @@
             container.innerHTML = `
                 <div class="text-center py-5 text-muted">
                     <i class="fa-regular fa-bookmark fa-3x mb-3 text-dim"></i>
-                    <h5 class="${isBn ? 'font-bangla' : ''} text-light">${isBn ? "এখনো কোন বুকমার্ক নেই" : "No Bookmarks Yet"}</h5>
+                    <h5 class="${isBn ? 'font-bangla' : ''}" style="color: var(--text-primary);">${isBn ? "এখনো কোন বুকমার্ক নেই" : "No Bookmarks Yet"}</h5>
                     <p class="small text-muted mb-4">${isBn ? "কুরআন পড়ার সময় পছন্দের সূরা বা আয়াতে বুকমার্ক আইকনে ক্লিক করে সংরক্ষণ করুন।" : "Click the bookmark icon on any surah or verse while reading to save it here."}</p>
                     <a href="{{ route('public.surah', 1) }}" class="btn-quran-primary" style="text-decoration:none;">
                         ${isBn ? "কুরআন পড়ুন" : "Read Quran"} <i class="fa-solid fa-arrow-right ms-1"></i>
@@ -93,7 +93,7 @@
                         <div class="surah-num-box">${b.surah}</div>
                         <div>
                             <a href="${targetUrl}" class="text-decoration-none">
-                                <h5 class="mb-0 ${isBn ? 'font-bangla' : ''} fw-bold text-light hover-primary">${title}</h5>
+                                <h5 class="mb-0 ${isBn ? 'font-bangla' : ''} fw-bold hover-primary" style="color: var(--text-primary);">${title}</h5>
                             </a>
                             <p class="text-muted small mb-0">${dateLabel}</p>
                         </div>
