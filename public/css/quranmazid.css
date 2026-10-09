@@ -116,22 +116,23 @@ body {
 
 .watermark-text-center {
     position: absolute;
-    top: 13%;
+    top: 9%;
     left: 50%;
     transform: translateX(-50%);
-    font-size: clamp(3rem, 7.5vw, 6.2rem);
+    font-size: clamp(4.5rem, 13vw, 11rem);
     font-family: 'Amiri', serif;
     font-weight: 700;
-    color: var(--primary-color);
-    opacity: 0.016;
+    color: var(--text-primary);
+    opacity: 0.06;
     white-space: nowrap;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.03em;
     pointer-events: none;
     user-select: none;
 }
 
 [data-theme="light"] .watermark-text-center {
-    opacity: 0.022;
+    opacity: 0.055;
+    color: var(--text-primary);
 }
 
 .glow-orb-top {
