@@ -215,7 +215,8 @@ class HomeController extends Controller
         ];
 
         return response()->view('public.sitemap', compact('surahs', 'staticPages', 'lastmod'))
-                         ->header('Content-Type', 'application/xml');
+                         ->header('Content-Type', 'application/xml; charset=utf-8')
+                         ->header('Cache-Control', 'public, max-age=86400');
     }
 
     public function robots()
