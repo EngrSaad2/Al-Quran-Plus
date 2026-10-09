@@ -41,7 +41,7 @@
 
     <!-- Watermark Calligraphy & Ambient Orbs Background -->
     <div class="quran-bg-watermark">
-        <div class="watermark-text-center">ٱلْقُرْآنُ ٱلْكَرِيمُ</div>
+        <div class="watermark-text-center">الْقُرْآنُ الْكَرِيمُ</div>
         <div class="glow-orb-top"></div>
         <div class="glow-orb-right"></div>
     </div>
