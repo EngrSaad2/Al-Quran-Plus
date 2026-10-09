@@ -87,6 +87,16 @@
             </div>
 
             <div class="d-flex align-items-center gap-2">
+                <!-- Change Qari Option on Header Circle with Qari Picture -->
+                <div class="dropdown d-inline-block" id="headerQariDropdownContainer">
+                    <button class="btn-qari-header-circle" id="headerQariBtn" data-bs-toggle="dropdown" aria-expanded="false" title="ক্বারী পরিবর্তন করুন / Change Reciter">
+                        <img id="headerQariImg" src="{{ asset('images/reciters/alafasy.webp') }}" alt="Qari" class="qari-header-avatar">
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end qari-dropdown-menu shadow-lg" id="headerQariMenu">
+                        <!-- Populated dynamically by JS -->
+                    </ul>
+                </div>
+
                 <a href="{{ route('public.home') }}" class="btn-icon-circle" id="readerHeaderHome" title="হোমে ফিরুন">
                     <i class="fa-solid fa-house"></i>
                 </a>
@@ -165,9 +175,9 @@
             <div class="setting-group-item">
                 <div class="setting-label">
                     <span id="labelArabicSize">আরবি ফন্ট সাইজ</span>
-                    <span class="badge badge-font-size" id="arabicSizeValue">28px</span>
+                    <span class="badge badge-font-size" id="arabicSizeValue">25px</span>
                 </div>
-                <input type="range" class="custom-range-slider" id="settingArabicSize" min="20" max="48" value="28">
+                <input type="range" class="custom-range-slider" id="settingArabicSize" min="18" max="44" value="25">
             </div>
 
             <!-- Translation Font Size Slider -->
@@ -215,19 +225,21 @@
     function initReaderView() {
         updateReaderLanguageUI();
 
-        // Check if autoplay requested
+        // Check if autoplay requested and target ayah specified
         const urlParams = new URLSearchParams(window.location.search);
         const shouldAutoplay = urlParams.get('autoplay') === '1' || urlParams.get('play') === '1';
+        const targetAyah = parseInt(urlParams.get('ayah')) || null;
 
-        // Populate Reciters in Settings
+        // Populate Reciters in Settings & Header Dropdown
         populateRecitersDropdown();
+        populateHeaderQariDropdown();
 
-        // Initialize QuranReader instance
-        window.quranReader = new QuranReader(currentSurahId);
+        // Initialize QuranReader instance with targetAyah
+        window.quranReader = new QuranReader(currentSurahId, targetAyah);
 
-        // Sync global audio player to current surah
+        // Sync global audio player to current surah and target ayah
         if (window.quranPlayer) {
-            window.quranPlayer.loadSurah(currentSurahId, shouldAutoplay);
+            window.quranPlayer.loadSurah(currentSurahId, shouldAutoplay, targetAyah || 1);
         }
     }
 
@@ -416,7 +428,68 @@
         if (window.quranPlayer) {
             window.quranPlayer.setReciter(subfolder, name);
         }
+        populateHeaderQariDropdown();
     }
+
+    function populateHeaderQariDropdown() {
+        const menu = document.getElementById("headerQariMenu");
+        if (!menu || !window.QURAN_DATA || !window.QURAN_DATA.reciters) return;
+
+        const currentReciter = localStorage.getItem("quran_reciter") || "Alafasy_128kbps";
+        const lang = window.currentQuranLang || localStorage.getItem("quran_lang") || "bn";
+        const isBn = lang === "bn";
+        const activeReciterObj = window.QURAN_DATA.reciters.find(r => r.subfolder === currentReciter) || window.QURAN_DATA.reciters[0];
+
+        // Update header button avatar
+        const qariImg = document.getElementById("headerQariImg");
+        if (qariImg && activeReciterObj) {
+            qariImg.src = activeReciterObj.photo || "{{ asset('images/reciters/alafasy.webp') }}";
+            qariImg.alt = activeReciterObj.name;
+        }
+
+        let html = `
+            <li class="dropdown-header font-bangla fw-bold pb-2" style="color: var(--text-muted); font-size: 0.75rem;">
+                ${isBn ? 'ক্বারী / তিলাওয়াতকারী নির্বাচন করুন' : 'Select Quran Reciter (Qari)'}
+            </li>
+        `;
+
+        window.QURAN_DATA.reciters.forEach(r => {
+            const isActive = r.subfolder === currentReciter;
+            html += `
+                <li>
+                    <button class="dropdown-item qari-dropdown-item ${isActive ? 'active' : ''}" type="button" onclick="selectQari('${r.subfolder}', '${r.name}')">
+                        <img src="${r.photo || '{{ asset('images/reciters/alafasy.webp') }}'}" alt="${r.name}" class="qari-item-thumb">
+                        <div class="qari-item-info">
+                            <div class="qari-item-name">${r.name}</div>
+                            <div class="qari-item-arabic">${r.arabicName}</div>
+                        </div>
+                        ${isActive ? '<i class="fa-solid fa-circle-check qari-item-check ms-auto"></i>' : ''}
+                    </button>
+                </li>
+            `;
+        });
+
+        menu.innerHTML = html;
+    }
+
+    function selectQari(subfolder, name) {
+        if (window.quranPlayer) {
+            window.quranPlayer.setReciter(subfolder, name);
+        }
+        const select = document.getElementById("settingReciterSelect");
+        if (select) select.value = subfolder;
+        populateHeaderQariDropdown();
+    }
+
+    window.addEventListener("quranReciterChanged", (e) => {
+        const reciter = e.detail?.reciter;
+        const qariImg = document.getElementById("headerQariImg");
+        if (qariImg && reciter) {
+            qariImg.src = reciter.photo || "{{ asset('images/reciters/alafasy.webp') }}";
+            qariImg.alt = reciter.name;
+        }
+        populateHeaderQariDropdown();
+    });
 
     function toggleNavPanel() {
         const panel = document.getElementById("readerNavPanel");

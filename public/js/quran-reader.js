@@ -4,14 +4,15 @@
  */
 
 class QuranReader {
-    constructor(surahId) {
+    constructor(surahId, targetAyah = null) {
         this.surahId = parseInt(surahId) || 1;
+        this.targetAyah = parseInt(targetAyah) || null;
         this.surahMeta = null;
         this.verses = [];
         this.showBangla = true;
         this.showEnglish = true;
         this.showWbw = false;
-        this.arabicFontSize = 28;
+        this.arabicFontSize = 25;
         this.transFontSize = 15;
         this.arabicFont = "font-amiri"; // 'font-amiri', 'font-scheherazade', 'font-naskh'
 
@@ -37,7 +38,11 @@ class QuranReader {
         const savedShowWbw = localStorage.getItem("quran_show_wbw");
         const currentLang = window.currentQuranLang || localStorage.getItem("quran_lang") || "bn";
 
-        if (savedArabicSize) this.arabicFontSize = parseInt(savedArabicSize);
+        if (savedArabicSize) {
+            this.arabicFontSize = parseInt(savedArabicSize);
+        } else {
+            this.arabicFontSize = 25;
+        }
         if (savedTransSize) this.transFontSize = parseInt(savedTransSize);
         if (savedArabicFont) this.arabicFont = savedArabicFont;
         if (savedShowBn !== null) {
@@ -210,8 +215,19 @@ class QuranReader {
 
         container.innerHTML = html;
 
-        // Auto highlight current playing ayah if audio is active
-        if (window.quranPlayer) {
+        // Auto highlight & scroll target ayah if provided in shared link
+        if (this.targetAyah) {
+            setTimeout(() => {
+                const targetCard = document.getElementById(`ayah-${this.targetAyah}`);
+                if (targetCard) {
+                    document.querySelectorAll(".ayah-card.active-playing, .ayah-card.shared-highlight").forEach(el => {
+                        el.classList.remove("active-playing", "shared-highlight");
+                    });
+                    targetCard.classList.add("active-playing", "shared-highlight");
+                    targetCard.scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+            }, 300);
+        } else if (window.quranPlayer) {
             window.quranPlayer.highlightActiveAyah();
         }
     }
@@ -279,15 +295,19 @@ class QuranReader {
         const sTitle = isBn ? (this.surahMeta ? this.surahMeta.bangla : this.surahId) : (this.surahMeta ? this.surahMeta.name : this.surahId);
         const prefix = isBn ? "সূরা" : "Surah";
         const verseWord = isBn ? "আয়াত" : "Verse";
+        const shareUrl = `${window.location.origin}/surah/${this.surahId}?ayah=${ayahNumber}&autoplay=1`;
+        const shareText = `${v.arabic}\n\n${isBn ? v.bangla : v.english}\n\n[${prefix} ${sTitle}, ${verseWord} ${ayahNumber}]\n${shareUrl}`;
 
         if (navigator.share) {
             navigator.share({
                 title: `${prefix} ${sTitle}, ${verseWord} ${ayahNumber}`,
-                text: `${v.arabic}\n\n${isBn ? v.bangla : v.english}`,
-                url: window.location.href
+                text: shareText,
+                url: shareUrl
             }).catch(() => {});
         } else {
-            this.copyAyah(ayahNumber);
+            navigator.clipboard.writeText(shareText).then(() => {
+                alert(isBn ? `আয়াত ${this.surahId}:${ayahNumber} লিংক কপি করা হয়েছে!` : `Verse ${this.surahId}:${ayahNumber} link copied!`);
+            });
         }
     }
 

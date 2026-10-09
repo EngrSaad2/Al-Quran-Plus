@@ -15,8 +15,8 @@
         <div class="hero-search-box max-w-700 mx-auto">
             <i class="fa-solid fa-magnifying-glass text-muted me-2"></i>
             <input type="text" id="liveSearchInput" class="hero-search-input" placeholder="সূরার নাম, নম্বর বা অর্থ লিখুন..." value="{{ $query }}" oninput="performSearch(this.value)" autofocus>
-            <button class="hero-search-btn" onclick="performSearch(document.getElementById('liveSearchInput').value)">
-                <span id="searchBtnSpan">খুঁজুন</span>
+            <button class="hero-search-btn" title="Search" onclick="performSearch(document.getElementById('liveSearchInput').value)">
+                <i class="fa-solid fa-magnifying-glass"></i>
             </button>
         </div>
     </div>

@@ -135,8 +135,8 @@
         <div class="hero-search-box">
             <i class="fa-solid fa-magnifying-glass text-muted me-2"></i>
             <input type="text" name="q" id="homeSearchInput" class="hero-search-input" placeholder="সূরার নাম, নম্বর, বা আয়াত দিয়ে খুঁজুন..." autocomplete="off">
-            <button type="submit" class="hero-search-btn">
-                <span id="homeSearchBtnText">খুঁজুন</span> <i class="fa-solid fa-arrow-right"></i>
+            <button type="submit" class="hero-search-btn" id="homeSearchBtn" title="Search">
+                <i class="fa-solid fa-arrow-right"></i>
             </button>
         </div>
     </form>
@@ -296,12 +296,8 @@
 
         // Hero Search
         const searchInput = document.getElementById("homeSearchInput");
-        const searchBtnText = document.getElementById("homeSearchBtnText");
         if (searchInput) {
             searchInput.placeholder = isBn ? "সূরার নাম, নম্বর বা আয়াত দিয়ে খুঁজুন..." : "Search by Surah name, number, or verse...";
-        }
-        if (searchBtnText) {
-            searchBtnText.textContent = isBn ? "খুঁজুন" : "Search";
         }
 
         // Section header for Popular Recitations

@@ -37,6 +37,13 @@ class QuranAudioPlayer {
         this.bindAudioEvents();
         this.bindSliderEvents();
         this.updateUI();
+
+        // Notify active reciter for header icons and menus
+        setTimeout(() => {
+            window.dispatchEvent(new CustomEvent("quranReciterChanged", {
+                detail: { reciter: this.getReciterObj() }
+            }));
+        }, 100);
     }
 
     bindAudioEvents() {
@@ -115,29 +122,42 @@ class QuranAudioPlayer {
     getSurahAudioUrl(surahId, reciterKey = this.currentReciter) {
         const sId = parseInt(surahId) || 1;
         const reciter = this.getReciterObj(reciterKey);
-        const padSurah = String(sId).padStart(3, "0");
-        return `${reciter.surahServer}${padSurah}.mp3`;
+        if (reciter && reciter.audioSlug) {
+            if (reciter.audioSlug === "saud_ash-shuraym") {
+                const padSurah = String(sId).padStart(3, "0");
+                return `https://download.quranicaudio.com/qdc/saud_ash-shuraym/murattal/${padSurah}.mp3`;
+            }
+            return `https://download.quranicaudio.com/qdc/${reciter.audioSlug}/murattal/${sId}.mp3`;
+        }
+        if (reciter && reciter.surahServer) {
+            const padSurah = String(sId).padStart(3, "0");
+            return `${reciter.surahServer}${padSurah}.mp3`;
+        }
+        return `https://download.quranicaudio.com/qdc/mishari_al_afasy/murattal/${sId}.mp3`;
     }
 
-    async fetchSurahTimestamps(surahId) {
+    async fetchSurahTimestamps(surahId, reciterKey = this.currentReciter) {
         const sId = parseInt(surahId) || 1;
-        if (this.timestampsCache[sId]) {
-            return this.timestampsCache[sId];
+        const reciter = this.getReciterObj(reciterKey);
+        const qComId = reciter.quranComId || 7;
+        const cacheKey = `quran_ts_v4_${qComId}_${sId}`;
+
+        if (this.timestampsCache[cacheKey]) {
+            return this.timestampsCache[cacheKey];
         }
 
-        const cacheKey = `quran_ts_v2_${sId}`;
         const cached = localStorage.getItem(cacheKey);
         if (cached) {
             try {
                 const parsed = JSON.parse(cached);
-                this.timestampsCache[sId] = parsed;
+                this.timestampsCache[cacheKey] = parsed;
                 return parsed;
             } catch (e) {}
         }
 
         try {
             // Quran.com chapter_recitations provides standard verse boundary timestamps
-            const res = await fetch(`https://api.quran.com/api/v4/chapter_recitations/7/${sId}?segments=true`);
+            const res = await fetch(`https://api.quran.com/api/v4/chapter_recitations/${qComId}/${sId}?segments=true`);
             if (!res.ok) throw new Error("API status " + res.status);
             const data = await res.json();
             if (data && data.audio_file && data.audio_file.timestamps) {
@@ -147,17 +167,15 @@ class QuranAudioPlayer {
                     ayah: idx + 1,
                     fromMs: t.timestamp_from,
                     toMs: t.timestamp_to,
-                    fromRatio: t.timestamp_from / totalMs,
-                    toRatio: t.timestamp_to / totalMs,
                     fromSec: t.timestamp_from / 1000,
                     toSec: t.timestamp_to / 1000
                 }));
-                this.timestampsCache[sId] = parsed;
+                this.timestampsCache[cacheKey] = parsed;
                 localStorage.setItem(cacheKey, JSON.stringify(parsed));
                 return parsed;
             }
         } catch (err) {
-            console.warn("Could not load verse timestamps for Surah", sId, err);
+            console.warn("Could not load verse timestamps for Surah", sId, "Reciter", qComId, err);
         }
         return null;
     }
@@ -259,13 +277,24 @@ class QuranAudioPlayer {
         this.currentAyahNumber = Math.max(1, Math.min(this.totalAyahs, parseInt(ayahNumber) || 1));
         const dur = this.audio.duration || 0;
         const reciterObj = this.getReciterObj();
-        const isExactSec = reciterObj && reciterObj.quranComId === 7;
+        const hasExactTimestamps = reciterObj && reciterObj.quranComId;
 
         if (this.timestamps && this.timestamps.length >= this.currentAyahNumber) {
             const ts = this.timestamps[this.currentAyahNumber - 1];
-            const targetSec = (isExactSec || !dur) ? ts.fromSec : (ts.fromRatio * dur);
-            if (!isNaN(targetSec) && isFinite(targetSec)) {
-                this.audio.currentTime = Math.max(0, targetSec);
+            if (hasExactTimestamps || !dur) {
+                const targetSec = ts.fromSec;
+                if (!isNaN(targetSec) && isFinite(targetSec)) {
+                    this.audio.currentTime = Math.max(0, targetSec);
+                }
+            } else {
+                const hasBismillahPrefix = (this.currentSurahId !== 1 && this.currentSurahId !== 9);
+                const bismillahSec = hasBismillahPrefix ? 8.0 : 0.0;
+                const totalRefMs = this.timestamps[this.timestamps.length - 1]?.toMs || 1;
+                const adjDur = Math.max(1, dur - bismillahSec);
+                const targetSec = bismillahSec + ((ts.fromMs / totalRefMs) * adjDur);
+                if (!isNaN(targetSec) && isFinite(targetSec)) {
+                    this.audio.currentTime = Math.max(0, targetSec);
+                }
             }
         } else if (dur > 0 && this.totalAyahs > 0) {
             const targetSec = ((this.currentAyahNumber - 1) / this.totalAyahs) * dur;
@@ -409,19 +438,45 @@ class QuranAudioPlayer {
     syncActiveAyahFromTime(cur, dur) {
         let matchedAyah = null;
         const reciterObj = this.getReciterObj();
-        const isExactSec = reciterObj && reciterObj.quranComId === 7;
+        const hasExactTimestamps = reciterObj && reciterObj.quranComId;
 
         if (this.timestamps && this.timestamps.length > 0) {
-            for (const t of this.timestamps) {
-                const start = (isExactSec || !dur) ? t.fromSec : (t.fromRatio * dur);
-                const end = (isExactSec || !dur) ? t.toSec : (t.toRatio * dur);
-                if (cur >= start && cur < end) {
-                    matchedAyah = t.ayah;
-                    break;
+            if (hasExactTimestamps) {
+                // Exact Quran.com chapter recitation timestamps
+                for (const t of this.timestamps) {
+                    if (cur >= t.fromSec && cur < t.toSec) {
+                        matchedAyah = t.ayah;
+                        break;
+                    }
                 }
-            }
-            if (!matchedAyah && dur > 0 && cur >= ((this.timestamps[this.timestamps.length - 1]?.fromRatio || 0) * dur)) {
-                matchedAyah = this.totalAyahs;
+                if (!matchedAyah && cur >= (this.timestamps[this.timestamps.length - 1]?.fromSec || 0)) {
+                    matchedAyah = this.totalAyahs;
+                }
+            } else {
+                // Non-exact reciter (e.g. Maher from mp3quran)
+                // In mp3quran full surahs (except Surah 1 and 9), reciter starts with Bismillah (~8.0s)
+                const hasBismillahPrefix = (this.currentSurahId !== 1 && this.currentSurahId !== 9);
+                const bismillahSec = hasBismillahPrefix ? 8.0 : 0.0;
+
+                if (cur < bismillahSec) {
+                    matchedAyah = 1;
+                } else {
+                    const adjCur = cur - bismillahSec;
+                    const adjDur = Math.max(1, dur - bismillahSec);
+                    const totalRefMs = this.timestamps[this.timestamps.length - 1]?.toMs || 1;
+
+                    for (const t of this.timestamps) {
+                        const startRatio = t.fromMs / totalRefMs;
+                        const endRatio = t.toMs / totalRefMs;
+                        const scaledStart = startRatio * adjDur;
+                        const scaledEnd = endRatio * adjDur;
+
+                        if (adjCur >= scaledStart && adjCur < scaledEnd) {
+                            matchedAyah = t.ayah;
+                            break;
+                        }
+                    }
+                }
             }
         } else if (dur > 0 && this.totalAyahs > 0) {
             const ratio = cur / dur;
@@ -443,19 +498,18 @@ class QuranAudioPlayer {
         localStorage.setItem("quran_reciter_name", reciterName);
 
         const wasPlaying = this.isPlaying;
-        const prevCur = this.audio.currentTime || 0;
-        const prevDur = this.audio.duration || 1;
-        const ratio = prevDur > 0 ? (prevCur / prevDur) : 0;
+        const currentAyah = this.currentAyahNumber || 1;
 
         const newUrl = this.getSurahAudioUrl(this.currentSurahId, reciterSubfolder);
         this.audio.src = newUrl;
         this.audio.playbackRate = this.playbackSpeed;
         this.audio.load();
 
-        const onMeta = () => {
-            if (this.audio.duration && ratio > 0) {
-                this.audio.currentTime = ratio * this.audio.duration;
-            }
+        this.updateUI();
+
+        this.fetchSurahTimestamps(this.currentSurahId, reciterSubfolder).then(ts => {
+            this.timestamps = ts;
+            this.seekToAyah(currentAyah);
             if (wasPlaying) {
                 this.audio.play().then(() => {
                     this.isPlaying = true;
@@ -463,10 +517,12 @@ class QuranAudioPlayer {
                     this.updateMediaSession();
                 }).catch(e => console.warn(e));
             }
-        };
-        this.audio.addEventListener("loadedmetadata", onMeta, { once: true });
+        });
 
-        this.updateUI();
+        // Dispatch global event for header avatar & menus
+        window.dispatchEvent(new CustomEvent("quranReciterChanged", {
+            detail: { reciter: this.getReciterObj(reciterSubfolder) }
+        }));
     }
 
     toggleLoopMode() {

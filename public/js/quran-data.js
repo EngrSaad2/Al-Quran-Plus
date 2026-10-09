@@ -121,14 +121,12 @@ window.QURAN_DATA = {
     ],
 
     reciters: [
-        { id: "ar.alafasy", name: "Mishary Rashid Alafasy", arabicName: "مشاري راشد العفاسي", subfolder: "Alafasy_128kbps", surahServer: "https://server8.mp3quran.net/afs/", quranComId: 7 },
-        { id: "ar.abdurrahmaansudais", name: "Abdul Rahman Al-Sudais", arabicName: "عبد الرحمن السديس", subfolder: "Abdurrahmaan_As-Sudais_192kbps", surahServer: "https://server11.mp3quran.net/sds/", quranComId: 3 },
-        { id: "ar.mahermuaiqly", name: "Maher Al-Muaiqly", arabicName: "ماهر المعيقلي", subfolder: "Maher_AlMuaiqly_64kbps", surahServer: "https://server12.mp3quran.net/maher/" },
-        { id: "ar.saoodshuraym", name: "Saood Ash-Shuraym", arabicName: "سعود الشريم", subfolder: "Saood_ash-Shuraym_128kbps", surahServer: "https://server7.mp3quran.net/shur/", quranComId: 10 },
-        { id: "ar.abdullahbasfar", name: "Abdullah Basfar", arabicName: "عبد الله بصفر", subfolder: "Abdullah_Basfar_192kbps", surahServer: "https://server6.mp3quran.net/bsfr/" },
-        { id: "ar.minshawi", name: "Mohamed Siddiq El-Minshawi", arabicName: "محمد صديق المنشاوي", subfolder: "Minshawy_Murattal_128kbps", surahServer: "https://server10.mp3quran.net/minsh/", quranComId: 9 },
-        { id: "ar.hudhaify", name: "Ali Al-Hudhaify", arabicName: "علي بن عبد الرحمن الحذيفي", subfolder: "Hudhaify_128kbps", surahServer: "https://server9.mp3quran.net/hthfi/" },
-        { id: "ar.ahmedajamy", name: "Ahmed ibn Ali al-Ajamy", arabicName: "أحمد بن علي العجمي", subfolder: "Ahmed_ibn_Ali_al-Ajamy_128kbps_ketaballah.net", surahServer: "https://server10.mp3quran.net/ajm/128/" }
+        { id: "ar.alafasy", name: "Mishary Rashid Alafasy", arabicName: "مشاري راشد العفاسي", photo: "/images/reciters/alafasy.webp", subfolder: "Alafasy_128kbps", quranComId: 7, audioSlug: "mishari_al_afasy" },
+        { id: "ar.abdurrahmaansudais", name: "Abdul Rahman Al-Sudais", arabicName: "عبد الرحمن السديس", photo: "/images/reciters/sudais.webp", subfolder: "Abdurrahmaan_As-Sudais_192kbps", quranComId: 3, audioSlug: "abdurrahmaan_as_sudais" },
+        { id: "ar.mahermuaiqly", name: "Maher Al-Muaiqly", arabicName: "ماهر المعيقلي", photo: "/images/reciters/maher.webp", subfolder: "Maher_AlMuaiqly_64kbps", surahServer: "https://server12.mp3quran.net/maher/" },
+        { id: "ar.minshawi", name: "Mohamed Siddiq El-Minshawi", arabicName: "محمد صديق المنشاوي", photo: "/images/reciters/minshawi.webp", subfolder: "Minshawy_Murattal_128kbps", quranComId: 9, audioSlug: "siddiq_minshawi" },
+        { id: "ar.saoodshuraym", name: "Saood Ash-Shuraym", arabicName: "سعود الشريم", photo: "/images/reciters/shuraym.webp", subfolder: "Saood_ash-Shuraym_128kbps", quranComId: 10, audioSlug: "saud_ash-shuraym" },
+        { id: "ar.husary", name: "Mahmoud Khalil Al-Husary", arabicName: "محمود خليل الحصري", photo: "/images/reciters/husary.webp", subfolder: "Husary_128kbps", quranComId: 6, audioSlug: "khalil_al_husary" }
     ],
 
     popularRecitations: [
