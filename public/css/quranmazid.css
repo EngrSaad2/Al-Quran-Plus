@@ -352,6 +352,69 @@ body {
     border-color: var(--border-hover);
 }
 
+/* Mobile Offcanvas Navigation Drawer */
+#mobileNavDrawer {
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+    border-right: 1px solid var(--border-color) !important;
+    z-index: 1060;
+    max-width: 320px;
+}
+
+#mobileNavDrawer .offcanvas-header {
+    border-color: var(--border-color) !important;
+    padding: 16px 20px;
+}
+
+#mobileNavDrawer .offcanvas-title {
+    color: var(--text-primary) !important;
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+#mobileNavDrawer .drawer-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 16px;
+    border-radius: 12px;
+    color: var(--text-primary) !important;
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 600;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+
+#mobileNavDrawer .drawer-nav-item:hover {
+    background: var(--bg-secondary-hover);
+    border-color: var(--border-hover);
+    color: var(--primary-color) !important;
+}
+
+#mobileNavDrawer .drawer-nav-item.active {
+    background: var(--primary-glow);
+    border-color: var(--primary-color);
+    color: var(--primary-color) !important;
+    font-weight: 700;
+}
+
+#mobileNavDrawer .drawer-nav-item i {
+    width: 22px;
+    text-align: center;
+    font-size: 1.05rem;
+    flex-shrink: 0;
+}
+
+[data-theme="dark"] #mobileNavDrawer .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+[data-theme="light"] #mobileNavDrawer .btn-close {
+    filter: none;
+}
+
 /* Hero Section */
 .hero-wrapper {
     position: relative;

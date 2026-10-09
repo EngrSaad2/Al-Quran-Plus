@@ -79,60 +79,60 @@
                 </button>
 
                 <!-- Mobile Menu Toggle Button -->
-                <button class="btn-icon-circle d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileNavDrawer" aria-label="Menu">
-                    <i class="fa-solid fa-bars"></i>
+                <button class="btn-icon-circle d-md-none" id="mobileNavToggleBtn" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileNavDrawer" aria-controls="mobileNavDrawer" aria-label="Menu">
+                    <i class="fa-solid fa-bars" style="pointer-events: none;"></i>
                 </button>
             </div>
         </nav>
     </header>
 
     <!-- Mobile Offcanvas Drawer -->
-    <div class="offcanvas offcanvas-start bg-dark text-light" tabindex="-1" id="mobileNavDrawer" style="background: var(--bg-card) !important; border-right: 1px solid var(--border-color);">
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileNavDrawer" aria-labelledby="mobileNavDrawerLabel">
         <div class="offcanvas-header border-bottom" style="border-color: var(--border-color) !important;">
             <div class="d-flex align-items-center gap-2">
                 <img src="{{ asset('favicon.png') }}" alt="Al Quran" class="brand-logo-img">
-                <h5 class="offcanvas-title font-bangla mb-0">আল কুরআন</h5>
+                <h5 class="offcanvas-title font-bangla mb-0" id="mobileNavDrawerLabel">আল কুরআন</h5>
             </div>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <button type="button" class="btn-close" id="mobileNavCloseBtn" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body p-4">
+        <div class="offcanvas-body p-3">
             <div class="d-flex flex-column gap-2">
-                <a href="{{ route('public.home') }}" id="drawerHome" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.home') ? 'active' : '' }}">
-                    <i class="fa-solid fa-house me-2"></i> হোম
+                <a href="{{ route('public.home') }}" id="drawerHome" class="drawer-nav-item {{ request()->routeIs('public.home') ? 'active' : '' }}">
+                    <i class="fa-solid fa-house me-2"></i> <span>হোম</span>
                 </a>
-                <a href="{{ route('public.surah', 1) }}" id="drawerRead" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.surah') ? 'active' : '' }}">
-                    <i class="fa-solid fa-book-quran me-2"></i> কুরআন পড়ুন
+                <a href="{{ route('public.surah', 1) }}" id="drawerRead" class="drawer-nav-item {{ request()->routeIs('public.surah') ? 'active' : '' }}">
+                    <i class="fa-solid fa-book-quran me-2"></i> <span>কুরআন পড়ুন</span>
                 </a>
-                <a href="{{ route('public.quran.bangla') }}" id="drawerBangla" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.quran.bangla') ? 'active' : '' }}">
-                    <i class="fa-solid fa-language me-2 text-emerald"></i> বাংলা অনুবাদসহ কুরআন
+                <a href="{{ route('public.quran.bangla') }}" id="drawerBangla" class="drawer-nav-item {{ request()->routeIs('public.quran.bangla') ? 'active' : '' }}">
+                    <i class="fa-solid fa-language me-2 text-emerald"></i> <span>বাংলা অনুবাদসহ কুরআন</span>
                 </a>
-                <a href="{{ route('public.quran.tafsir') }}" id="drawerTafsir" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.quran.tafsir') ? 'active' : '' }}">
-                    <i class="fa-solid fa-book-open-reader me-2 text-warning"></i> কুরআনের তাফসীর বাংলা
+                <a href="{{ route('public.quran.tafsir') }}" id="drawerTafsir" class="drawer-nav-item {{ request()->routeIs('public.quran.tafsir') ? 'active' : '' }}">
+                    <i class="fa-solid fa-book-open-reader me-2 text-warning"></i> <span>কুরআনের তাফসীর বাংলা</span>
                 </a>
-                <a href="{{ route('public.dua') }}" id="drawerDua" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.dua') ? 'active' : '' }}">
-                    <i class="fa-solid fa-hands-praying me-2 text-primary"></i> ইসলামিক দোয়া ও মোনাজাত
+                <a href="{{ route('public.dua') }}" id="drawerDua" class="drawer-nav-item {{ request()->routeIs('public.dua') ? 'active' : '' }}">
+                    <i class="fa-solid fa-hands-praying me-2 text-primary"></i> <span>ইসলামিক দোয়া ও মোনাজাত</span>
                 </a>
-                <a href="{{ route('public.prayer-times') }}" id="drawerPrayerTimes" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.prayer-times') ? 'active' : '' }}">
-                    <i class="fa-solid fa-clock me-2 text-info"></i> নামাজের সময়সূচি (বাংলাদেশ)
+                <a href="{{ route('public.prayer-times') }}" id="drawerPrayerTimes" class="drawer-nav-item {{ request()->routeIs('public.prayer-times') ? 'active' : '' }}">
+                    <i class="fa-solid fa-clock me-2 text-info"></i> <span>নামাজের সময়সূচি (বাংলাদেশ)</span>
                 </a>
-                <a href="{{ route('public.daily-ayah') }}" id="drawerDailyAyah" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.daily-ayah') ? 'active' : '' }}">
-                    <i class="fa-solid fa-sun me-2 text-warning"></i> প্রতিদিনের আয়াত
+                <a href="{{ route('public.daily-ayah') }}" id="drawerDailyAyah" class="drawer-nav-item {{ request()->routeIs('public.daily-ayah') ? 'active' : '' }}">
+                    <i class="fa-solid fa-sun me-2 text-warning"></i> <span>প্রতিদিনের আয়াত</span>
                 </a>
-                <a href="{{ route('public.bookmarks') }}" id="drawerBookmarks" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.bookmarks') ? 'active' : '' }}">
-                    <i class="fa-solid fa-bookmark me-2"></i> সংরক্ষিত আয়াত / বুকমার্ক
+                <a href="{{ route('public.bookmarks') }}" id="drawerBookmarks" class="drawer-nav-item {{ request()->routeIs('public.bookmarks') ? 'active' : '' }}">
+                    <i class="fa-solid fa-bookmark me-2"></i> <span>সংরক্ষিত আয়াত / বুকমার্ক</span>
                 </a>
-                <a href="{{ route('public.search') }}" id="drawerSearch" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.search') ? 'active' : '' }}">
-                    <i class="fa-solid fa-magnifying-glass me-2"></i> অনুসন্ধান
+                <a href="{{ route('public.search') }}" id="drawerSearch" class="drawer-nav-item {{ request()->routeIs('public.search') ? 'active' : '' }}">
+                    <i class="fa-solid fa-magnifying-glass me-2"></i> <span>অনুসন্ধান</span>
                 </a>
-                <hr style="border-color: var(--border-color);">
-                <a href="{{ route('public.about') }}" id="drawerAbout" class="nav-pill-item text-start p-3 rounded-3">
-                    <i class="fa-solid fa-circle-info me-2"></i> অ্যাপ সম্পর্কে
+                <hr style="border-color: var(--border-color); margin: 6px 0;">
+                <a href="{{ route('public.about') }}" id="drawerAbout" class="drawer-nav-item">
+                    <i class="fa-solid fa-circle-info me-2"></i> <span>অ্যাপ সম্পর্কে</span>
                 </a>
-                <a href="{{ route('public.privacy') }}" id="drawerPrivacy" class="nav-pill-item text-start p-3 rounded-3">
-                    <i class="fa-solid fa-shield-halved me-2"></i> গোপনীয়তা নীতি
+                <a href="{{ route('public.privacy') }}" id="drawerPrivacy" class="drawer-nav-item">
+                    <i class="fa-solid fa-shield-halved me-2"></i> <span>গোপনীয়তা নীতি</span>
                 </a>
-                <a href="{{ route('public.contact') }}" id="drawerContact" class="nav-pill-item text-start p-3 rounded-3">
-                    <i class="fa-solid fa-envelope me-2"></i> যোগাযোগ
+                <a href="{{ route('public.contact') }}" id="drawerContact" class="drawer-nav-item">
+                    <i class="fa-solid fa-envelope me-2"></i> <span>যোগাযোগ</span>
                 </a>
             </div>
         </div>
@@ -543,6 +543,29 @@
                 settingBtn.addEventListener("click", (e) => {
                     e.preventDefault();
                     window.openQariModal();
+                });
+            }
+
+            // Mobile Nav Drawer Toggle
+            const mobileNavBtn = document.getElementById("mobileNavToggleBtn");
+            const drawerEl = document.getElementById("mobileNavDrawer");
+            if (mobileNavBtn && drawerEl) {
+                mobileNavBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (window.bootstrap && window.bootstrap.Offcanvas) {
+                        const bsDrawer = bootstrap.Offcanvas.getOrCreateInstance(drawerEl);
+                        bsDrawer.show();
+                    }
+                });
+
+                drawerEl.querySelectorAll(".drawer-nav-item").forEach(link => {
+                    link.addEventListener("click", () => {
+                        if (window.bootstrap && window.bootstrap.Offcanvas) {
+                            const bsDrawer = bootstrap.Offcanvas.getInstance(drawerEl);
+                            if (bsDrawer) bsDrawer.hide();
+                        }
+                    });
                 });
             }
 
