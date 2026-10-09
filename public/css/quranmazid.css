@@ -116,7 +116,7 @@ body {
 
 .watermark-text-center {
     position: absolute;
-    top: 52%;
+    top: clamp(140px, 19vh, 175px);
     left: 50%;
     transform: translate(-50%, -50%) scaleX(1.4);
     width: 100vw;
@@ -141,7 +141,7 @@ body {
 
 @media (max-width: 768px) {
     .watermark-text-center {
-        top: 50%;
+        top: clamp(120px, 17vh, 150px);
         transform: translate(-50%, -50%) scaleX(1.35);
         font-size: clamp(2.8rem, 14vw, 7.5rem);
     }
@@ -149,7 +149,7 @@ body {
 
 @media (max-width: 480px) {
     .watermark-text-center {
-        top: 48%;
+        top: clamp(105px, 16vh, 130px);
         transform: translate(-50%, -50%) scaleX(1.28);
         font-size: clamp(2.4rem, 14.5vw, 5rem);
     }
