@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="{{ app()->getLocale() == 'en' ? 'en' : 'bn' }}" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Quran Mazid - Complete Quran Reading & Audio Recitation')</title>
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
-    <meta name="description" content="Beautiful Quran reading experience with crystal-clear Arabic text, English & Bengali translations, and audio recitation by world-renowned Qaris.">
+    
+    @yield('meta', View::make('partials.seo-meta'))
     
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -62,6 +62,9 @@
             <div class="nav-links-pill d-none d-md-flex">
                 <a href="{{ route('public.home') }}" id="navHome" class="nav-pill-item {{ request()->routeIs('public.home') ? 'active' : '' }}">হোম</a>
                 <a href="{{ route('public.surah', 1) }}" id="navRead" class="nav-pill-item {{ request()->routeIs('public.surah') ? 'active' : '' }}">কুরআন পড়ুন</a>
+                <a href="{{ route('public.quran.bangla') }}" class="nav-pill-item {{ request()->routeIs('public.quran.*') ? 'active' : '' }}">অনুবাদ ও তাফসীর</a>
+                <a href="{{ route('public.dua') }}" class="nav-pill-item {{ request()->routeIs('public.dua') ? 'active' : '' }}">দোয়া</a>
+                <a href="{{ route('public.prayer-times') }}" class="nav-pill-item {{ request()->routeIs('public.prayer-times') ? 'active' : '' }}">নামাজের সময়</a>
                 <a href="{{ route('public.bookmarks') }}" id="navBookmarks" class="nav-pill-item {{ request()->routeIs('public.bookmarks') ? 'active' : '' }}">বুকমার্ক</a>
                 <a href="{{ route('public.search') }}" id="navSearch" class="nav-pill-item {{ request()->routeIs('public.search') ? 'active' : '' }}">অনুসন্ধান</a>
             </div>
@@ -103,6 +106,21 @@
                 <a href="{{ route('public.surah', 1) }}" id="drawerRead" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.surah') ? 'active' : '' }}">
                     <i class="fa-solid fa-book-quran me-2"></i> কুরআন পড়ুন
                 </a>
+                <a href="{{ route('public.quran.bangla') }}" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.quran.bangla') ? 'active' : '' }}">
+                    <i class="fa-solid fa-language me-2 text-emerald"></i> বাংলা অনুবাদসহ কুরআন
+                </a>
+                <a href="{{ route('public.quran.tafsir') }}" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.quran.tafsir') ? 'active' : '' }}">
+                    <i class="fa-solid fa-book-open-reader me-2 text-warning"></i> কুরআনের তাফসীর বাংলা
+                </a>
+                <a href="{{ route('public.dua') }}" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.dua') ? 'active' : '' }}">
+                    <i class="fa-solid fa-hands-praying me-2 text-primary"></i> ইসলামিক দোয়া ও মোনাজাত
+                </a>
+                <a href="{{ route('public.prayer-times') }}" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.prayer-times') ? 'active' : '' }}">
+                    <i class="fa-solid fa-clock me-2 text-info"></i> নামাজের সময়সূচি (বাংলাদেশ)
+                </a>
+                <a href="{{ route('public.daily-ayah') }}" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.daily-ayah') ? 'active' : '' }}">
+                    <i class="fa-solid fa-sun me-2 text-warning"></i> প্রতিদিনের আয়াত
+                </a>
                 <a href="{{ route('public.bookmarks') }}" id="drawerBookmarks" class="nav-pill-item text-start p-3 rounded-3 {{ request()->routeIs('public.bookmarks') ? 'active' : '' }}">
                     <i class="fa-solid fa-bookmark me-2"></i> সংরক্ষিত আয়াত / বুকমার্ক
                 </a>
@@ -127,6 +145,11 @@
     <main style="position: relative; z-index: 1;">
         @yield('content')
     </main>
+
+    <!-- Global SEO Footer (Included on all pages except Surah Reader) -->
+    @if(!request()->routeIs('public.surah'))
+        @include('partials.public-footer')
+    @endif
 
     <!-- Global Floating Audio Player Bar (Hidden on Home Page) -->
     @if(!request()->routeIs('public.home') && !request()->is('/'))

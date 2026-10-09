@@ -1,6 +1,14 @@
 @extends('layouts.public')
 
-@section('title', 'Surah ' . $surahId . ' — Quran Mazid Reader')
+@section('meta')
+    @include('partials.seo-meta', [
+        'metaTitle' => "সূরা {$surah['bangla']} (Surah {$surah['name']}) - বাংলা অর্থ, আরবি ও অডিও | Al Quran Plus",
+        'metaDesc' => "পবিত্র কুরআনের {$surah['id']} নম্বর সূরা {$surah['bangla']} (Surah {$surah['name']})। মোট {$surah['verses']} আয়াত, " . ($surah['type'] == 'Makki' ? 'মাক্কী' : 'মাদানী') . " সূরা। বিশুদ্ধ আরবি তিলাওয়াত, সহজ বাংলা ও ইংরেজি অনুবাদসহ অনলাইনে পড়ুন।",
+        'metaKeywords' => "সূরা {$surah['bangla']}, Surah {$surah['name']}, সূরা {$surah['bangla']} বাংলা অর্থ, Surah {$surah['name']} Bangla Translation, {$surah['arabic']}, পবিত্র কুরআন সূরা {$surah['id']}",
+        'canonicalUrl' => url('/surah/' . $surahId),
+        'ogType' => 'article'
+    ])
+@endsection
 
 @section('styles')
 <style>
@@ -91,21 +99,30 @@
 
         <!-- Verses Scrollable Area -->
         <main class="reader-scroll-container">
-            <!-- Surah Header Banner -->
+            <!-- Surah Header Banner (Server Rendered for Googlebot) -->
             <div class="surah-header-banner" id="surahBanner">
-                <div class="surah-banner-arabic" id="bannerArabicName">...</div>
-                <h2 class="surah-banner-english font-bangla" id="bannerBanglaName">...</h2>
+                <div class="surah-banner-arabic" id="bannerArabicName">{{ $surah['arabic'] }}</div>
+                <h1 class="surah-banner-english font-bangla" id="bannerBanglaName">সূরা {{ $surah['bangla'] }} (Surah {{ $surah['name'] }})</h1>
                 <div class="surah-banner-meta" id="bannerMetaInfo">
-                    <span><i class="fa-solid fa-kaaba text-warning me-1"></i> মাক্কী</span>
+                    <span><i class="fa-solid {{ $surah['type'] == 'Makki' ? 'fa-kaaba text-warning' : 'fa-mosque text-emerald' }} me-1"></i> {{ $surah['type'] == 'Makki' ? 'মাক্কী' : 'মাদানী' }}</span>
                     <span>•</span>
-                    <span>৭ আয়াত</span>
+                    <span>{{ App\Services\QuranDataService::toBanglaNumber($surah['verses']) }} আয়াত ({{ $surah['verses'] }} Verses)</span>
                     <span>•</span>
-                    <span>পারা ১</span>
+                    <span>পারা {{ App\Services\QuranDataService::toBanglaNumber(implode(', ', $surah['juz'])) }}</span>
                 </div>
                 @if($surahId != 9)
                     <div class="surah-bismillah-box">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
                 @endif
             </div>
+
+            <!-- Crawlable Noscript Summary for Search Crawlers -->
+            <noscript>
+                <div style="background: var(--bg-card); padding: 25px; border-radius: 16px; margin: 20px 0; border: 1px solid var(--border-color); color: var(--text-primary);">
+                    <h2 class="h5 font-bangla fw-bold">সূরা {{ $surah['bangla'] }} ({{ $surah['name'] }}) - পরিচিতি ও অর্থ</h2>
+                    <p class="small text-muted mb-2">অর্থ: {{ $surah['banglaMeaning'] }} ({{ $surah['englishMeaning'] }}) | অবতীর্ণ: {{ $surah['type'] == 'Makki' ? 'মক্কা মুকাররমা' : 'মদিনা মুনাওয়ারা' }} | পারা: {{ implode(', ', $surah['juz']) }}</p>
+                    <p class="small mb-0">পবিত্র কুরআনের {{ $surah['id'] }} নম্বর সূরা {{ $surah['bangla'] }}। এতে মোট {{ $surah['verses'] }}টি আয়াত রয়েছে। নিচে জাভাস্ক্রিপ্ট সক্রিয় করে সম্পূর্ণ সূরা বিশুদ্ধ আরবি পাঠ, সহজ বাংলা অনুবাদ, ইংরেজি অর্থ ও অডিও তিলাওয়াত শুনুন।</p>
+                </div>
+            </noscript>
 
             <!-- Ayahs Container -->
             <div id="ayahsContainer">

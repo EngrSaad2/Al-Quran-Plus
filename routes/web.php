@@ -9,6 +9,21 @@ use App\Http\Controllers\Admin\NotificationController;
 // Public Website Routes
 Route::get('/', [HomeController::class, 'index'])->name('public.home');
 Route::get('/surah/{id}', [HomeController::class, 'surah'])->name('public.surah');
+
+// Dedicated SEO Landing Pages
+Route::get('/quran/bangla-translation', [HomeController::class, 'banglaTranslation'])->name('public.quran.bangla');
+Route::get('/quran/english-translation', [HomeController::class, 'englishTranslation'])->name('public.quran.english');
+Route::get('/quran/tafsir/bangla', [HomeController::class, 'tafsirBangla'])->name('public.quran.tafsir');
+Route::get('/quran/audio', [HomeController::class, 'audio'])->name('public.quran.audio');
+Route::get('/dua', [HomeController::class, 'dua'])->name('public.dua');
+Route::get('/prayer-times', [HomeController::class, 'prayerTimes'])->name('public.prayer-times');
+Route::get('/daily-ayah', [HomeController::class, 'dailyAyah'])->name('public.daily-ayah');
+
+// XML Sitemap & Robots
+Route::get('/sitemap.xml', [HomeController::class, 'sitemap'])->name('public.sitemap');
+Route::get('/robots.txt', [HomeController::class, 'robots'])->name('public.robots');
+
+// Utility Routes
 Route::get('/bookmarks', [HomeController::class, 'bookmarks'])->name('public.bookmarks');
 Route::get('/search', [HomeController::class, 'search'])->name('public.search');
 Route::get('/juz/{id}', [HomeController::class, 'juz'])->name('public.juz');

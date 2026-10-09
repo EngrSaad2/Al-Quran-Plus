@@ -239,25 +239,6 @@
     </div>
 </section>
 
-<!-- Footer -->
-<footer style="background: var(--bg-card); border-top: 1px solid var(--border-color); padding: 40px 16px 30px; margin-top: 50px;">
-    <div class="container text-center">
-        <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
-            <img src="{{ asset('favicon.png') }}" alt="Quran Mazid" class="brand-logo-img" style="width:28px; height:28px;">
-            <span class="font-bangla fw-bold fs-6" id="footerBrand">কুরআন মাজিদ</span>
-        </div>
-        <p class="text-muted small mb-3" id="footerDesc">পবিত্র কুরআন পাঠ ও শোনার জন্য একটি পরিচ্ছন্ন, বিজ্ঞাপনহীন ইসলামিক ওয়েব প্ল্যাটফর্ম।</p>
-        <div class="d-flex justify-content-center gap-4 text-muted small mb-4">
-            <a href="{{ route('public.surah', 1) }}" id="footerRead" class="text-decoration-none text-muted">কুরআন পড়ুন</a>
-            <a href="{{ route('public.bookmarks') }}" id="footerBookmarks" class="text-decoration-none text-muted">বুকমার্ক</a>
-            <a href="{{ route('public.search') }}" id="footerSearch" class="text-decoration-none text-muted">অনুসন্ধান</a>
-            <a href="{{ route('public.privacy') }}" id="footerPrivacy" class="text-decoration-none text-muted">প্রাইভেসি পলিসি</a>
-            <a href="{{ route('public.contact') }}" id="footerContact" class="text-decoration-none text-muted">যোগাযোগ</a>
-        </div>
-        <p class="text-dim small mb-0">&copy; {{ date('Y') }} Quran Mazid. Built for Al Quran App.</p>
-    </div>
-</footer>
-
 @endsection
 
 @section('scripts')
