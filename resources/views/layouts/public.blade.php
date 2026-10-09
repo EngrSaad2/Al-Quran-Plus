@@ -54,8 +54,8 @@
         <nav class="navbar-floating-pill">
             <!-- Brand Logo -->
             <a href="{{ route('public.home') }}" class="brand-logo-pill">
-                <img src="{{ asset('favicon.png') }}" alt="Quran Mazid" class="brand-logo-img">
-                <span class="font-bangla" id="navBrandText">কুরআন মাজিদ</span>
+                <img src="{{ asset('favicon.png') }}" alt="Al Quran" class="brand-logo-img">
+                <span class="font-bangla" id="navBrandText">আল কুরআন</span>
             </a>
 
             <!-- Center Navigation Links -->
@@ -93,8 +93,8 @@
     <div class="offcanvas offcanvas-start bg-dark text-light" tabindex="-1" id="mobileNavDrawer" style="background: var(--bg-card) !important; border-right: 1px solid var(--border-color);">
         <div class="offcanvas-header border-bottom" style="border-color: var(--border-color) !important;">
             <div class="d-flex align-items-center gap-2">
-                <img src="{{ asset('favicon.png') }}" alt="Quran Mazid" class="brand-logo-img">
-                <h5 class="offcanvas-title font-bangla mb-0">কুরআন মাজিদ</h5>
+                <img src="{{ asset('favicon.png') }}" alt="Al Quran" class="brand-logo-img">
+                <h5 class="offcanvas-title font-bangla mb-0">আল কুরআন</h5>
             </div>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
@@ -265,7 +265,7 @@
             // Navbar Brand
             const brandEls = document.querySelectorAll("#navBrandText, .offcanvas-title");
             brandEls.forEach(el => {
-                el.textContent = isBn ? "কুরআন মাজিদ" : "Quran Mazid";
+                el.textContent = isBn ? "আল কুরআন" : "Al Quran";
                 if (isBn) {
                     el.classList.add("font-bangla");
                 } else {

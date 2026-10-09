@@ -334,7 +334,7 @@
 
         // Footer
         const footerBrand = document.getElementById("footerBrand");
-        if (footerBrand) footerBrand.textContent = isBn ? "কুরআন মাজিদ" : "Quran Mazid";
+        if (footerBrand) footerBrand.textContent = isBn ? "আল কুরআন" : "Al Quran";
         const footerDesc = document.getElementById("footerDesc");
         if (footerDesc) footerDesc.textContent = isBn ? "পবিত্র কুরআন পাঠ ও শোনার জন্য একটি পরিচ্ছন্ন, বিজ্ঞাপনহীন ইসলামিক ওয়েব প্ল্যাটফর্ম।" : "A clean, ad-free Islamic web platform for reading and listening to the Holy Quran.";
         const footerRead = document.getElementById("footerRead");
