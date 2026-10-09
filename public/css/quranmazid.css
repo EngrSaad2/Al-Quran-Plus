@@ -117,13 +117,14 @@ body {
 .watermark-text-center {
     position: absolute;
     top: 52%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: clamp(6.5rem, 16vw, 15rem);
+    left: 30px;
+    right: 30px;
+    transform: translateY(-50%);
+    font-size: clamp(4.5rem, 18vw, 22rem);
     font-family: 'Aref Ruqaa', 'Amiri Quran', 'Amiri', serif;
     font-weight: 700;
     color: var(--text-primary);
-    opacity: 0.032;
+    opacity: 0.035;
     white-space: nowrap;
     letter-spacing: 0.02em;
     pointer-events: none;
@@ -133,21 +134,25 @@ body {
 }
 
 [data-theme="light"] .watermark-text-center {
-    opacity: 0.035;
+    opacity: 0.038;
     color: var(--text-primary);
 }
 
 @media (max-width: 768px) {
     .watermark-text-center {
         top: 50%;
-        font-size: clamp(4.5rem, 18vw, 8.5rem);
+        left: 30px;
+        right: 30px;
+        font-size: clamp(3.8rem, 18.5vw, 9.5rem);
     }
 }
 
 @media (max-width: 480px) {
     .watermark-text-center {
         top: 48%;
-        font-size: clamp(4rem, 20vw, 6.5rem);
+        left: 20px;
+        right: 20px;
+        font-size: clamp(3.2rem, 19vw, 6.5rem);
     }
 }
 
