@@ -6,7 +6,9 @@
         'metaDesc' => "পবিত্র কুরআনের {$surah['id']} নম্বর সূরা {$surah['bangla']} (Surah {$surah['name']})। মোট {$surah['verses']} আয়াত, " . ($surah['type'] == 'Makki' ? 'মাক্কী' : 'মাদানী') . " সূরা। বিশুদ্ধ আরবি তিলাওয়াত, সহজ বাংলা ও ইংরেজি অনুবাদসহ অনলাইনে পড়ুন।",
         'metaKeywords' => "সূরা {$surah['bangla']}, Surah {$surah['name']}, সূরা {$surah['bangla']} বাংলা অর্থ, Surah {$surah['name']} Bangla Translation, {$surah['arabic']}, পবিত্র কুরআন সূরা {$surah['id']}",
         'canonicalUrl' => url('/surah/' . $surahId),
-        'ogType' => 'article'
+        'ogType' => 'article',
+        'breadcrumbSchema' => $breadcrumbSchema ?? null,
+        'surahSchema' => $surahSchema ?? null
     ])
 @endsection
 

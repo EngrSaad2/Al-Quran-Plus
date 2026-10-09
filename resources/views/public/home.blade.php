@@ -1,6 +1,16 @@
 @extends('layouts.public')
 
-@section('title', 'Quran Mazid — Complete Quran Reading, Audio Recitation & Translations')
+@section('meta')
+    @include('partials.seo-meta', [
+        'metaTitle' => 'আল কুরআন বাংলা ও ইংরেজি অনুবাদ | কুরআন মাজিদ অনলাইন - Al Quran Plus',
+        'metaDesc' => 'পবিত্র আল কুরআন পড়ুন ও শুনুন বিশুদ্ধ আরবি, সহজ বাংলা ও ইংরেজি অনুবাদসহ। ১১৪টি সূরার অডিও তিলাওয়াত, তাফসীর, ইসলামিক দোয়া ও নামাজের সময়সূচি।',
+        'metaKeywords' => 'আল কুরআন বাংলা, কুরআন শরীফ বাংলা, Quran Bangla Translation, Al Quran Online, সূরা ইয়াসিন, সূরা আর রহমান, ইসলামিক দোয়া, নামাজের সময়সূচি',
+        'canonicalUrl' => url('/'),
+        'ogType' => 'website',
+        'websiteSchema' => $websiteSchema ?? null,
+        'orgSchema' => $orgSchema ?? null
+    ])
+@endsection
 
 @section('content')
 
