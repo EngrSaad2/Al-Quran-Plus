@@ -2270,3 +2270,24 @@ body {
         font-size: 0.85rem;
     }
 }
+
+/* ========================================================
+   LANDING PAGES & TABLES THEME ADAPTATION
+   ======================================================== */
+.table {
+    --bs-table-bg: transparent !important;
+    --bs-table-hover-bg: rgba(16, 185, 129, 0.08) !important;
+    --bs-table-color: var(--text-primary) !important;
+    color: var(--text-primary) !important;
+}
+
+.table td, .table th {
+    background-color: transparent !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+.table-hover tbody tr:hover td {
+    background-color: rgba(16, 185, 129, 0.08) !important;
+}
+
