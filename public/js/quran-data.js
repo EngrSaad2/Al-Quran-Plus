@@ -145,7 +145,6 @@ window.QURAN_DATA = {
     featuredStack: [
         { id: 112, name: "Al-Ikhlaas", bangla: "আল-ইখলাস", arabic: "الإخلاص", verses: 4, type: "Makki" },
         { id: 18, name: "Al-Kahf", bangla: "আল-কাহফ", arabic: "الكهف", verses: 110, type: "Makki" },
-        { id: 36, name: "Yaseen", bangla: "ইয়াসিন", arabic: "يس", verses: 83, type: "Makki" },
         { id: 55, name: "Ar-Rahmaan", bangla: "আর-রহমান", arabic: "الرحمن", verses: 78, type: "Madani" },
         { id: 67, name: "Al-Mulk", bangla: "আল-মুলক", arabic: "الملك", verses: 30, type: "Makki" },
         { id: 1, name: "Al-Faatiha", bangla: "আল-ফাতিহা", arabic: "الفاتحة", verses: 7, type: "Makki" }

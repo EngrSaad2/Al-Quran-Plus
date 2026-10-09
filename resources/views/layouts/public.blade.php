@@ -54,7 +54,7 @@
         <nav class="navbar-floating-pill">
             <!-- Brand Logo -->
             <a href="{{ route('public.home') }}" class="brand-logo-pill">
-                <div class="brand-logo-badge">ق</div>
+                <img src="{{ asset('favicon.png') }}" alt="Quran Mazid" class="brand-logo-img">
                 <span class="font-bangla" id="navBrandText">কুরআন মাজিদ</span>
             </a>
 
@@ -90,7 +90,7 @@
     <div class="offcanvas offcanvas-start bg-dark text-light" tabindex="-1" id="mobileNavDrawer" style="background: var(--bg-card) !important; border-right: 1px solid var(--border-color);">
         <div class="offcanvas-header border-bottom" style="border-color: var(--border-color) !important;">
             <div class="d-flex align-items-center gap-2">
-                <div class="brand-logo-badge">ق</div>
+                <img src="{{ asset('favicon.png') }}" alt="Quran Mazid" class="brand-logo-img">
                 <h5 class="offcanvas-title font-bangla mb-0">কুরআন মাজিদ</h5>
             </div>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>

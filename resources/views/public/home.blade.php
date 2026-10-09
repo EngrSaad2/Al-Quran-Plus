@@ -49,7 +49,7 @@
                     </div>
                 </div>
             </a>
-            <a href="{{ route('public.surah', 18) }}?autoplay=1" class="fan-card-item" style="transform: translateY(-2px) rotate(-5deg); z-index: 20;">
+            <a href="{{ route('public.surah', 18) }}?autoplay=1" class="fan-card-item" style="transform: translateY(-6px) rotate(-5deg); z-index: 20;">
                 <div class="fan-card-inner">
                     <span class="fan-card-bg-watermark">سورة</span>
                     <div class="fan-card-top">
@@ -66,24 +66,7 @@
                     </div>
                 </div>
             </a>
-            <a href="{{ route('public.surah', 36) }}?autoplay=1" class="fan-card-item" style="transform: translateY(-28px) rotate(-1.5deg); z-index: 30;">
-                <div class="fan-card-inner">
-                    <span class="fan-card-bg-watermark">سورة</span>
-                    <div class="fan-card-top">
-                        <span class="badge-surah-num">36</span>
-                        <button class="fan-card-quick-play" onclick="playFanCardAudio(event, 36)" title="শুনুন">
-                            <i class="fa-solid fa-play"></i>
-                        </button>
-                        <span class="badge-surah-origin">🕋 মাক্কী</span>
-                    </div>
-                    <div class="fan-card-arabic">يس</div>
-                    <div class="fan-card-bottom">
-                        <h4 class="fan-card-name">ইয়াসিন</h4>
-                        <p class="fan-card-verses">৮৩ আয়াত</p>
-                    </div>
-                </div>
-            </a>
-            <a href="{{ route('public.surah', 55) }}?autoplay=1" class="fan-card-item" style="transform: translateY(-28px) rotate(1.5deg); z-index: 30;">
+            <a href="{{ route('public.surah', 55) }}?autoplay=1" class="fan-card-item" style="transform: translateY(-34px) rotate(0deg); z-index: 30;">
                 <div class="fan-card-inner">
                     <span class="fan-card-bg-watermark">سورة</span>
                     <div class="fan-card-top">
@@ -100,7 +83,7 @@
                     </div>
                 </div>
             </a>
-            <a href="{{ route('public.surah', 67) }}?autoplay=1" class="fan-card-item" style="transform: translateY(-2px) rotate(5deg); z-index: 20;">
+            <a href="{{ route('public.surah', 67) }}?autoplay=1" class="fan-card-item" style="transform: translateY(-6px) rotate(5deg); z-index: 20;">
                 <div class="fan-card-inner">
                     <span class="fan-card-bg-watermark">سورة</span>
                     <div class="fan-card-top">
@@ -260,7 +243,7 @@
 <footer style="background: var(--bg-card); border-top: 1px solid var(--border-color); padding: 40px 16px 30px; margin-top: 50px;">
     <div class="container text-center">
         <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
-            <div class="brand-logo-badge" style="width:28px; height:28px; font-size:0.9rem;">ق</div>
+            <img src="{{ asset('favicon.png') }}" alt="Quran Mazid" class="brand-logo-img" style="width:28px; height:28px;">
             <span class="font-bangla fw-bold fs-6" id="footerBrand">কুরআন মাজিদ</span>
         </div>
         <p class="text-muted small mb-3" id="footerDesc">পবিত্র কুরআন পাঠ ও শোনার জন্য একটি পরিচ্ছন্ন, বিজ্ঞাপনহীন ইসলামিক ওয়েব প্ল্যাটফর্ম।</p>
@@ -397,13 +380,12 @@
         const stackItems = window.QURAN_DATA.featuredStack;
         const transforms = [
             'translateY(22px) rotate(-10deg)',
-            'translateY(-2px) rotate(-5deg)',
-            'translateY(-28px) rotate(-1.5deg)',
-            'translateY(-28px) rotate(1.5deg)',
-            'translateY(-2px) rotate(5deg)',
+            'translateY(-6px) rotate(-5deg)',
+            'translateY(-34px) rotate(0deg)',
+            'translateY(-6px) rotate(5deg)',
             'translateY(22px) rotate(10deg)'
         ];
-        const zIndexes = [10, 20, 30, 30, 20, 10];
+        const zIndexes = [10, 20, 30, 20, 10];
 
         const baseUrl = window.APP_BASE_URL || '';
         let html = "";
