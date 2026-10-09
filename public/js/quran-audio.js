@@ -642,7 +642,10 @@ class QuranAudioPlayer {
             inlineSpeed.closest("button")?.setAttribute("title", isBn ? "প্লেব্যাক গতি" : "Playback Speed");
         }
         if (reciterEl) reciterEl.textContent = this.currentReciterName;
-        if (bar) bar.classList.remove("hidden-bar");
+        if (bar) {
+            bar.classList.remove("hidden-bar");
+            document.body.classList.add("has-audio-bar");
+        }
 
         this.updatePlayPauseButtons();
     }

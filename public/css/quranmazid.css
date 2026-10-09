@@ -2520,3 +2520,157 @@ body {
     background-color: rgba(16, 185, 129, 0.08) !important;
 }
 
+/* ========================================================
+   FLOATING PLAY STORE DOWNLOAD BUTTON
+   ======================================================== */
+.floating-playstore-container {
+    position: fixed;
+    bottom: 24px;
+    right: 20px;
+    z-index: 998;
+    display: flex;
+    align-items: center;
+    transition: bottom 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+body:has(.global-audio-player-bar:not(.hidden-bar)) .floating-playstore-container,
+body.has-audio-bar .floating-playstore-container {
+    bottom: 92px;
+}
+
+.floating-playstore-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(16, 29, 22, 0.95);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1.5px solid var(--border-color);
+    border-radius: 9999px;
+    padding: 6px 14px 6px 10px;
+    text-decoration: none;
+    color: var(--text-primary);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35), 0 0 12px var(--primary-glow);
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+[data-theme="light"] .floating-playstore-btn {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(16, 185, 129, 0.3);
+    color: #0f291c;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12), 0 0 12px rgba(16, 185, 129, 0.2);
+}
+
+.floating-playstore-btn:hover {
+    transform: translateY(-3px) scale(1.03);
+    border-color: var(--primary-color);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4), 0 0 20px var(--primary-glow);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .floating-playstore-btn:hover {
+    color: #0f291c;
+}
+
+.playstore-icon-wrap {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(16, 185, 129, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
+    color: #10b981;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.floating-playstore-btn:hover .playstore-icon-wrap {
+    transform: scale(1.12);
+    background: rgba(16, 185, 129, 0.22);
+}
+
+.playstore-btn-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+    text-align: left;
+}
+
+.playstore-sub {
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.playstore-title {
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+
+[data-theme="light"] .playstore-title {
+    color: #0f291c;
+}
+
+.playstore-close-btn {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    opacity: 0.8;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.playstore-close-btn:hover {
+    opacity: 1;
+    background: var(--primary-color);
+    color: #ffffff;
+    border-color: var(--primary-color);
+    transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+    .floating-playstore-container {
+        bottom: 18px;
+        right: 14px;
+    }
+    body:has(.global-audio-player-bar:not(.hidden-bar)) .floating-playstore-container,
+    body.has-audio-bar .floating-playstore-container {
+        bottom: 78px;
+    }
+    .floating-playstore-btn {
+        padding: 5px 12px 5px 8px;
+        gap: 8px;
+    }
+    .playstore-icon-wrap {
+        width: 24px;
+        height: 24px;
+        font-size: 0.92rem;
+    }
+    .playstore-sub {
+        font-size: 0.52rem;
+    }
+    .playstore-title {
+        font-size: 0.75rem;
+    }
+}
+
+

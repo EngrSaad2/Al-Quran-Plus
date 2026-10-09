@@ -215,6 +215,24 @@
     </div>
     @endif
 
+    <!-- Floating Download Al Quran from Play Store Button -->
+    <div class="floating-playstore-container" id="floatingPlaystoreWrap">
+        <a href="https://play.google.com/store/apps/details?id=com.engrsaad.alquran" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="floating-playstore-btn" 
+           title="Download Al Quran from Play Store">
+            <span class="playstore-icon-wrap">
+                <i class="fa-brands fa-google-play"></i>
+            </span>
+            <span class="playstore-btn-text">
+                <span class="playstore-sub" id="playstoreSubText">GET ON PLAY STORE</span>
+                <span class="playstore-title" id="playstoreTitleText">Al Quran App</span>
+            </span>
+        </a>
+        <button type="button" class="playstore-close-btn" onclick="dismissPlaystoreBadge(event)" title="Close" aria-label="Dismiss">&times;</button>
+    </div>
+
     <!-- Core Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/quran-data.js') }}?v={{ $dataVer }}"></script>
@@ -308,6 +326,29 @@
             if (audioSurahName && (!window.quranPlayer || !window.quranPlayer.isPlaying)) {
                 audioSurahName.textContent = isBn ? "সূরা আল-ফাতিহা (১)" : "Surah Al-Faatiha (1)";
             }
+
+            // Floating Play Store Badge
+            const psSub = document.getElementById("playstoreSubText");
+            const psTitle = document.getElementById("playstoreTitleText");
+            if (psSub) psSub.textContent = isBn ? "প্লে-স্টোর থেকে ডাউনলোড" : "GET ON PLAY STORE";
+            if (psTitle) psTitle.textContent = isBn ? "আল কুরআন অ্যাপ" : "Al Quran App";
+        }
+
+        window.dismissPlaystoreBadge = function(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const wrap = document.getElementById("floatingPlaystoreWrap");
+            if (wrap) {
+                wrap.style.display = "none";
+                sessionStorage.setItem("playstore_btn_dismissed", "1");
+            }
+        };
+
+        if (sessionStorage.getItem("playstore_btn_dismissed") === "1") {
+            const wrap = document.getElementById("floatingPlaystoreWrap");
+            if (wrap) wrap.style.display = "none";
         }
 
         window.setQuranLanguage = function(lang) {
