@@ -258,7 +258,7 @@
     </div>
 
     <!-- Core Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/quran-data.js') }}?v={{ $dataVer }}"></script>
     <script src="{{ asset('js/quran-audio.js') }}?v={{ $audioVer }}"></script>
     <script src="{{ asset('js/quran-reader.js') }}?v={{ $readerVer }}"></script>
@@ -549,22 +549,61 @@
             // Mobile Nav Drawer Toggle
             const mobileNavBtn = document.getElementById("mobileNavToggleBtn");
             const drawerEl = document.getElementById("mobileNavDrawer");
-            if (mobileNavBtn && drawerEl) {
+            const closeBtn = document.getElementById("mobileNavCloseBtn");
+
+            window.openMobileDrawer = function() {
+                if (!drawerEl) return;
+                if (window.bootstrap && window.bootstrap.Offcanvas) {
+                    const bsDrawer = bootstrap.Offcanvas.getOrCreateInstance(drawerEl);
+                    bsDrawer.show();
+                } else {
+                    drawerEl.classList.add("show");
+                    drawerEl.style.visibility = "visible";
+                    drawerEl.style.transform = "none";
+                    let backdrop = document.getElementById("customDrawerBackdrop");
+                    if (!backdrop) {
+                        backdrop = document.createElement("div");
+                        backdrop.id = "customDrawerBackdrop";
+                        backdrop.className = "offcanvas-backdrop fade show";
+                        backdrop.addEventListener("click", window.closeMobileDrawer);
+                        document.body.appendChild(backdrop);
+                    }
+                }
+            };
+
+            window.closeMobileDrawer = function() {
+                if (!drawerEl) return;
+                if (window.bootstrap && window.bootstrap.Offcanvas) {
+                    const bsDrawer = bootstrap.Offcanvas.getInstance(drawerEl);
+                    if (bsDrawer) bsDrawer.hide();
+                } else {
+                    drawerEl.classList.remove("show");
+                    drawerEl.style.visibility = "hidden";
+                    drawerEl.style.transform = "translateX(-100%)";
+                    const backdrop = document.getElementById("customDrawerBackdrop");
+                    if (backdrop) backdrop.remove();
+                }
+            };
+
+            if (mobileNavBtn) {
                 mobileNavBtn.addEventListener("click", (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    if (window.bootstrap && window.bootstrap.Offcanvas) {
-                        const bsDrawer = bootstrap.Offcanvas.getOrCreateInstance(drawerEl);
-                        bsDrawer.show();
-                    }
+                    window.openMobileDrawer();
                 });
+            }
 
+            if (closeBtn) {
+                closeBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    window.closeMobileDrawer();
+                });
+            }
+
+            if (drawerEl) {
                 drawerEl.querySelectorAll(".drawer-nav-item").forEach(link => {
                     link.addEventListener("click", () => {
-                        if (window.bootstrap && window.bootstrap.Offcanvas) {
-                            const bsDrawer = bootstrap.Offcanvas.getInstance(drawerEl);
-                            if (bsDrawer) bsDrawer.hide();
-                        }
+                        window.closeMobileDrawer();
                     });
                 });
             }
