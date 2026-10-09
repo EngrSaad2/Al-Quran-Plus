@@ -3,7 +3,7 @@
  * Clones Quran Mazid (quranmaziid.vercel.app) aesthetics
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Scheherazade+New:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@700&family=Amiri+Quran&family=Scheherazade+New:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
     --bg-main: #0a130e;
@@ -116,23 +116,39 @@ body {
 
 .watermark-text-center {
     position: absolute;
-    top: 9%;
+    top: 52%;
     left: 50%;
-    transform: translateX(-50%);
-    font-size: clamp(4.5rem, 13vw, 11rem);
-    font-family: 'Amiri', serif;
+    transform: translate(-50%, -50%);
+    font-size: clamp(6.5rem, 16vw, 15rem);
+    font-family: 'Aref Ruqaa', 'Amiri Quran', 'Amiri', serif;
     font-weight: 700;
     color: var(--text-primary);
-    opacity: 0.06;
+    opacity: 0.032;
     white-space: nowrap;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.02em;
     pointer-events: none;
     user-select: none;
+    line-height: 1;
+    text-align: center;
 }
 
 [data-theme="light"] .watermark-text-center {
-    opacity: 0.055;
+    opacity: 0.035;
     color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+    .watermark-text-center {
+        top: 50%;
+        font-size: clamp(4.5rem, 18vw, 8.5rem);
+    }
+}
+
+@media (max-width: 480px) {
+    .watermark-text-center {
+        top: 48%;
+        font-size: clamp(4rem, 20vw, 6.5rem);
+    }
 }
 
 .glow-orb-top {
