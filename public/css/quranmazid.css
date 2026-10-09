@@ -114,14 +114,6 @@ body {
     user-select: none;
 }
 
-.quran-bg-dots {
-    position: absolute;
-    inset: 0;
-    opacity: 0.12;
-    background-image: radial-gradient(circle, var(--primary-color) 1.2px, transparent 1.2px);
-    background-size: 24px 24px;
-}
-
 .watermark-text-center {
     position: absolute;
     top: 8%;
