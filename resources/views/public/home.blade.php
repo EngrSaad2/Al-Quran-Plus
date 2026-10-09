@@ -55,7 +55,7 @@
                     </div>
                     <div class="fan-card-arabic">الإخلاص</div>
                     <div class="fan-card-bottom">
-                        <h4 class="fan-card-name">আল-ইখলাস</h4>
+                        <h4 class="fan-card-name font-bangla">আল-ইখলাস</h4>
                         <p class="fan-card-verses">৪ আয়াত</p>
                     </div>
                 </div>
@@ -72,7 +72,7 @@
                     </div>
                     <div class="fan-card-arabic">الكهف</div>
                     <div class="fan-card-bottom">
-                        <h4 class="fan-card-name">আল-কাহফ</h4>
+                        <h4 class="fan-card-name font-bangla">আল-কাহফ</h4>
                         <p class="fan-card-verses">১১০ আয়াত</p>
                     </div>
                 </div>
@@ -89,7 +89,7 @@
                     </div>
                     <div class="fan-card-arabic">الرحمن</div>
                     <div class="fan-card-bottom">
-                        <h4 class="fan-card-name">আর-রহমান</h4>
+                        <h4 class="fan-card-name font-bangla">আর-রহমান</h4>
                         <p class="fan-card-verses">৭৮ আয়াত</p>
                     </div>
                 </div>
@@ -106,7 +106,7 @@
                     </div>
                     <div class="fan-card-arabic">الملك</div>
                     <div class="fan-card-bottom">
-                        <h4 class="fan-card-name">আল-মুলক</h4>
+                        <h4 class="fan-card-name font-bangla">আল-মুলক</h4>
                         <p class="fan-card-verses">৩০ আয়াত</p>
                     </div>
                 </div>
@@ -123,7 +123,7 @@
                     </div>
                     <div class="fan-card-arabic">الفاتحة</div>
                     <div class="fan-card-bottom">
-                        <h4 class="fan-card-name">আল-ফাতিহা</h4>
+                        <h4 class="fan-card-name font-bangla">আল-ফাতিহা</h4>
                         <p class="fan-card-verses">৭ আয়াত</p>
                     </div>
                 </div>

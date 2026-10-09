@@ -539,131 +539,6 @@ body {
     display: block;
 }
 
-@media (max-width: 768px) {
-    .cards-fan-container {
-        height: 235px;
-        padding-top: 20px;
-        margin: 16px auto 10px;
-        overflow: visible;
-    }
-    .cards-fan-stack {
-        transform: scale(0.96);
-    }
-    .fan-card-item {
-        width: 110px;
-        height: 165px;
-        margin: 0 -12px;
-    }
-    .badge-surah-num,
-    .badge-surah-origin,
-    .fan-card-verses {
-        display: none !important;
-    }
-    .fan-card-top {
-        justify-content: center !important;
-    }
-    .fan-card-name {
-        font-size: 0.68rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .cards-fan-container {
-        height: 205px;
-        padding-top: 16px;
-        margin: 12px auto 8px;
-        overflow: visible;
-    }
-    .cards-fan-stack {
-        transform: scale(0.86);
-    }
-    .fan-card-item {
-        width: 98px;
-        height: 145px;
-        margin: 0 -9px;
-        padding: 4px;
-        border-radius: 14px;
-    }
-    .fan-card-inner {
-        padding: 8px 3px 6px;
-        border-radius: 12px;
-    }
-    .fan-card-arabic {
-        font-size: 1.25rem;
-    }
-    .fan-card-name {
-        font-size: 0.55rem;
-        font-weight: 700;
-        letter-spacing: -0.015em;
-        margin-bottom: 2px;
-        line-height: 1.2;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: clip;
-    }
-    .badge-surah-num,
-    .badge-surah-origin,
-    .fan-card-verses {
-        display: none !important;
-    }
-    .fan-card-top {
-        justify-content: center !important;
-    }
-}
-
-@media (max-width: 400px) {
-    .cards-fan-container {
-        height: 190px;
-        padding-top: 12px;
-        margin: 10px auto 6px;
-        overflow: visible;
-    }
-    .cards-fan-stack {
-        transform: scale(0.78);
-    }
-    .fan-card-item {
-        width: 90px;
-        height: 135px;
-        margin: 0 -8px;
-        padding: 4px;
-        border-radius: 13px;
-    }
-    .fan-card-inner {
-        padding: 6px 2px 4px;
-    }
-    .fan-card-arabic {
-        font-size: 1.15rem;
-    }
-    .fan-card-name {
-        font-size: 0.49rem;
-        font-weight: 700;
-        letter-spacing: -0.02em;
-        line-height: 1.2;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: clip;
-    }
-    .badge-surah-num,
-    .badge-surah-origin,
-    .fan-card-verses {
-        display: none !important;
-    }
-    .fan-card-top {
-        justify-content: center !important;
-    }
-}
-
-@media (max-width: 360px) {
-    .fan-card-item {
-        width: 84px;
-        margin: 0 -7px;
-    }
-    .fan-card-name {
-        font-size: 0.45rem;
-        letter-spacing: -0.025em;
-    }
-}
-
 .fan-card-item:hover,
 .fan-card-item:focus,
 .fan-card-item:active {
@@ -788,6 +663,159 @@ body {
     font-size: 0.68rem;
     color: var(--text-muted);
     margin-top: 2px;
+}
+
+/* Fan Stack Responsive Rules (after base rules so media queries take precedence) */
+@media (max-width: 768px) {
+    .cards-fan-container {
+        height: 235px;
+        padding-top: 20px;
+        margin: 16px auto 10px;
+        overflow: visible;
+    }
+    .cards-fan-stack {
+        transform: scale(0.96);
+    }
+    .fan-card-item {
+        width: 110px;
+        height: 165px;
+        margin: 0 -12px;
+    }
+    .badge-surah-num,
+    .badge-surah-origin,
+    .fan-card-verses {
+        display: none !important;
+    }
+    .fan-card-top {
+        justify-content: center !important;
+    }
+    .fan-card-name {
+        font-size: 0.68rem;
+    }
+    .fan-card-name.font-bangla {
+        font-size: 0.64rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .cards-fan-container {
+        height: 205px;
+        padding-top: 16px;
+        margin: 12px auto 8px;
+        overflow: visible;
+    }
+    .cards-fan-stack {
+        transform: scale(0.86);
+    }
+    .fan-card-item {
+        width: 100px;
+        height: 145px;
+        margin: 0 -9px;
+        padding: 4px;
+        border-radius: 14px;
+    }
+    .fan-card-inner {
+        padding: 8px 3px 6px;
+        border-radius: 12px;
+    }
+    .fan-card-arabic {
+        font-size: 1.25rem;
+    }
+    .fan-card-bottom {
+        padding-top: 4px;
+    }
+    .fan-card-name {
+        font-size: 0.58rem;
+        font-weight: 700;
+        letter-spacing: -0.015em;
+        margin-bottom: 2px;
+        line-height: 1.2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: clip;
+    }
+    .fan-card-name.font-bangla {
+        font-size: 0.54rem;
+        letter-spacing: normal;
+    }
+    .badge-surah-num,
+    .badge-surah-origin,
+    .fan-card-verses {
+        display: none !important;
+    }
+    .fan-card-top {
+        justify-content: center !important;
+    }
+    .surah-name-en {
+        font-size: 0.88rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .cards-fan-container {
+        height: 190px;
+        padding-top: 12px;
+        margin: 10px auto 6px;
+        overflow: visible;
+    }
+    .cards-fan-stack {
+        transform: scale(0.80);
+    }
+    .fan-card-item {
+        width: 92px;
+        height: 136px;
+        margin: 0 -8px;
+        padding: 3px;
+        border-radius: 13px;
+    }
+    .fan-card-inner {
+        padding: 6px 2px 4px;
+    }
+    .fan-card-arabic {
+        font-size: 1.15rem;
+    }
+    .fan-card-bottom {
+        padding-top: 3px;
+    }
+    .fan-card-name {
+        font-size: 0.52rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: clip;
+    }
+    .fan-card-name.font-bangla {
+        font-size: 0.48rem;
+        letter-spacing: normal;
+    }
+    .badge-surah-num,
+    .badge-surah-origin,
+    .fan-card-verses {
+        display: none !important;
+    }
+    .fan-card-top {
+        justify-content: center !important;
+    }
+    .surah-name-en {
+        font-size: 0.84rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .fan-card-item {
+        width: 84px;
+        margin: 0 -7px;
+    }
+    .fan-card-name {
+        font-size: 0.46rem;
+        letter-spacing: -0.025em;
+    }
+    .fan-card-name.font-bangla {
+        font-size: 0.43rem;
+        letter-spacing: -0.015em;
+    }
 }
 
 /* Central Search Input */
