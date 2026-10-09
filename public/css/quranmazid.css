@@ -2535,7 +2535,7 @@ body {
 
 body:has(.global-audio-player-bar:not(.hidden-bar)) .floating-playstore-container,
 body.has-audio-bar .floating-playstore-container {
-    bottom: 92px;
+    bottom: 96px;
 }
 
 .floating-playstore-btn {
@@ -2654,7 +2654,7 @@ body.has-audio-bar .floating-playstore-container {
     }
     body:has(.global-audio-player-bar:not(.hidden-bar)) .floating-playstore-container,
     body.has-audio-bar .floating-playstore-container {
-        bottom: 78px;
+        bottom: 105px;
     }
     .floating-playstore-btn {
         padding: 5px 12px 5px 8px;
