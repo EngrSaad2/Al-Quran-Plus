@@ -73,10 +73,9 @@
                     <i class="fa-solid fa-sun text-warning" id="themeIcon"></i>
                 </button>
 
-                <!-- Language Toggle -->
-                <button class="btn-lang-pill" id="langToggleBtn" title="Change Language">
-                    <i class="fa-solid fa-globe text-muted"></i>
-                    <span id="langLabel">Ar+বাং</span>
+                <!-- Language Toggle (Icon Only) -->
+                <button class="btn-icon-circle" id="langToggleBtn" aria-label="Toggle Language" title="Change Language">
+                    <i class="fa-solid fa-globe"></i>
                 </button>
 
                 <!-- Mobile Menu Toggle Button -->
@@ -129,7 +128,8 @@
         @yield('content')
     </main>
 
-    <!-- Global Floating Audio Player Bar -->
+    <!-- Global Floating Audio Player Bar (Hidden on Home Page) -->
+    @if(!request()->routeIs('public.home') && !request()->is('/'))
     <div class="global-audio-player-bar" id="globalAudioBar">
         <!-- Track & Surah Meta -->
         <div class="audio-track-info">
@@ -183,6 +183,7 @@
             </div>
         </div>
     </div>
+    @endif
 
     <!-- Core Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/bootstrap.bundle.min.js"></script>
@@ -268,11 +269,9 @@
             if (dPrivacy) dPrivacy.innerHTML = `<i class="fa-solid fa-shield-halved me-2"></i> ${isBn ? "গোপনীয়তা নীতি" : "Privacy Policy"}`;
             if (dContact) dContact.innerHTML = `<i class="fa-solid fa-envelope me-2"></i> ${isBn ? "যোগাযোগ" : "Contact"}`;
 
-            // Lang toggle button label & tooltips
-            const label = document.getElementById("langLabel");
-            if (label) label.textContent = isBn ? "Ar+বাং" : "Ar+En";
+            // Lang toggle button tooltip
             const langToggle = document.getElementById("langToggleBtn");
-            if (langToggle) langToggle.title = isBn ? "ভাষা পরিবর্তন করুন" : "Change Language";
+            if (langToggle) langToggle.title = isBn ? "Switch to English" : "বাংলায় পরিবর্তন করুন";
 
             // Audio Player Bar defaults if not active
             const audioSurahName = document.getElementById("audioSurahName");

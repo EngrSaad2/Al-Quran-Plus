@@ -444,9 +444,8 @@
             e.preventDefault();
             e.stopPropagation();
         }
-        if (window.quranPlayer) {
-            window.quranPlayer.playSurah(surahId);
-        }
+        const baseUrl = window.APP_BASE_URL || '';
+        window.location.href = `${baseUrl}/surah/${surahId}?autoplay=1`;
     }
 
     // 2. Render Popular Recitations
@@ -494,13 +493,15 @@
     }
 
     function playPopularSurah(surahId, reciterName) {
-        if (window.quranPlayer) {
+        if (reciterName && window.QURAN_DATA) {
             const reciterObj = window.QURAN_DATA.reciters.find(r => r.name === reciterName);
             if (reciterObj) {
-                window.quranPlayer.setReciter(reciterObj.subfolder, reciterObj.name);
+                localStorage.setItem("quran_reciter", reciterObj.subfolder);
+                localStorage.setItem("quran_reciter_name", reciterObj.name);
             }
-            window.quranPlayer.playSurah(surahId, 1);
         }
+        const baseUrl = window.APP_BASE_URL || '';
+        window.location.href = `${baseUrl}/surah/${surahId}?autoplay=1`;
     }
 
     // 3. Render Surahs Grid
@@ -745,10 +746,8 @@
     function playLastPlayed() {
         const lastSurah = parseInt(localStorage.getItem("quran_last_surah") || "18");
         const lastAyah = parseInt(localStorage.getItem("quran_last_ayah") || "1");
-
-        if (window.quranPlayer) {
-            window.quranPlayer.playAyah(lastSurah, lastAyah);
-        }
+        const baseUrl = window.APP_BASE_URL || '';
+        window.location.href = `${baseUrl}/surah/${lastSurah}?ayah=${lastAyah}&autoplay=1`;
     }
 </script>
 @endsection
