@@ -140,7 +140,7 @@ class QuranAudioPlayer {
         const sId = parseInt(surahId) || 1;
         const reciter = this.getReciterObj(reciterKey);
         const qComId = reciter.quranComId || 7;
-        const cacheKey = `quran_ts_v4_${qComId}_${sId}`;
+        const cacheKey = `quran_ts_v5_${qComId}_${sId}`;
 
         if (this.timestampsCache[cacheKey]) {
             return this.timestampsCache[cacheKey];
@@ -150,8 +150,10 @@ class QuranAudioPlayer {
         if (cached) {
             try {
                 const parsed = JSON.parse(cached);
-                this.timestampsCache[cacheKey] = parsed;
-                return parsed;
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    this.timestampsCache[cacheKey] = parsed;
+                    return parsed;
+                }
             } catch (e) {}
         }
 
@@ -162,16 +164,21 @@ class QuranAudioPlayer {
             const data = await res.json();
             if (data && data.audio_file && data.audio_file.timestamps) {
                 const rawList = data.audio_file.timestamps;
-                const totalMs = rawList[rawList.length - 1].timestamp_to || 1;
-                const parsed = rawList.map((t, idx) => ({
-                    ayah: idx + 1,
-                    fromMs: t.timestamp_from,
-                    toMs: t.timestamp_to,
-                    fromSec: t.timestamp_from / 1000,
-                    toSec: t.timestamp_to / 1000
-                }));
+                const parsed = rawList.map((t, idx) => {
+                    const ayahNum = t.verse_key ? parseInt(t.verse_key.split(':')[1]) : (idx + 1);
+                    return {
+                        ayah: ayahNum,
+                        fromMs: t.timestamp_from,
+                        toMs: t.timestamp_to,
+                        fromSec: t.timestamp_from / 1000,
+                        toSec: t.timestamp_to / 1000
+                    };
+                }).sort((a, b) => a.ayah - b.ayah);
+
                 this.timestampsCache[cacheKey] = parsed;
-                localStorage.setItem(cacheKey, JSON.stringify(parsed));
+                try {
+                    localStorage.setItem(cacheKey, JSON.stringify(parsed));
+                } catch (e) {}
                 return parsed;
             }
         } catch (err) {
@@ -183,6 +190,7 @@ class QuranAudioPlayer {
     loadSurah(surahId, autoplay = false, startAyah = 1) {
         this.currentSurahId = parseInt(surahId) || 1;
         this.currentAyahNumber = parseInt(startAyah) || 1;
+        this.pendingSeekAyah = parseInt(startAyah) || 1;
 
         if (window.QURAN_DATA) {
             const s = window.QURAN_DATA.surahs.find(item => item.id === this.currentSurahId);
@@ -201,18 +209,22 @@ class QuranAudioPlayer {
         this.updateUI();
         this.highlightActiveAyah();
 
-        this.fetchSurahTimestamps(this.currentSurahId).then(ts => {
-            this.timestamps = ts;
-            if (startAyah > 1) {
-                this.seekToAyah(startAyah);
+        const tsPromise = this.fetchSurahTimestamps(this.currentSurahId);
+        const metaPromise = new Promise(resolve => {
+            if (this.audio.readyState >= 1) {
+                resolve();
+            } else {
+                this.audio.addEventListener("loadedmetadata", resolve, { once: true });
             }
         });
 
-        if (autoplay) {
-            const playHandler = () => {
-                if (startAyah > 1) {
-                    this.seekToAyah(startAyah);
-                }
+        Promise.all([tsPromise, metaPromise]).then(([ts]) => {
+            this.timestamps = ts;
+            if (this.pendingSeekAyah) {
+                this.seekToAyah(this.pendingSeekAyah);
+                this.pendingSeekAyah = null;
+            }
+            if (autoplay) {
                 const p = this.audio.play();
                 if (p !== undefined) {
                     p.then(() => {
@@ -223,26 +235,35 @@ class QuranAudioPlayer {
                         console.log("Audio autoplay waiting for user interaction:", err);
                     });
                 }
-            };
-
-            if (this.audio.readyState >= 1) {
-                playHandler();
-            } else {
-                this.audio.addEventListener("loadedmetadata", playHandler, { once: true });
             }
-        }
+        }).catch(err => {
+            console.warn("Error initializing surah playback:", err);
+        });
     }
 
     playSurah(surahId, startAyah = 1) {
         const sId = parseInt(surahId) || 1;
+        const aNum = parseInt(startAyah) || 1;
         if (this.currentSurahId !== sId) {
-            this.loadSurah(sId, true, startAyah);
+            this.loadSurah(sId, true, aNum);
             return;
         }
 
-        if (startAyah > 1) {
-            this.seekToAyah(startAyah);
+        if (!this.timestamps) {
+            this.pendingSeekAyah = aNum;
+            this.fetchSurahTimestamps(sId).then(ts => {
+                this.timestamps = ts;
+                this.seekToAyah(aNum);
+                this.audio.play().then(() => {
+                    this.isPlaying = true;
+                    this.updatePlayPauseButtons();
+                    this.updateMediaSession();
+                }).catch(err => console.warn(err));
+            });
+            return;
         }
+
+        this.seekToAyah(aNum);
         this.audio.play().then(() => {
             this.isPlaying = true;
             this.updatePlayPauseButtons();
@@ -260,6 +281,20 @@ class QuranAudioPlayer {
             return;
         }
 
+        if (!this.timestamps) {
+            this.pendingSeekAyah = aNum;
+            this.fetchSurahTimestamps(sId).then(ts => {
+                this.timestamps = ts;
+                this.seekToAyah(aNum);
+                this.audio.play().then(() => {
+                    this.isPlaying = true;
+                    this.updatePlayPauseButtons();
+                    this.updateMediaSession();
+                }).catch(err => console.warn(err));
+            });
+            return;
+        }
+
         this.seekToAyah(aNum);
         const p = this.audio.play();
         if (p !== undefined) {
@@ -274,30 +309,30 @@ class QuranAudioPlayer {
     }
 
     seekToAyah(ayahNumber) {
-        this.currentAyahNumber = Math.max(1, Math.min(this.totalAyahs, parseInt(ayahNumber) || 1));
+        const aNum = Math.max(1, Math.min(this.totalAyahs, parseInt(ayahNumber) || 1));
+        this.currentAyahNumber = aNum;
         const dur = this.audio.duration || 0;
         const reciterObj = this.getReciterObj();
         const hasExactTimestamps = reciterObj && reciterObj.quranComId;
 
-        if (this.timestamps && this.timestamps.length >= this.currentAyahNumber) {
-            const ts = this.timestamps[this.currentAyahNumber - 1];
-            if (hasExactTimestamps || !dur) {
-                const targetSec = ts.fromSec;
-                if (!isNaN(targetSec) && isFinite(targetSec)) {
-                    this.audio.currentTime = Math.max(0, targetSec);
+        if (this.timestamps && this.timestamps.length > 0) {
+            const ts = this.timestamps.find(t => t.ayah === aNum) || this.timestamps[aNum - 1];
+            if (ts) {
+                let targetSec = ts.fromSec;
+                if (!hasExactTimestamps && dur > 0) {
+                    const hasBismillahPrefix = (this.currentSurahId !== 1 && this.currentSurahId !== 9);
+                    const bismillahSec = hasBismillahPrefix ? 8.0 : 0.0;
+                    const totalRefMs = this.timestamps[this.timestamps.length - 1]?.toMs || 1;
+                    const adjDur = Math.max(1, dur - bismillahSec);
+                    targetSec = bismillahSec + ((ts.fromMs / totalRefMs) * adjDur);
                 }
-            } else {
-                const hasBismillahPrefix = (this.currentSurahId !== 1 && this.currentSurahId !== 9);
-                const bismillahSec = hasBismillahPrefix ? 8.0 : 0.0;
-                const totalRefMs = this.timestamps[this.timestamps.length - 1]?.toMs || 1;
-                const adjDur = Math.max(1, dur - bismillahSec);
-                const targetSec = bismillahSec + ((ts.fromMs / totalRefMs) * adjDur);
                 if (!isNaN(targetSec) && isFinite(targetSec)) {
                     this.audio.currentTime = Math.max(0, targetSec);
                 }
             }
         } else if (dur > 0 && this.totalAyahs > 0) {
-            const targetSec = ((this.currentAyahNumber - 1) / this.totalAyahs) * dur;
+            // Only as a last-resort fallback if timestamps cannot be fetched
+            const targetSec = ((aNum - 1) / this.totalAyahs) * dur;
             this.audio.currentTime = Math.max(0, targetSec);
         }
 
@@ -436,51 +471,75 @@ class QuranAudioPlayer {
     }
 
     syncActiveAyahFromTime(cur, dur) {
+        if (!this.timestamps || this.timestamps.length === 0) {
+            if (dur > 0 && this.totalAyahs > 0) {
+                const ratio = cur / dur;
+                const matchedAyah = Math.min(this.totalAyahs, Math.max(1, Math.floor(ratio * this.totalAyahs) + 1));
+                if (matchedAyah !== this.currentAyahNumber) {
+                    this.currentAyahNumber = matchedAyah;
+                    this.saveState();
+                    this.updateSurahTitle();
+                    this.highlightActiveAyah();
+                }
+            }
+            return;
+        }
+
         let matchedAyah = null;
         const reciterObj = this.getReciterObj();
         const hasExactTimestamps = reciterObj && reciterObj.quranComId;
 
-        if (this.timestamps && this.timestamps.length > 0) {
-            if (hasExactTimestamps) {
-                // Exact Quran.com chapter recitation timestamps
-                for (const t of this.timestamps) {
-                    if (cur >= t.fromSec && cur < t.toSec) {
+        if (hasExactTimestamps) {
+            // Exact Quran.com chapter recitation timestamps
+            const len = this.timestamps.length;
+            for (let i = 0; i < len; i++) {
+                const t = this.timestamps[i];
+                const nextT = this.timestamps[i + 1];
+
+                // Current verse remains active until the next verse's recitation actually begins
+                // (+ 0.05s buffer to prevent early flip before reciter speaks the next ayah).
+                if (nextT) {
+                    if (cur >= t.fromSec && cur < (nextT.fromSec + 0.05)) {
+                        matchedAyah = t.ayah;
+                        break;
+                    }
+                } else {
+                    // Last ayah in surah
+                    if (cur >= t.fromSec) {
                         matchedAyah = t.ayah;
                         break;
                     }
                 }
-                if (!matchedAyah && cur >= (this.timestamps[this.timestamps.length - 1]?.fromSec || 0)) {
-                    matchedAyah = this.totalAyahs;
-                }
+            }
+
+            if (!matchedAyah && cur < (this.timestamps[0]?.fromSec || 0)) {
+                matchedAyah = 1;
+            }
+        } else {
+            // Non-exact reciter fallback
+            const hasBismillahPrefix = (this.currentSurahId !== 1 && this.currentSurahId !== 9);
+            const bismillahSec = hasBismillahPrefix ? 8.0 : 0.0;
+
+            if (cur < bismillahSec) {
+                matchedAyah = 1;
             } else {
-                // Non-exact reciter (e.g. Maher from mp3quran)
-                // In mp3quran full surahs (except Surah 1 and 9), reciter starts with Bismillah (~8.0s)
-                const hasBismillahPrefix = (this.currentSurahId !== 1 && this.currentSurahId !== 9);
-                const bismillahSec = hasBismillahPrefix ? 8.0 : 0.0;
+                const adjCur = cur - bismillahSec;
+                const adjDur = Math.max(1, dur - bismillahSec);
+                const totalRefMs = this.timestamps[this.timestamps.length - 1]?.toMs || 1;
+                const len = this.timestamps.length;
 
-                if (cur < bismillahSec) {
-                    matchedAyah = 1;
-                } else {
-                    const adjCur = cur - bismillahSec;
-                    const adjDur = Math.max(1, dur - bismillahSec);
-                    const totalRefMs = this.timestamps[this.timestamps.length - 1]?.toMs || 1;
+                for (let i = 0; i < len; i++) {
+                    const t = this.timestamps[i];
+                    const nextT = this.timestamps[i + 1];
+                    const startSec = (t.fromMs / totalRefMs) * adjDur;
+                    const nextStartSec = nextT ? ((nextT.fromMs / totalRefMs) * adjDur) : adjDur;
 
-                    for (const t of this.timestamps) {
-                        const startRatio = t.fromMs / totalRefMs;
-                        const endRatio = t.toMs / totalRefMs;
-                        const scaledStart = startRatio * adjDur;
-                        const scaledEnd = endRatio * adjDur;
-
-                        if (adjCur >= scaledStart && adjCur < scaledEnd) {
-                            matchedAyah = t.ayah;
-                            break;
-                        }
+                    if (adjCur >= startSec && adjCur < (nextStartSec + 0.05)) {
+                        matchedAyah = t.ayah;
+                        break;
                     }
                 }
             }
-        } else if (dur > 0 && this.totalAyahs > 0) {
-            const ratio = cur / dur;
-            matchedAyah = Math.min(this.totalAyahs, Math.max(1, Math.floor(ratio * this.totalAyahs) + 1));
         }
 
         if (matchedAyah && matchedAyah !== this.currentAyahNumber) {
@@ -507,7 +566,13 @@ class QuranAudioPlayer {
 
         this.updateUI();
 
-        this.fetchSurahTimestamps(this.currentSurahId, reciterSubfolder).then(ts => {
+        const fetchPromise = this.fetchSurahTimestamps(this.currentSurahId, reciterSubfolder);
+        const metaPromise = new Promise(resolve => {
+            if (this.audio.readyState >= 1) resolve();
+            else this.audio.addEventListener("loadedmetadata", resolve, { once: true });
+        });
+
+        Promise.all([fetchPromise, metaPromise]).then(([ts]) => {
             this.timestamps = ts;
             this.seekToAyah(currentAyah);
             if (wasPlaying) {
@@ -581,19 +646,34 @@ class QuranAudioPlayer {
     }
 
     highlightActiveAyah() {
-        const prevActive = document.querySelector(".ayah-card.active-playing");
-        const target = document.getElementById(`ayah-${this.currentAyahNumber}`);
-        
-        if (prevActive && prevActive !== target) {
-            prevActive.classList.remove("active-playing");
-        }
+        const targetId = `ayah-${this.currentAyahNumber}`;
+        const target = document.getElementById(targetId);
 
-        if (target && !target.classList.contains("active-playing")) {
-            target.classList.add("active-playing");
-            const rect = target.getBoundingClientRect();
-            if (rect.top < 80 || rect.bottom > window.innerHeight - 80) {
-                target.scrollIntoView({ behavior: "smooth", block: "center" });
+        const applyHighlight = (el) => {
+            const prevActive = document.querySelector(".ayah-card.active-playing");
+            if (prevActive && prevActive !== el) {
+                prevActive.classList.remove("active-playing");
             }
+
+            if (el) {
+                if (!el.classList.contains("active-playing")) {
+                    el.classList.add("active-playing");
+                }
+                const rect = el.getBoundingClientRect();
+                if (rect.top < 90 || rect.bottom > window.innerHeight - 90) {
+                    el.scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+            }
+        };
+
+        if (target) {
+            applyHighlight(target);
+        } else {
+            // Verse card element might still be rendering in DOM by quran-reader.js
+            setTimeout(() => {
+                const retryEl = document.getElementById(targetId);
+                if (retryEl) applyHighlight(retryEl);
+            }, 250);
         }
     }
 
