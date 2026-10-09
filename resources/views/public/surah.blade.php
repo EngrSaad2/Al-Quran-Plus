@@ -232,7 +232,7 @@
             else bnName.classList.remove("font-bangla");
         }
         if (headerTitle) {
-            headerTitle.textContent = isBn ? s.bangla : `${s.name} (${s.englishMeaning})`;
+            headerTitle.innerHTML = `<span class="header-surah-name">${isBn ? s.bangla : s.name}</span><span class="header-surah-meaning d-none d-md-inline text-muted fw-normal ms-1">(${isBn ? s.banglaMeaning : s.englishMeaning})</span>`;
             if (isBn) headerTitle.classList.add("font-bangla");
             else headerTitle.classList.remove("font-bangla");
         }
