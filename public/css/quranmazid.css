@@ -2163,11 +2163,14 @@ body {
 }
 
 .audio-time-label {
-    font-size: 0.68rem;
+    font-size: 0.72rem;
     color: var(--text-dim);
     font-family: monospace;
-    width: 38px;
+    min-width: 52px;
+    width: auto;
     text-align: center;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .audio-seek-slider {
@@ -2227,17 +2230,17 @@ body {
     }
     .audio-controls-center {
         width: 100% !important;
-        max-width: 100% !important;
+        max-width: 440px !important;
         margin: 0 auto !important;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 0 !important;
+        padding: 0 16px !important;
     }
     .audio-buttons-row {
         gap: 16px;
-        margin-bottom: 2px;
+        margin-bottom: 3px;
         justify-content: center;
     }
     .btn-audio-ctrl {
@@ -2249,22 +2252,28 @@ body {
         font-size: 0.95rem;
     }
     .audio-progress-row {
-        width: 100%;
-        gap: 8px;
+        width: 84% !important;
+        max-width: 320px !important;
+        margin: 0 auto !important;
+        gap: 10px;
     }
     .audio-time-label {
-        font-size: 0.65rem;
-        width: 34px;
+        font-size: 0.70rem;
+        min-width: 50px;
+        width: auto;
+        white-space: nowrap;
+        text-align: center;
+        flex-shrink: 0;
     }
 }
 
 @media (max-width: 480px) {
     .global-audio-player-bar {
-        padding: 6px 10px 8px;
+        padding: 6px 12px 8px;
         min-height: 62px;
     }
     .audio-buttons-row {
-        gap: 12px;
+        gap: 14px;
     }
     .btn-audio-ctrl {
         font-size: 0.9rem;
@@ -2273,6 +2282,18 @@ body {
         width: 32px;
         height: 32px;
         font-size: 0.85rem;
+    }
+    .audio-controls-center {
+        padding: 0 8px !important;
+    }
+    .audio-progress-row {
+        width: 80% !important;
+        max-width: 275px !important;
+        gap: 8px;
+    }
+    .audio-time-label {
+        font-size: 0.68rem;
+        min-width: 48px;
     }
 }
 
