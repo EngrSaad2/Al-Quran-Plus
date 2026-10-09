@@ -2397,6 +2397,8 @@ body {
 
 /* ========================================================
    HEADER QARI CIRCLE BUTTON & DROPDOWN MENU
+/* ========================================================
+   HEADER QARI CIRCLE BUTTON & QARI SELECTION MODAL
    ======================================================== */
 .btn-qari-header-circle {
     width: 34px;
@@ -2412,6 +2414,7 @@ body {
     justify-content: center;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     box-shadow: 0 2px 8px var(--primary-glow);
+    flex-shrink: 0;
 }
 
 .btn-qari-header-circle:hover {
@@ -2427,77 +2430,372 @@ body {
     display: block;
 }
 
-.qari-dropdown-menu {
-    min-width: 270px;
-    max-height: 400px;
-    overflow-y: auto;
-    border-radius: 16px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    padding: 8px;
-    z-index: 1050;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3) !important;
+/* Global Qari Selection Modal */
+.qari-select-modal .modal-dialog {
+    max-width: 460px;
+    margin: 1.25rem auto;
 }
 
-.qari-dropdown-item {
+.qari-modal-content {
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card) !important;
+    overflow: hidden;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="light"] .qari-modal-content {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12) !important;
+}
+
+.qari-modal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 10px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background 0.15s ease;
-    color: var(--text-primary);
-    text-decoration: none;
-    border: none;
-    background: transparent;
-    width: 100%;
-    text-align: left;
+    justify-content: space-between;
+    background: var(--bg-card);
 }
 
-.qari-dropdown-item:hover, .qari-dropdown-item.active {
+[data-theme="light"] .qari-modal-header {
+    background: #ffffff !important;
+    border-bottom-color: #f1f5f9 !important;
+}
+
+.qari-modal-icon-badge {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
     background: rgba(16, 185, 129, 0.12);
     color: var(--primary-color);
-}
-
-.qari-dropdown-item.active {
-    border-left: 3px solid var(--primary-color);
-}
-
-.qari-item-thumb {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1.5px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
     flex-shrink: 0;
 }
 
-.qari-item-info {
-    flex: 1;
-    min-width: 0;
-    line-height: 1.25;
+.qari-modal-sub {
+    font-size: 0.73rem;
+    display: block;
+    margin-top: 1px;
 }
 
-.qari-item-name {
-    font-size: 0.82rem;
-    font-weight: 600;
+.btn-close-modal {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+[data-theme="light"] .btn-close-modal {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+    color: #64748b;
+}
+
+.btn-close-modal:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.qari-modal-body {
+    padding: 14px 16px;
+    max-height: 70vh;
+    overflow-y: auto;
+    background: var(--bg-card);
+}
+
+[data-theme="light"] .qari-modal-body {
+    background: #ffffff !important;
+}
+
+.qari-cards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Individual Qari Item Card */
+.qari-select-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 14px;
+    background: var(--bg-secondary);
+    border: 1.5px solid var(--border-color);
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+}
+
+[data-theme="light"] .qari-select-card {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.qari-select-card:hover {
+    border-color: var(--primary-color);
+    background: var(--bg-secondary-hover);
+    transform: translateY(-1px);
+}
+
+[data-theme="light"] .qari-select-card:hover {
+    background: #f0fdf4 !important;
+    border-color: #86efac !important;
+}
+
+.qari-select-card.active {
+    background: rgba(16, 185, 129, 0.12) !important;
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 1px var(--primary-color), 0 4px 14px var(--primary-glow);
+}
+
+[data-theme="light"] .qari-select-card.active {
+    background: #ecfdf5 !important;
+    border-color: #10b981 !important;
+    box-shadow: 0 0 0 1px #10b981, 0 4px 14px rgba(16, 185, 129, 0.15) !important;
+}
+
+.qari-card-thumb {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.qari-select-card.active .qari-card-thumb {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--primary-glow);
+}
+
+.qari-card-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.qari-card-name-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.qari-card-name {
+    font-size: 0.88rem;
+    font-weight: 700;
     color: var(--text-primary);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.qari-item-arabic {
+[data-theme="light"] .qari-card-name {
+    color: #0f172a;
+}
+
+.qari-select-card.active .qari-card-name {
+    color: var(--primary-color);
+}
+
+.qari-card-arabic {
+    font-family: 'Amiri', serif;
+    font-size: 0.82rem;
+    color: var(--primary-color);
+    direction: rtl;
+    white-space: nowrap;
+}
+
+.qari-card-meta {
     font-size: 0.72rem;
     color: var(--text-muted);
-    direction: rtl;
+}
+
+[data-theme="light"] .qari-card-meta {
+    color: #64748b;
+}
+
+.qari-card-badge-active {
+    display: none;
+    align-items: center;
+    gap: 4px;
+    background: var(--primary-color);
+    color: #ffffff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+    flex-shrink: 0;
+}
+
+.qari-select-card.active .qari-card-badge-active {
+    display: inline-flex;
+}
+
+.qari-card-radio-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: transparent;
+    font-size: 0.65rem;
+}
+
+[data-theme="light"] .qari-card-radio-icon {
+    border-color: #cbd5e1;
+}
+
+.qari-select-card.active .qari-card-radio-icon {
+    display: none;
+}
+
+/* Reading Settings Panel Qari Preview Button */
+.qari-setting-preview-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 14px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .qari-setting-preview-btn {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.qari-setting-preview-btn:hover {
+    border-color: var(--primary-color);
+    background: var(--bg-secondary-hover);
+}
+
+[data-theme="light"] .qari-setting-preview-btn:hover {
+    background: #f0fdf4 !important;
+    border-color: #86efac !important;
+}
+
+.qari-setting-thumb {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary-color);
+    flex-shrink: 0;
+}
+
+.qari-setting-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.qari-setting-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .qari-setting-name {
+    color: #0f172a;
+}
+
+.qari-setting-sub {
+    font-size: 0.72rem;
+    color: var(--text-muted);
     font-family: 'Amiri', serif;
 }
 
-.qari-item-check {
+.qari-setting-action-badge {
+    font-size: 0.72rem;
+    font-weight: 600;
     color: var(--primary-color);
-    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    background: rgba(16, 185, 129, 0.1);
+}
+
+/* Mobile View Adjustments for Qari Modal */
+@media (max-width: 576px) {
+    .qari-select-modal .modal-dialog {
+        margin: 0;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        max-width: 100%;
+        transform: translateY(100%);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .qari-select-modal.show .modal-dialog {
+        transform: translateY(0);
+    }
+    .qari-modal-content {
+        border-radius: 22px 22px 0 0;
+        border-bottom: none;
+        max-height: 80vh;
+    }
+    .qari-modal-header {
+        padding: 14px 16px;
+    }
+    .qari-modal-body {
+        padding: 10px 12px 24px 12px;
+    }
+    .qari-select-card {
+        padding: 8px 12px;
+        gap: 10px;
+        border-radius: 12px;
+    }
+    .qari-card-thumb {
+        width: 38px;
+        height: 38px;
+    }
+    .qari-card-name {
+        font-size: 0.82rem;
+    }
+    .qari-card-arabic {
+        font-size: 0.78rem;
+    }
+    .qari-card-meta {
+        font-size: 0.68rem;
+    }
 }
 
 /* ========================================================

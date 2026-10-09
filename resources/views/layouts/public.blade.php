@@ -233,6 +233,33 @@
         <button type="button" class="playstore-close-btn" onclick="dismissPlaystoreBadge(event)" title="Close" aria-label="Dismiss">&times;</button>
     </div>
 
+    <!-- Global Qari Selection Modal -->
+    <div class="modal fade qari-select-modal" id="qariSelectModal" tabindex="-1" aria-labelledby="qariModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content qari-modal-content">
+                <div class="modal-header qari-modal-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="qari-modal-icon-badge">
+                            <i class="fa-solid fa-microphone-lines"></i>
+                        </span>
+                        <div>
+                            <h6 class="modal-title font-bangla fw-bold mb-0" id="qariModalTitle">ক্বারী / তিলাওয়াতকারী নির্বাচন</h6>
+                            <span class="qari-modal-sub font-bangla text-muted" id="qariModalSubTitle">পছন্দের ক্বারীর কণ্ঠে পবিত্র কুরআন তিলাওয়াত শুনুন</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close-modal" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="modal-body qari-modal-body">
+                    <div class="qari-cards-list" id="qariModalCardsList">
+                        <!-- Populated dynamically by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Core Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/quran-data.js') }}?v={{ $dataVer }}"></script>
@@ -367,6 +394,126 @@
                 window.setQuranLanguage(nextLang);
             });
         }
+
+        // ==========================================
+        // Global Qari Modal & Reciter Switcher Logic
+        // ==========================================
+        window.openQariModal = function() {
+            window.renderQariModalCards();
+            const modalEl = document.getElementById("qariSelectModal");
+            if (modalEl && window.bootstrap) {
+                const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                modal.show();
+            }
+        };
+
+        window.renderQariModalCards = function() {
+            const list = document.getElementById("qariModalCardsList");
+            if (!list || !window.QURAN_DATA || !window.QURAN_DATA.reciters) return;
+
+            const currentReciter = localStorage.getItem("quran_reciter") || "Alafasy_128kbps";
+            const lang = window.currentQuranLang || localStorage.getItem("quran_lang") || "bn";
+            const isBn = lang === "bn";
+
+            const mTitle = document.getElementById("qariModalTitle");
+            const mSub = document.getElementById("qariModalSubTitle");
+            if (mTitle) mTitle.textContent = isBn ? "ক্বারী / তিলাওয়াতকারী নির্বাচন" : "Select Quran Reciter (Qari)";
+            if (mSub) mSub.textContent = isBn ? "পছন্দের ক্বারীর কণ্ঠে পবিত্র কুরআন তিলাওয়াত শুনুন" : "Listen to Quran recitation in your favorite Qari's voice";
+
+            let html = "";
+            window.QURAN_DATA.reciters.forEach(r => {
+                const isActive = r.subfolder === currentReciter;
+                const displayName = isBn && r.banglaName ? r.banglaName : r.name;
+                const subName = isBn ? r.name : (r.banglaName || '');
+                const styleText = isBn ? 'মুরাত্তাল তিলাওয়াত' : 'Murattal Recitation';
+
+                html += `
+                    <button type="button" class="qari-select-card ${isActive ? 'active' : ''}" onclick="window.onSelectQariCard('${r.subfolder}', '${r.name}')">
+                        <img src="${r.photo || '{{ asset('images/reciters/alafasy.webp') }}'}" alt="${r.name}" class="qari-card-thumb">
+                        <div class="qari-card-info">
+                            <div class="qari-card-name-row">
+                                <span class="qari-card-name ${isBn ? 'font-bangla' : ''}">${displayName}</span>
+                                <span class="qari-card-arabic">${r.arabicName}</span>
+                            </div>
+                            <div class="qari-card-meta">${styleText}${subName ? ' • ' + subName : ''}</div>
+                        </div>
+                        <span class="qari-card-badge-active font-bangla">
+                            <i class="fa-solid fa-circle-check"></i> ${isBn ? 'সক্রিয়' : 'Active'}
+                        </span>
+                        <span class="qari-card-radio-icon"><i class="fa-solid fa-check"></i></span>
+                    </button>
+                `;
+            });
+
+            list.innerHTML = html;
+        };
+
+        window.onSelectQariCard = function(subfolder, name) {
+            if (window.quranPlayer) {
+                window.quranPlayer.setReciter(subfolder, name);
+            } else {
+                localStorage.setItem("quran_reciter", subfolder);
+                localStorage.setItem("quran_reciter_name", name);
+            }
+
+            const modalEl = document.getElementById("qariSelectModal");
+            if (modalEl && window.bootstrap) {
+                const modal = bootstrap.Modal.getInstance(modalEl);
+                if (modal) modal.hide();
+            }
+
+            window.updateAllQariUIPreviews();
+        };
+
+        window.updateAllQariUIPreviews = function() {
+            if (!window.QURAN_DATA || !window.QURAN_DATA.reciters) return;
+            const currentReciter = localStorage.getItem("quran_reciter") || "Alafasy_128kbps";
+            const reciterObj = window.QURAN_DATA.reciters.find(r => r.subfolder === currentReciter) || window.QURAN_DATA.reciters[0];
+            const lang = window.currentQuranLang || localStorage.getItem("quran_lang") || "bn";
+            const isBn = lang === "bn";
+
+            // Header circle avatar
+            const headImg = document.getElementById("headerQariImg");
+            if (headImg && reciterObj) {
+                headImg.src = reciterObj.photo || "{{ asset('images/reciters/alafasy.webp') }}";
+                headImg.alt = reciterObj.name;
+            }
+
+            // Reading settings drawer preview
+            const setImg = document.getElementById("settingQariImg");
+            const setName = document.getElementById("settingQariName");
+            const setSub = document.getElementById("settingQariSub");
+            if (setImg && reciterObj) {
+                setImg.src = reciterObj.photo || "{{ asset('images/reciters/alafasy.webp') }}";
+                setImg.alt = reciterObj.name;
+            }
+            if (setName && reciterObj) {
+                setName.textContent = isBn && reciterObj.banglaName ? reciterObj.banglaName : reciterObj.name;
+            }
+            if (setSub && reciterObj) {
+                setSub.textContent = reciterObj.arabicName;
+            }
+
+            // Global audio player bar reciter name
+            const audioReciter = document.getElementById("audioReciterName");
+            if (audioReciter && reciterObj) {
+                audioReciter.textContent = isBn && reciterObj.banglaName ? reciterObj.banglaName : reciterObj.name;
+            }
+        };
+
+        window.addEventListener("quranReciterChanged", () => {
+            window.updateAllQariUIPreviews();
+        });
+
+        window.addEventListener("quranLanguageChanged", () => {
+            window.updateAllQariUIPreviews();
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            setTimeout(() => {
+                window.updateAllQariUIPreviews();
+            }, 100);
+        });
     </script>
 
     @yield('scripts')

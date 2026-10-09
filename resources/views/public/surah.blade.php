@@ -88,13 +88,10 @@
 
             <div class="d-flex align-items-center gap-2">
                 <!-- Change Qari Option on Header Circle with Qari Picture -->
-                <div class="dropdown d-inline-block" id="headerQariDropdownContainer">
-                    <button class="btn-qari-header-circle" id="headerQariBtn" data-bs-toggle="dropdown" aria-expanded="false" title="ক্বারী পরিবর্তন করুন / Change Reciter">
+                <div class="d-inline-block" id="headerQariDropdownContainer">
+                    <button class="btn-qari-header-circle" id="headerQariBtn" onclick="openQariModal()" title="ক্বারী পরিবর্তন করুন / Change Reciter">
                         <img id="headerQariImg" src="{{ asset('images/reciters/alafasy.webp') }}" alt="Qari" class="qari-header-avatar">
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end qari-dropdown-menu shadow-lg" id="headerQariMenu">
-                        <!-- Populated dynamically by JS -->
-                    </ul>
                 </div>
 
                 <a href="{{ route('public.home') }}" class="btn-icon-circle" id="readerHeaderHome" title="হোমে ফিরুন">
@@ -156,9 +153,17 @@
             <!-- Qari / Reciter Selection -->
             <div class="setting-group-item">
                 <div class="setting-label" id="labelReciter">ক্বারী / তিলাওয়াতকারী</div>
-                <select class="custom-select-box" id="settingReciterSelect" onchange="onReciterChanged(this)">
-                    <!-- Populated dynamically -->
-                </select>
+                <button type="button" class="qari-setting-preview-btn" onclick="openQariModal()" id="settingQariBtn" title="ক্বারী পরিবর্তন করুন / Change Reciter">
+                    <img id="settingQariImg" src="{{ asset('images/reciters/alafasy.webp') }}" alt="Qari" class="qari-setting-thumb">
+                    <div class="qari-setting-info">
+                        <div class="qari-setting-name font-bangla" id="settingQariName">মিশারি রশিদ আল-আফাসি</div>
+                        <div class="qari-setting-sub" id="settingQariSub">مشاري راشد العفاسي</div>
+                    </div>
+                    <span class="qari-setting-action-badge font-bangla">
+                        <span id="labelChangeQari">পরিবর্তন</span>
+                        <i class="fa-solid fa-chevron-right ms-1"></i>
+                    </span>
+                </button>
             </div>
 
             <!-- Arabic Font Family -->
@@ -230,9 +235,10 @@
         const shouldAutoplay = urlParams.get('autoplay') === '1' || urlParams.get('play') === '1';
         const targetAyah = parseInt(urlParams.get('ayah')) || null;
 
-        // Populate Reciters in Settings & Header Dropdown
-        populateRecitersDropdown();
-        populateHeaderQariDropdown();
+        // Update Reciter Previews in Settings & Header
+        if (window.updateAllQariUIPreviews) {
+            window.updateAllQariUIPreviews();
+        }
 
         // Initialize QuranReader instance with targetAyah
         window.quranReader = new QuranReader(currentSurahId, targetAyah);
@@ -405,91 +411,14 @@
         renderNavSurahList(query);
     }
 
-    function populateRecitersDropdown() {
-        const select = document.getElementById("settingReciterSelect");
-        if (!select || !window.QURAN_DATA) return;
-
-        const currentReciter = localStorage.getItem("quran_reciter") || "Alafasy_128kbps";
-        let html = "";
-
-        window.QURAN_DATA.reciters.forEach(r => {
-            const isSelected = r.subfolder === currentReciter ? "selected" : "";
-            html += `<option value="${r.subfolder}" data-name="${r.name}" ${isSelected}>${r.name} (${r.arabicName})</option>`;
-        });
-
-        select.innerHTML = html;
-    }
-
-    function onReciterChanged(select) {
-        const selectedOption = select.options[select.selectedIndex];
-        const subfolder = select.value;
-        const name = selectedOption.getAttribute("data-name");
-
-        if (window.quranPlayer) {
-            window.quranPlayer.setReciter(subfolder, name);
-        }
-        populateHeaderQariDropdown();
-    }
-
-    function populateHeaderQariDropdown() {
-        const menu = document.getElementById("headerQariMenu");
-        if (!menu || !window.QURAN_DATA || !window.QURAN_DATA.reciters) return;
-
-        const currentReciter = localStorage.getItem("quran_reciter") || "Alafasy_128kbps";
-        const lang = window.currentQuranLang || localStorage.getItem("quran_lang") || "bn";
-        const isBn = lang === "bn";
-        const activeReciterObj = window.QURAN_DATA.reciters.find(r => r.subfolder === currentReciter) || window.QURAN_DATA.reciters[0];
-
-        // Update header button avatar
-        const qariImg = document.getElementById("headerQariImg");
-        if (qariImg && activeReciterObj) {
-            qariImg.src = activeReciterObj.photo || "{{ asset('images/reciters/alafasy.webp') }}";
-            qariImg.alt = activeReciterObj.name;
-        }
-
-        let html = `
-            <li class="dropdown-header font-bangla fw-bold pb-2" style="color: var(--text-muted); font-size: 0.75rem;">
-                ${isBn ? 'ক্বারী / তিলাওয়াতকারী নির্বাচন করুন' : 'Select Quran Reciter (Qari)'}
-            </li>
-        `;
-
-        window.QURAN_DATA.reciters.forEach(r => {
-            const isActive = r.subfolder === currentReciter;
-            html += `
-                <li>
-                    <button class="dropdown-item qari-dropdown-item ${isActive ? 'active' : ''}" type="button" onclick="selectQari('${r.subfolder}', '${r.name}')">
-                        <img src="${r.photo || '{{ asset('images/reciters/alafasy.webp') }}'}" alt="${r.name}" class="qari-item-thumb">
-                        <div class="qari-item-info">
-                            <div class="qari-item-name">${r.name}</div>
-                            <div class="qari-item-arabic">${r.arabicName}</div>
-                        </div>
-                        ${isActive ? '<i class="fa-solid fa-circle-check qari-item-check ms-auto"></i>' : ''}
-                    </button>
-                </li>
-            `;
-        });
-
-        menu.innerHTML = html;
-    }
-
     function selectQari(subfolder, name) {
-        if (window.quranPlayer) {
+        if (window.onSelectQariCard) {
+            window.onSelectQariCard(subfolder, name);
+        } else if (window.quranPlayer) {
             window.quranPlayer.setReciter(subfolder, name);
+            if (window.updateAllQariUIPreviews) window.updateAllQariUIPreviews();
         }
-        const select = document.getElementById("settingReciterSelect");
-        if (select) select.value = subfolder;
-        populateHeaderQariDropdown();
     }
-
-    window.addEventListener("quranReciterChanged", (e) => {
-        const reciter = e.detail?.reciter;
-        const qariImg = document.getElementById("headerQariImg");
-        if (qariImg && reciter) {
-            qariImg.src = reciter.photo || "{{ asset('images/reciters/alafasy.webp') }}";
-            qariImg.alt = reciter.name;
-        }
-        populateHeaderQariDropdown();
-    });
 
     function toggleNavPanel() {
         const panel = document.getElementById("readerNavPanel");
