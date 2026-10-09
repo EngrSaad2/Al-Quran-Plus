@@ -119,14 +119,15 @@ body {
     top: 52%;
     left: 30px;
     right: 30px;
-    transform: translateY(-50%);
-    font-size: clamp(4.5rem, 16vw, 19rem);
+    transform: translateY(-50%) scaleX(1.35);
+    font-size: clamp(5rem, 18.5vw, 22rem);
     font-family: 'Amiri', 'Amiri Quran', 'Scheherazade New', serif;
     font-weight: 400;
     color: var(--text-primary);
     opacity: 0.038;
     white-space: nowrap;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
+    word-spacing: 0.15em;
     pointer-events: none;
     user-select: none;
     line-height: 1;
@@ -141,18 +142,20 @@ body {
 @media (max-width: 768px) {
     .watermark-text-center {
         top: 50%;
-        left: 30px;
-        right: 30px;
-        font-size: clamp(3.8rem, 17vw, 9rem);
+        left: 20px;
+        right: 20px;
+        transform: translateY(-50%) scaleX(1.28);
+        font-size: clamp(4rem, 19vw, 10rem);
     }
 }
 
 @media (max-width: 480px) {
     .watermark-text-center {
         top: 48%;
-        left: 20px;
-        right: 20px;
-        font-size: clamp(3.2rem, 18vw, 6rem);
+        left: 15px;
+        right: 15px;
+        transform: translateY(-50%) scaleX(1.22);
+        font-size: clamp(3.2rem, 20vw, 7rem);
     }
 }
 
