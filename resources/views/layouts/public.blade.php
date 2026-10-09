@@ -169,7 +169,7 @@
             <!-- Progress Timeline Bar -->
             <div class="audio-progress-row">
                 <span class="audio-time-label" id="audioCurTime">0:00</span>
-                <input type="range" class="audio-seek-slider" id="audioSeekSlider" min="0" max="100" value="0" oninput="window.quranPlayer.seekTo(this.value / 100)">
+                <input type="range" class="audio-seek-slider" id="audioSeekSlider" min="0" max="100" step="0.1" value="0">
                 <span class="audio-time-label" id="audioDurTime">0:00</span>
             </div>
         </div>
