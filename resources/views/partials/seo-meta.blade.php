@@ -1,6 +1,6 @@
 @php
-    $pageTitle = $metaTitle ?? 'Al Quran — Read & Listen Holy Quran Online with Bangla & English Translation | Al Quran Plus';
-    $pageDesc = $metaDesc ?? 'Read, listen, and explore the Holy Quran online with crystal clear Arabic script, authentic English and Bangla translations, verse-by-verse recitation audio, Tafsir, Dua, and prayer times.';
+    $pageTitle = $metaTitle ?? 'Al Quran Plus - Read & Listen Holy Quran Online';
+    $pageDesc = $metaDesc ?? 'Read and listen to the Holy Quran online on Al Quran Plus with authentic Bangla and English translations, crystal-clear Arabic text, and 114 Surahs audio.';
     $pageKeywords = $metaKeywords ?? 'Al Quran, Holy Quran Online, Quran English Translation, Quran Bangla Translation, Quran Audio Recitation, Read Quran Online, Surah Yaseen, Surah Rahman, Quran Tafsir, Islamic Dua, Al Quran Plus';
     $pageCanonical = $canonicalUrl ?? url()->current();
     $pageOgImage = $ogImage ?? asset('images/seo-og-banner.png');

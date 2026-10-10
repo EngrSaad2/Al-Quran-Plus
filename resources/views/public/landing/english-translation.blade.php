@@ -2,8 +2,8 @@
 
 @section('meta')
     @include('partials.seo-meta', [
-        'metaTitle' => 'Holy Quran with English Translation (Sahih International) | Al Quran Plus',
-        'metaDesc' => 'Read the Holy Quran online with Sahih International English translation and clear Arabic Uthmani script. All 114 Surahs with continuous audio recitation and verse references.',
+        'metaTitle' => 'Al Quran Plus - Holy Quran English Translation (Sahih)',
+        'metaDesc' => 'Read the Holy Quran with Sahih International English translation and Arabic script on Al Quran Plus. Complete 114 Surahs with synchronized audio.',
         'metaKeywords' => 'Quran English Translation, Holy Quran Sahih International, Read Quran Online, Al Quran English, Surah with English Meaning',
         'canonicalUrl' => url('/quran/english-translation')
     ])

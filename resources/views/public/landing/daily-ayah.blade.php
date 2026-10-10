@@ -2,7 +2,7 @@
 
 @section('meta')
     @include('partials.seo-meta', [
-        'metaTitle' => 'প্রতিদিনের কুরআনের আয়াত ও অর্থ (Daily Quran Ayah) | Al Quran Plus',
+        'metaTitle' => 'Al Quran Plus - প্রতিদিনের কুরআনের আয়াত ও বাংলা অর্থ',
         'metaDesc' => 'প্রতিদিনের জীবন গড়ার অনুপ্রেরণামূলক পবিত্র কুরআনের নির্বাচিত আয়াত। বিশুদ্ধ আরবি পাঠ, সহজ বাংলা অনুবাদ, ইংরেজি অর্থ ও গভীর আত্মশুদ্ধিমূলক জীবনোপদেশ।',
         'metaKeywords' => 'প্রতিদিনের আয়াত, Daily Quran Ayah Bangla, কুরআনের আয়াত ও অর্থ, ইসলামিক উপদেশ, অনুপ্রেরণামূলক আয়াত',
         'canonicalUrl' => url('/daily-ayah')

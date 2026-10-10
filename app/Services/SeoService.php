@@ -12,7 +12,7 @@ class SeoService
             'name' => 'Al Quran Plus',
             'alternateName' => ['Al Quran', 'Holy Quran Online', 'Al Quran Plus Online'],
             'url' => url('/'),
-            'description' => 'Read, listen, and explore the Holy Quran online with crystal clear Arabic script, authentic English and Bangla translations, verse-by-verse recitation audio, Tafsir, Dua, and prayer times.',
+            'description' => 'Read and listen to the Holy Quran online on Al Quran Plus with authentic Bangla and English translations, crystal-clear Arabic text, and 114 Surahs audio.',
             'inLanguage' => ['en', 'bn-BD', 'ar'],
             'image' => asset('images/seo-og-banner.png'),
             'potentialAction' => [

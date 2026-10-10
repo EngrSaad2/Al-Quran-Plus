@@ -221,7 +221,17 @@ class HomeController extends Controller
 
     public function robots()
     {
-        $content = "User-agent: *\n";
+        $content = "User-agent: GPTBot\n";
+        $content .= "Allow: /\n\n";
+        $content .= "User-agent: ClaudeBot\n";
+        $content .= "Allow: /\n\n";
+        $content .= "User-agent: PerplexityBot\n";
+        $content .= "Allow: /\n\n";
+        $content .= "User-agent: Google-Extended\n";
+        $content .= "Allow: /\n\n";
+        $content .= "User-agent: Applebot-Extended\n";
+        $content .= "Allow: /\n\n";
+        $content .= "User-agent: *\n";
         $content .= "Allow: /\n";
         $content .= "Disallow: /admin/\n";
         $content .= "Disallow: /login\n\n";
